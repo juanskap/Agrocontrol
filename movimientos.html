@@ -24,6 +24,36 @@
       }
     };
   </script>
+  <script>
+    const agroAuthKey = "agrocontrol-auth-v1";
+
+    function getAgroSession() {
+      try {
+        return JSON.parse(localStorage.getItem(agroAuthKey) || "null");
+      } catch {
+        return null;
+      }
+    }
+
+    function isAuthenticated() {
+      return Boolean(getAgroSession());
+    }
+
+    function redirectToLogin() {
+      const nextPage = encodeURIComponent("movimientos.html");
+      window.location.href = `login.html?redirect=${nextPage}`;
+    }
+
+    function requireAuth(actionLabel) {
+      if (isAuthenticated()) {
+        return true;
+      }
+
+      alert(`${actionLabel} requiere iniciar sesión. Estás en modo vista previa.`);
+      redirectToLogin();
+      return false;
+    }
+  </script>
 </head>
 <body class="bg-crema text-slate-800">
   <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
@@ -38,7 +68,7 @@
         <a href="movimientos.html" class="text-hoja">Movimientos</a>
         <a href="contacto.html" class="hover:text-hoja">Contacto</a>
       </nav>
-      <a href="inventario.html" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Volver al inventario</a>
+      <button id="logout-button" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Iniciar sesión</button>
     </div>
   </header>
 
@@ -47,6 +77,10 @@
       <p class="text-sm font-bold uppercase tracking-[0.28em] text-sol">Movimientos</p>
       <h1 class="mt-4 text-4xl font-black md:text-5xl">Entradas y salidas con trazabilidad operativa.</h1>
       <p class="mt-5 max-w-3xl text-lg leading-8 text-white/75">Registra compras, entregas y ajustes del inventario. Cada movimiento actualiza la cantidad del producto y deja detalle de fecha, responsable y observación.</p>
+    </section>
+
+    <section id="preview-notice" class="mt-6 rounded-[2rem] border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-900 shadow-sm">
+      Estás en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesión.
     </section>
 
     <section class="mt-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
@@ -311,6 +345,8 @@
     const clearFormButton = document.getElementById("clear-form");
     const viewReportButton = document.getElementById("view-report");
     const printReportButton = document.getElementById("print-report");
+    const logoutButton = document.getElementById("logout-button");
+    const previewNotice = document.getElementById("preview-notice");
 
     let inventoryState = null;
     let movementHistory = [];
@@ -318,6 +354,18 @@
     const movementItemsPerPage = 6;
     let inventoryPage = 1;
     const inventoryItemsPerPage = 10;
+
+    function updateAuthUI() {
+      const authenticated = isAuthenticated();
+
+      if (logoutButton) {
+        logoutButton.textContent = authenticated ? "Cerrar sesión" : "Iniciar sesión";
+      }
+
+      if (previewNotice) {
+        previewNotice.classList.toggle("hidden", authenticated);
+      }
+    }
 
     function loadInventoryState() {
       const raw = localStorage.getItem(stateStorageKey);
@@ -690,6 +738,10 @@
     movementForm.addEventListener("submit", (event) => {
       event.preventDefault();
 
+      if (!requireAuth("Guardar movimientos")) {
+        return;
+      }
+
       const selected = getSelectedProduct();
       if (!selected) {
         alert("Selecciona un producto válido.");
@@ -785,14 +837,35 @@
     });
     clearFormButton.addEventListener("click", clearForm);
     viewReportButton.addEventListener("click", () => {
+      if (!requireAuth("Ver reportes")) {
+        return;
+      }
+
       movementPage = 1;
       inventoryPage = 1;
       renderMovementTable();
     });
-    printReportButton.addEventListener("click", () => window.print());
+    printReportButton.addEventListener("click", () => {
+      if (!requireAuth("Imprimir reportes")) {
+        return;
+      }
+
+      window.print();
+    });
+    logoutButton?.addEventListener("click", () => {
+      if (!isAuthenticated()) {
+        redirectToLogin();
+        return;
+      }
+
+      localStorage.removeItem(agroAuthKey);
+      updateAuthUI();
+      window.location.href = "login.html";
+    });
 
     inventoryState = loadInventoryState() || { insumos: [], abonos: [], herramientas: [] };
     movementHistory = loadMovementHistory();
+    updateAuthUI();
     clearForm();
     refreshSelectedStock();
     renderMovementTable();

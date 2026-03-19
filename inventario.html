@@ -26,17 +26,32 @@
   </script>
   <script>
     const agroAuthKey = "agrocontrol-auth-v1";
-    let agroSession = null;
 
-    try {
-      agroSession = JSON.parse(localStorage.getItem(agroAuthKey) || "null");
-    } catch {
-      agroSession = null;
+    function getAgroSession() {
+      try {
+        return JSON.parse(localStorage.getItem(agroAuthKey) || "null");
+      } catch {
+        return null;
+      }
     }
 
-    if (!agroSession) {
+    function isAuthenticated() {
+      return Boolean(getAgroSession());
+    }
+
+    function redirectToLogin() {
       const nextPage = encodeURIComponent("inventario.html");
-      window.location.replace(`login.html?redirect=${nextPage}`);
+      window.location.href = `login.html?redirect=${nextPage}`;
+    }
+
+    function requireAuth(actionLabel) {
+      if (isAuthenticated()) {
+        return true;
+      }
+
+      alert(`${actionLabel} requiere iniciar sesión. Estás en modo vista previa.`);
+      redirectToLogin();
+      return false;
     }
   </script>
 </head>
@@ -53,52 +68,54 @@
         <a href="movimientos.html" class="hover:text-hoja">Movimientos</a>
         <a href="contacto.html" class="hover:text-hoja">Contacto</a>
       </nav>
-      <button id="logout-button" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Cerrar sesión</button>
+      <button id="logout-button" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Iniciar sesión</button>
     </div>
   </header>
 
   <main class="mx-auto max-w-7xl px-6 py-16">
-    <section class="rounded-[2.5rem] bg-slate-950 px-8 py-12 text-white shadow-suave">
-      <p class="text-sm font-bold uppercase tracking-[0.28em] text-sol">Inventario central</p>
-      <h1 class="mt-4 text-4xl font-black md:text-5xl">Administra tus categorías con un panel claro y operativo.</h1>
-      <p class="mt-5 max-w-3xl text-lg leading-8 text-white/75">Consulta existencias, registra movimientos y genera reportes por categoría. Esta vista organiza insumos, abonos y herramientas o maquinaria desde un solo lugar.</p>
+    <section class="rounded-[1.75rem] bg-slate-950 px-6 py-5 text-white shadow-suave">
+      <h1 class="text-2xl font-black md:text-3xl">Inventario central</h1>
+    </section>
+
+    <section id="preview-notice" class="mt-6 rounded-[2rem] border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-900 shadow-sm">
+      Estás en modo vista previa. Puedes consultar inventario y movimientos recientes, pero para agregar, editar, eliminar o registrar cambios debes iniciar sesión.
     </section>
 
     <section class="mt-10 grid gap-6 lg:grid-cols-[0.72fr_1.28fr]">
-      <aside class="rounded-[2rem] bg-white p-6 shadow-suave">
-        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Panel lateral</p>
+      <aside class="rounded-[2rem] bg-white p-6 shadow-suave ring-1 ring-slate-200/80">
+        <p class="text-sm font-black uppercase tracking-[0.28em] text-slate-900">Panel lateral</p>
         <div class="mt-6 space-y-4">
-          <div class="rounded-[1.5rem] border border-slate-200 p-4">
-            <p class="font-bold text-slate-900">Acciones rápidas</p>
+          <div class="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-sm">
+            <p class="text-base font-black text-slate-900">Acciones rápidas</p>
             <div class="mt-4 flex flex-wrap gap-3">
               <button id="open-add-modal" class="rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white">Agregar</button>
               <button id="open-edit-modal" class="rounded-full border border-hoja px-4 py-2 text-sm font-semibold text-hoja">Editar</button>
               <button id="delete-product-button" class="rounded-full border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-600">Eliminar</button>
             </div>
           </div>
-          <div class="rounded-[1.5rem] bg-crema p-4">
-            <p class="font-bold text-slate-900">Producto seleccionado</p>
-            <p id="selected-product-label" class="mt-3 text-sm text-slate-600">Ningún producto seleccionado.</p>
+          <div class="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 shadow-sm">
+            <p class="text-base font-black text-slate-900">Producto seleccionado</p>
+            <p id="selected-product-label" class="mt-3 text-sm leading-6 text-slate-700">Ningún producto seleccionado.</p>
           </div>
-          <div class="rounded-[1.5rem] bg-crema p-4">
-            <p class="font-bold text-slate-900">Alertas automáticas</p>
-            <ul class="mt-3 space-y-2 text-sm text-slate-600">
+          <div class="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 shadow-sm">
+            <p class="text-base font-black text-slate-900">Alertas automáticas</p>
+            <ul class="mt-3 space-y-2 text-sm leading-6 text-slate-700">
               <li>Stock bajo en semillas híbridas</li>
               <li>Abonos orgánicos próximos a reabastecer</li>
               <li>Mantenimiento pendiente de tractor T-90</li>
             </ul>
           </div>
-          <div class="rounded-[1.5rem] bg-crema p-4">
-            <p class="font-bold text-slate-900">Configuración</p>
-            <ul class="mt-3 space-y-2 text-sm text-slate-600">
+          <div class="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 shadow-sm">
+            <p class="text-base font-black text-slate-900">Configuración</p>
+            <ul class="mt-3 space-y-2 text-sm leading-6 text-slate-700">
               <li>Gestión de subcategorías</li>
               <li>Usuarios y permisos por rol</li>
               <li>Parámetros de alertas</li>
             </ul>
           </div>
-          <div class="rounded-[1.5rem] bg-crema p-4">
-            <p class="font-bold text-slate-900">Movimientos recientes</p>
-            <div id="recent-movements" class="mt-3 space-y-2 text-sm text-slate-600">
+          <div class="rounded-[1.5rem] border border-hoja/20 bg-[linear-gradient(180deg,_rgba(245,240,230,0.88),_rgba(255,255,255,0.98))] p-4 shadow-sm">
+            <p class="text-base font-black text-slate-900">Movimientos recientes</p>
+            <div id="recent-movements" class="mt-3 space-y-3 text-sm text-slate-700">
               <p>No hay movimientos registrados.</p>
             </div>
           </div>
@@ -514,6 +531,7 @@
     const deleteProductButton = document.getElementById("delete-product-button");
     const openEntryModalButton = document.getElementById("open-entry-modal");
     const openExitModalButton = document.getElementById("open-exit-modal");
+    const logoutButton = document.getElementById("logout-button");
     const closeAddModalButton = document.getElementById("close-add-modal");
     const cancelAddModalButton = document.getElementById("cancel-add-modal");
     const addModal = document.getElementById("add-modal");
@@ -566,6 +584,7 @@
     const clearFilterButton = document.getElementById("clear-filter");
     const filterSearch = document.getElementById("filter-search");
     const filterStatus = document.getElementById("filter-status");
+    const previewNotice = document.getElementById("preview-notice");
     const paginationControls = document.getElementById("pagination-controls");
     const paginationSummary = document.getElementById("pagination-summary");
     const rowClass = (index) => index === 0 ? "border-b border-slate-100" : "border-t border-slate-100";
@@ -701,6 +720,18 @@
       abonos,
       herramientas
     };
+
+    function updateAuthUI() {
+      const authenticated = isAuthenticated();
+
+      if (logoutButton) {
+        logoutButton.textContent = authenticated ? "Cerrar sesión" : "Iniciar sesión";
+      }
+
+      if (previewNotice) {
+        previewNotice.classList.toggle("hidden", authenticated);
+      }
+    }
 
     function getImageIndex(category, id) {
       const seed = `${category}-${id}`;
@@ -886,18 +917,18 @@
     }
 
     function renderRecentMovements() {
-      const visible = movementHistory.slice(0, 6);
+      const visible = movementHistory.slice(0, 3);
 
       if (visible.length === 0) {
-        recentMovements.innerHTML = "<p>No hay movimientos registrados.</p>";
+        recentMovements.innerHTML = "<p class=\"rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm leading-6 text-slate-700 shadow-sm\">No hay movimientos registrados.</p>";
         return;
       }
 
       recentMovements.innerHTML = visible.map((movement) => `
-        <div class="rounded-xl bg-white px-3 py-3">
+        <div class="rounded-xl border border-slate-200 bg-white px-3 py-3 shadow-sm">
           <p class="font-semibold text-slate-900">${movement.type}: ${movement.name}</p>
           <p class="mt-1 text-xs text-slate-500">${movement.date} · ${movement.amount} unidades</p>
-          <p class="mt-1 text-xs text-slate-600">${movement.note}</p>
+          <p class="mt-2 text-sm leading-6 text-slate-700">${movement.note}</p>
         </div>
       `).join("");
     }
@@ -1170,6 +1201,10 @@
     }
 
     function openAddModal() {
+      if (!requireAuth("Agregar productos")) {
+        return;
+      }
+
       editMode = false;
       formModalTitle.textContent = "Agregar registro al inventario";
       formModalSubtitle.textContent = "Completa los datos clave y guarda el registro en la categoría seleccionada.";
@@ -1190,6 +1225,10 @@
     }
 
     function openEditModal() {
+      if (!requireAuth("Editar productos")) {
+        return;
+      }
+
       if (!selectedProduct) {
         alert("Primero selecciona un producto desde la tabla.");
         return;
@@ -1224,6 +1263,10 @@
     }
 
     function deleteSelectedProduct() {
+      if (!requireAuth("Eliminar productos")) {
+        return;
+      }
+
       if (!selectedProduct) {
         alert("Primero selecciona un producto para eliminar.");
         return;
@@ -1323,6 +1366,7 @@
     }
 
     initializeStoredProducts();
+    updateAuthUI();
     updatePagination(activeCategory);
     renderRecentMovements();
 
@@ -1366,11 +1410,33 @@
     openEditModalButton.addEventListener("click", openEditModal);
     deleteProductButton.addEventListener("click", deleteSelectedProduct);
     if (openEntryModalButton) {
-      openEntryModalButton.addEventListener("click", () => openMovementModal("Entrada"));
+      openEntryModalButton.addEventListener("click", () => {
+        if (!requireAuth("Registrar entradas")) {
+          return;
+        }
+
+        openMovementModal("Entrada");
+      });
     }
     if (openExitModalButton) {
-      openExitModalButton.addEventListener("click", () => openMovementModal("Salida"));
+      openExitModalButton.addEventListener("click", () => {
+        if (!requireAuth("Registrar salidas")) {
+          return;
+        }
+
+        openMovementModal("Salida");
+      });
     }
+    logoutButton?.addEventListener("click", () => {
+      if (!isAuthenticated()) {
+        redirectToLogin();
+        return;
+      }
+
+      localStorage.removeItem(agroAuthKey);
+      updateAuthUI();
+      window.location.href = "login.html";
+    });
     closeAddModalButton.addEventListener("click", closeAddModal);
     cancelAddModalButton.addEventListener("click", closeAddModal);
     addModal.addEventListener("click", (event) => {
@@ -1396,6 +1462,10 @@
 
     addProductForm.addEventListener("submit", (event) => {
       event.preventDefault();
+
+      if (!requireAuth(editMode ? "Guardar cambios del producto" : "Crear productos")) {
+        return;
+      }
 
       if (!validateForm()) {
         alert("Completa al menos los campos principales del producto.");
@@ -1446,6 +1516,10 @@
 
     movementForm.addEventListener("submit", (event) => {
       event.preventDefault();
+
+      if (!requireAuth(`Registrar ${currentMovementType.toLowerCase()}`)) {
+        return;
+      }
 
       if (!selectedProduct) {
         alert("Primero selecciona un producto.");
