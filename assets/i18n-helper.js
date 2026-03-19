@@ -7,10 +7,18 @@ function getNestedTranslation(translations, lang, key) {
 function updateLanguageSelectorUI(lang) {
   document.querySelectorAll(".language-option").forEach((button) => {
     const active = button.dataset.lang === lang;
-    button.classList.toggle("bg-hoja", active);
-    button.classList.toggle("text-white", active);
-    button.classList.toggle("shadow-sm", active);
-    button.classList.toggle("text-slate-700", !active);
+    const isDarkTheme = button.dataset.languageTheme === "dark";
+
+    button.classList.toggle("bg-hoja", active && !isDarkTheme);
+    button.classList.toggle("text-white", active && !isDarkTheme);
+    button.classList.toggle("bg-sol", active && isDarkTheme);
+    button.classList.toggle("text-slate-950", active && isDarkTheme);
+    button.classList.toggle("shadow-md", active);
+    button.classList.toggle("bg-transparent", !active);
+    button.classList.toggle("text-hoja", !active && !isDarkTheme);
+    button.classList.toggle("text-white/80", !active && isDarkTheme);
+    button.classList.toggle("text-slate-700", false);
+    button.classList.toggle("shadow-sm", false);
   });
 }
 
