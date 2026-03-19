@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgroControl | Nosotros</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%233E6B48'/><path d='M20 39c0-10 7-18 18-20-2 3-3 6-3 10 0 6 3 11 9 15-3 1-5 1-8 1-10 0-16-6-16-6Z' fill='%23D9A441'/><path d='M23 42c4-7 11-12 21-14' stroke='%23F5F0E6' stroke-width='4' stroke-linecap='round'/></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            tierra: "#6B4F3A",
+            hoja: "#3E6B48",
+            musgo: "#6D8B4E",
+            crema: "#F5F0E6",
+            sol: "#D9A441"
+          },
+          boxShadow: {
+            suave: "0 20px 45px rgba(62, 107, 72, 0.16)"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-crema text-slate-800">
+  <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
+      </a>
+      <nav class="hidden gap-6 text-sm font-semibold md:flex">
+        <a href="index.html" class="hover:text-hoja">Inicio</a>
+        <a href="nosotros.html" class="text-hoja">Nosotros</a>
+        <a href="inventario.html" class="hover:text-hoja">Inventario</a>
+        <a href="contacto.html" class="hover:text-hoja">Contacto</a>
+      </nav>
+      <a href="contacto.html" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Habla con nosotros</a>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-6 py-16">
+    <section class="grid gap-10 lg:grid-cols-[1fr_0.95fr] lg:items-center">
+      <div>
+        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Nosotros</p>
+        <h1 class="mt-4 text-4xl font-black text-slate-900 md:text-5xl">Una empresa creada para ordenar el abastecimiento agrícola con calidad, trazabilidad y visión corporativa.</h1>
+        <p class="mt-6 text-lg leading-8 text-slate-700">Nacimos para responder a una necesidad real del sector: administrar mejor los recursos del campo, reducir pérdidas y trabajar con información confiable. Hoy integramos comercialización, control de inventario y seguimiento técnico en una misma operación.</p>
+      </div>
+      <div class="h-[430px] rounded-[2.5rem] bg-[linear-gradient(180deg,_rgba(62,107,72,0.18),_rgba(62,107,72,0.72)),url('https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center shadow-suave"></div>
+    </section>
+
+    <section class="mt-16 grid gap-6 md:grid-cols-3">
+      <article class="rounded-[2rem] bg-white p-8 shadow-suave">
+        <h2 class="text-2xl font-black text-slate-900">Historia</h2>
+        <p class="mt-4 text-slate-600">Comenzamos abasteciendo insumos esenciales para productores de la región y evolucionamos hacia una estructura más completa con control digital, seguimiento por categorías y reportes operativos para decisiones más inteligentes.</p>
+      </article>
+      <article class="rounded-[2rem] bg-white p-8 shadow-suave">
+        <h2 class="text-2xl font-black text-slate-900">Misión</h2>
+        <p class="mt-4 text-slate-600">Impulsar la productividad agrícola con recursos confiables, orden logístico y herramientas de gestión que fortalezcan la operación diaria de nuestros clientes.</p>
+      </article>
+      <article class="rounded-[2rem] bg-white p-8 shadow-suave">
+        <h2 class="text-2xl font-black text-slate-900">Visión</h2>
+        <p class="mt-4 text-slate-600">Ser una referencia regional en suministro agrícola e inteligencia de inventario, con procesos eficientes, sostenibles y orientados a resultados.</p>
+      </article>
+    </section>
+
+    <section class="mt-16 rounded-[2.5rem] bg-hoja px-8 py-12 text-white shadow-suave">
+      <p class="text-sm font-bold uppercase tracking-[0.28em] text-white/75">Valores corporativos</p>
+      <div class="mt-6 grid gap-4 md:grid-cols-4">
+        <div class="rounded-[1.5rem] bg-white/10 p-5">Compromiso con el productor</div>
+        <div class="rounded-[1.5rem] bg-white/10 p-5">Calidad en cada suministro</div>
+        <div class="rounded-[1.5rem] bg-white/10 p-5">Transparencia operativa</div>
+        <div class="rounded-[1.5rem] bg-white/10 p-5">Mejora continua y seguridad</div>
+      </div>
+    </section>
+
+    <section class="mt-16">
+      <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Equipo</p>
+          <h2 class="mt-2 text-3xl font-black text-slate-900">Perfiles que sostienen la operación</h2>
+        </div>
+        <p class="max-w-2xl text-slate-600">Cada área combina experiencia comercial, control de inventario y soporte técnico para mantener disponibilidad, trazabilidad y atención oportuna.</p>
+      </div>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        <article class="rounded-[2rem] bg-white p-8 shadow-suave">
+          <h3 class="text-xl font-black">Dirección General</h3>
+          <p class="mt-3 text-slate-600">Define estrategia, alianzas comerciales y expansión del portafolio agrícola.</p>
+        </article>
+        <article class="rounded-[2rem] bg-white p-8 shadow-suave">
+          <h3 class="text-xl font-black">Coordinación de Inventario</h3>
+          <p class="mt-3 text-slate-600">Supervisa stock, movimientos, vencimientos y reportes por categoría.</p>
+        </article>
+        <article class="rounded-[2rem] bg-white p-8 shadow-suave">
+          <h3 class="text-xl font-black">Asistencia Técnica</h3>
+          <p class="mt-3 text-slate-600">Acompaña recomendaciones de uso, aplicación y mantenimiento de equipos.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="mt-16 grid gap-6 lg:grid-cols-2">
+      <div class="rounded-[2rem] bg-white p-8 shadow-suave">
+        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Nuestros rubros</p>
+        <div class="mt-6 space-y-5">
+          <div>
+            <h3 class="text-xl font-black">Insumos certificados</h3>
+            <p class="mt-2 text-slate-600">Trabajamos con proveedores evaluados, control de trazabilidad y productos alineados a las necesidades productivas de la región.</p>
+          </div>
+          <div>
+            <h3 class="text-xl font-black">Abonos adaptados al terreno</h3>
+            <p class="mt-2 text-slate-600">Disponemos de opciones orgánicas y químicas con fichas claras de composición, aplicación y certificación.</p>
+          </div>
+          <div>
+            <h3 class="text-xl font-black">Herramientas y maquinaria operativa</h3>
+            <p class="mt-2 text-slate-600">Mantenemos control sobre estado, disponibilidad, mantenimiento y asignación de equipos para evitar interrupciones.</p>
+          </div>
+        </div>
+      </div>
+      <div class="rounded-[2rem] bg-white p-8 shadow-suave">
+        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Certificaciones y reconocimientos</p>
+        <div class="mt-6 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-[1.5rem] bg-crema p-5">
+            <p class="font-bold text-slate-900">Buenas prácticas de almacenamiento</p>
+            <p class="mt-2 text-sm text-slate-600">Procesos internos orientados a seguridad, orden y control de vencimientos.</p>
+          </div>
+          <div class="rounded-[1.5rem] bg-crema p-5">
+            <p class="font-bold text-slate-900">Red de proveedores aprobados</p>
+            <p class="mt-2 text-sm text-slate-600">Selección de marcas con respaldo técnico y cumplimiento comercial.</p>
+          </div>
+          <div class="rounded-[1.5rem] bg-crema p-5">
+            <p class="font-bold text-slate-900">Trazabilidad documental</p>
+            <p class="mt-2 text-sm text-slate-600">Registro de compras, aplicaciones, mantenimientos y responsables operativos.</p>
+          </div>
+          <div class="rounded-[1.5rem] bg-crema p-5">
+            <p class="font-bold text-slate-900">Compromiso con la calidad</p>
+            <p class="mt-2 text-sm text-slate-600">Orientación continua a mejora, soporte técnico y satisfacción del cliente.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-slate-950 text-white">
+    <div class="mx-auto flex max-w-7xl flex-col items-center gap-5 px-6 py-8 text-center">
+      <p class="text-sm text-white/70">AgroControl. Nuestra historia se construye con orden, calidad y trabajo en campo.</p>
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <a href="#" aria-label="Facebook" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4H16V5.5c-.2 0-.9-.1-1.8-.1-1.8 0-3.1 1.1-3.1 3.2v1.8H9v2.8h2.3v7h2.2Z"/></svg>
+        </a>
+        <a href="#" aria-label="Instagram" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M7.8 3h8.4A4.8 4.8 0 0 1 21 7.8v8.4a4.8 4.8 0 0 1-4.8 4.8H7.8A4.8 4.8 0 0 1 3 16.2V7.8A4.8 4.8 0 0 1 7.8 3Zm0 1.7A3.1 3.1 0 0 0 4.7 7.8v8.4a3.1 3.1 0 0 0 3.1 3.1h8.4a3.1 3.1 0 0 0 3.1-3.1V7.8a3.1 3.1 0 0 0-3.1-3.1H7.8Zm8.9 1.3a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.7A3.3 3.3 0 1 0 12 15.3 3.3 3.3 0 0 0 12 8.7Z"/></svg>
+        </a>
+        <a href="#" aria-label="LinkedIn" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M6.5 8.5A1.5 1.5 0 1 1 6.5 5a1.5 1.5 0 0 1 0 3.5ZM5.3 9.8h2.4V19H5.3V9.8Zm4 0h2.3V11h.1c.3-.6 1.1-1.4 2.4-1.4 2.6 0 3 1.7 3 4V19h-2.4v-4.8c0-1.1 0-2.5-1.5-2.5s-1.8 1.2-1.8 2.4V19H9.3V9.8Z"/></svg>
+        </a>
+        <a href="#" aria-label="WhatsApp" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.5L3 20.8l1.6-4.7a8.5 8.5 0 1 1 15.9-4.3Zm-8.5-6.8a6.8 6.8 0 0 0-5.8 10.4l.4.7-.9 2.5 2.6-.8.6.4A6.8 6.8 0 1 0 12 5Zm3.9 8.7c-.2-.1-1.2-.6-1.4-.7s-.3-.1-.4.1-.5.7-.6.8-.2.1-.4 0a5.5 5.5 0 0 1-1.6-1 6 6 0 0 1-1.1-1.4c-.1-.2 0-.3.1-.4l.3-.4.2-.3v-.3c0-.1-.4-1-.6-1.5s-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3s-.8.8-.8 1.9.8 2.2.9 2.4a10.2 10.2 0 0 0 3.9 3.5c.6.2 1 .4 1.3.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5.2-1 .2-1.1 0-.1-.1-.2-.3-.3Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

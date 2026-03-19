@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgroControl | Inventario</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%233E6B48'/><path d='M20 39c0-10 7-18 18-20-2 3-3 6-3 10 0 6 3 11 9 15-3 1-5 1-8 1-10 0-16-6-16-6Z' fill='%23D9A441'/><path d='M23 42c4-7 11-12 21-14' stroke='%23F5F0E6' stroke-width='4' stroke-linecap='round'/></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            tierra: "#6B4F3A",
+            hoja: "#3E6B48",
+            musgo: "#6D8B4E",
+            crema: "#F5F0E6",
+            sol: "#D9A441"
+          },
+          boxShadow: {
+            suave: "0 20px 45px rgba(62, 107, 72, 0.16)"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-crema text-slate-800">
+  <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
+      </a>
+      <nav class="hidden gap-6 text-sm font-semibold md:flex">
+        <a href="index.html" class="hover:text-hoja">Inicio</a>
+        <a href="nosotros.html" class="hover:text-hoja">Nosotros</a>
+        <a href="inventario.html" class="text-hoja">Inventario</a>
+        <a href="contacto.html" class="hover:text-hoja">Contacto</a>
+      </nav>
+      <a href="contacto.html" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Solicita demo</a>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-6 py-16">
+    <section class="rounded-[2.5rem] bg-slate-950 px-8 py-12 text-white shadow-suave">
+      <p class="text-sm font-bold uppercase tracking-[0.28em] text-sol">Inventario central</p>
+      <h1 class="mt-4 text-4xl font-black md:text-5xl">Administra tus categorías con un panel claro y operativo.</h1>
+      <p class="mt-5 max-w-3xl text-lg leading-8 text-white/75">Consulta existencias, registra movimientos y genera reportes por categoría. Esta vista organiza insumos, abonos y herramientas o maquinaria desde un solo lugar.</p>
+    </section>
+
+    <section class="mt-10 grid gap-6 lg:grid-cols-[0.72fr_1.28fr]">
+      <aside class="rounded-[2rem] bg-white p-6 shadow-suave">
+        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Panel lateral</p>
+        <div class="mt-6 space-y-4">
+          <div class="rounded-[1.5rem] border border-slate-200 p-4">
+            <p class="font-bold text-slate-900">Acciones rápidas</p>
+            <div class="mt-4 flex flex-wrap gap-3">
+              <button id="open-add-modal" class="rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white">Agregar</button>
+              <button class="rounded-full border border-hoja px-4 py-2 text-sm font-semibold text-hoja">Editar</button>
+              <button class="rounded-full border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-600">Eliminar</button>
+            </div>
+          </div>
+          <div class="rounded-[1.5rem] bg-crema p-4">
+            <p class="font-bold text-slate-900">Alertas automáticas</p>
+            <ul class="mt-3 space-y-2 text-sm text-slate-600">
+              <li>Stock bajo en semillas híbridas</li>
+              <li>Abonos orgánicos próximos a reabastecer</li>
+              <li>Mantenimiento pendiente de tractor T-90</li>
+            </ul>
+          </div>
+          <div class="rounded-[1.5rem] bg-crema p-4">
+            <p class="font-bold text-slate-900">Configuración</p>
+            <ul class="mt-3 space-y-2 text-sm text-slate-600">
+              <li>Gestión de subcategorías</li>
+              <li>Usuarios y permisos por rol</li>
+              <li>Parámetros de alertas</li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <section class="space-y-6">
+        <div class="flex flex-wrap items-center gap-3">
+          <button class="category-btn rounded-full bg-hoja px-5 py-3 text-sm font-semibold text-white" data-target="insumos">Insumos</button>
+          <button class="category-btn rounded-full border border-hoja px-5 py-3 text-sm font-semibold text-hoja" data-target="abonos">Abonos</button>
+          <button class="category-btn rounded-full border border-hoja px-5 py-3 text-sm font-semibold text-hoja" data-target="herramientas">Herramientas y Maquinaria</button>
+          <button id="toggle-filter" class="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:border-hoja hover:text-hoja">Filtrar productos</button>
+        </div>
+
+        <div id="filter-panel" class="hidden rounded-[2rem] bg-white p-6 shadow-suave">
+          <div class="flex flex-col gap-4 lg:flex-row lg:items-end">
+            <label class="block flex-1">
+              <span class="mb-2 block text-sm font-semibold text-slate-700">Buscar por nombre o ID</span>
+              <input id="filter-search" type="text" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 outline-none focus:border-hoja" placeholder="Ej: INS-001 o tractor">
+            </label>
+            <label class="block lg:w-64">
+              <span class="mb-2 block text-sm font-semibold text-slate-700">Estado u observacion</span>
+              <select id="filter-status" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 outline-none focus:border-hoja">
+                <option value="">Todos</option>
+                <option value="Disponible">Disponible</option>
+                <option value="Mantenimiento">Mantenimiento</option>
+                <option value="Revision">Revision</option>
+                <option value="Reponer pronto">Reponer pronto</option>
+                <option value="Stock bajo">Stock bajo</option>
+              </select>
+            </label>
+            <div class="flex gap-3">
+              <button id="apply-filter" class="rounded-full bg-hoja px-5 py-3 text-sm font-semibold text-white">Aplicar filtro</button>
+              <button id="clear-filter" class="rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700">Limpiar</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="insumos" class="category-panel space-y-6">
+          <div class="rounded-[2rem] bg-white p-6 shadow-suave">
+            <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <h2 class="text-2xl font-black text-slate-900">Listado de insumos</h2>
+                <p class="mt-2 text-slate-600">Control de semillas, pesticidas y materiales de apoyo con disponibilidad y vencimiento. Mostrando hasta 26 productos en pantalla.</p>
+              </div>
+              <div class="flex flex-wrap gap-3 text-sm">
+                <span class="rounded-full bg-crema px-4 py-2">Filtro: tipo</span>
+                <span class="rounded-full bg-crema px-4 py-2">Filtro: disponibilidad</span>
+              </div>
+            </div>
+            <div class="mt-6 overflow-x-auto">
+              <table class="min-w-full text-left text-sm">
+                <thead class="border-b border-slate-200 text-slate-500">
+                  <tr>
+                    <th class="px-3 py-3">Imagen</th>
+                    <th class="px-3 py-3">ID</th>
+                    <th class="px-3 py-3">Nombre</th>
+                    <th class="px-3 py-3">Subcategoría</th>
+                    <th class="px-3 py-3">Proveedor</th>
+                    <th class="px-3 py-3">Cantidad</th>
+                    <th class="px-3 py-3">Unidad</th>
+                    <th class="px-3 py-3">Vencimiento</th>
+                    <th class="px-3 py-3">Precio</th>
+                    <th class="px-3 py-3">Uso</th>
+                    <th class="px-3 py-3">Almacenaje</th>
+                    <th class="px-3 py-3">Observaciones</th>
+                    <th class="px-3 py-3">Detalle</th>
+                  </tr>
+                </thead>
+                <tbody id="insumos-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="pagination-host"></div>
+
+          <div class="grid gap-6 lg:grid-cols-2">
+            <div class="rounded-[2rem] bg-white p-6 shadow-suave">
+              <h3 class="text-xl font-black">Movimientos</h3>
+              <ul class="mt-4 space-y-3 text-slate-600">
+                <li>Entradas por compras a proveedores principales</li>
+                <li>Salidas por distribución a cultivos o áreas de producción</li>
+                <li>Registro de lote y fecha para trazabilidad</li>
+              </ul>
+            </div>
+            <div class="rounded-[2rem] bg-white p-6 shadow-suave">
+              <h3 class="text-xl font-black">Reportes</h3>
+              <ul class="mt-4 space-y-3 text-slate-600">
+                <li>Stock bajo y próximos vencimientos</li>
+                <li>Consumo por cultivo o temporada</li>
+                <li>Ranking de proveedores principales</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div id="abonos" class="category-panel hidden space-y-6">
+          <div class="rounded-[2rem] bg-white p-6 shadow-suave">
+            <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <h2 class="text-2xl font-black text-slate-900">Listado de abonos</h2>
+                <p class="mt-2 text-slate-600">Gestión de fertilizantes con composición, certificación y aplicación recomendada. Mostrando hasta 26 productos en pantalla.</p>
+              </div>
+              <div class="flex flex-wrap gap-3 text-sm">
+                <span class="rounded-full bg-crema px-4 py-2">Filtro: tipo</span>
+                <span class="rounded-full bg-crema px-4 py-2">Filtro: certificación</span>
+              </div>
+            </div>
+            <div class="mt-6 overflow-x-auto">
+              <table class="min-w-full text-left text-sm">
+                <thead class="border-b border-slate-200 text-slate-500">
+                  <tr>
+                    <th class="px-3 py-3">Imagen</th>
+                    <th class="px-3 py-3">ID</th>
+                    <th class="px-3 py-3">Nombre</th>
+                    <th class="px-3 py-3">Subcategoría</th>
+                    <th class="px-3 py-3">Composición</th>
+                    <th class="px-3 py-3">Cantidad</th>
+                    <th class="px-3 py-3">Unidad</th>
+                    <th class="px-3 py-3">Fabricación</th>
+                    <th class="px-3 py-3">Precio</th>
+                    <th class="px-3 py-3">Aplicación</th>
+                    <th class="px-3 py-3">Certificaciones</th>
+                    <th class="px-3 py-3">Observaciones</th>
+                    <th class="px-3 py-3">Detalle</th>
+                  </tr>
+                </thead>
+                <tbody id="abonos-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="pagination-host"></div>
+
+          <div class="grid gap-6 lg:grid-cols-2">
+            <div class="rounded-[2rem] bg-white p-6 shadow-suave">
+              <h3 class="text-xl font-black">Movimientos</h3>
+              <ul class="mt-4 space-y-3 text-slate-600">
+                <li>Entradas por compras y recepción técnica</li>
+                <li>Aplicaciones registradas por campo o hectárea</li>
+                <li>Historial de lotes usados por temporada</li>
+              </ul>
+            </div>
+            <div class="rounded-[2rem] bg-white p-6 shadow-suave">
+              <h3 class="text-xl font-black">Reportes</h3>
+              <ul class="mt-4 space-y-3 text-slate-600">
+                <li>Uso por hectárea y rendimiento esperado</li>
+                <li>Efectividad según zona o cultivo</li>
+                <li>Stock disponible por tipo de abono</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div id="herramientas" class="category-panel hidden space-y-6">
+          <div class="rounded-[2rem] bg-white p-6 shadow-suave">
+            <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <h2 class="text-2xl font-black text-slate-900">Herramientas y maquinaria</h2>
+                <p class="mt-2 text-slate-600">Activos con control de estado, ubicación, mantenimiento e historial de reparaciones. Mostrando hasta 26 registros en pantalla.</p>
+              </div>
+              <div class="flex flex-wrap gap-3 text-sm">
+                <span class="rounded-full bg-crema px-4 py-2">Filtro: estado</span>
+                <span class="rounded-full bg-crema px-4 py-2">Filtro: ubicación</span>
+              </div>
+            </div>
+            <div class="mt-6 overflow-x-auto">
+              <table class="min-w-full text-left text-sm">
+                <thead class="border-b border-slate-200 text-slate-500">
+                  <tr>
+                    <th class="px-3 py-3">Imagen</th>
+                    <th class="px-3 py-3">ID</th>
+                    <th class="px-3 py-3">Nombre / modelo</th>
+                    <th class="px-3 py-3">Subcategoría</th>
+                    <th class="px-3 py-3">Marca</th>
+                    <th class="px-3 py-3">Estado</th>
+                    <th class="px-3 py-3">Cantidad</th>
+                    <th class="px-3 py-3">Adquisición</th>
+                    <th class="px-3 py-3">Costo inicial</th>
+                    <th class="px-3 py-3">Ubicación</th>
+                    <th class="px-3 py-3">Mantenimiento</th>
+                    <th class="px-3 py-3">Historial / responsable</th>
+                    <th class="px-3 py-3">Detalle</th>
+                  </tr>
+                </thead>
+                <tbody id="herramientas-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="pagination-host"></div>
+
+          <div class="grid gap-6 lg:grid-cols-3">
+            <div class="rounded-[2rem] bg-white p-6 shadow-suave">
+              <h3 class="text-xl font-black">Movimientos</h3>
+              <p class="mt-4 text-slate-600">Registro de asignación a usuarios, salidas temporales y devoluciones por responsable.</p>
+            </div>
+            <div class="rounded-[2rem] bg-white p-6 shadow-suave">
+              <h3 class="text-xl font-black">Mantenimiento</h3>
+              <p class="mt-4 text-slate-600">Agenda de revisiones, historial de reparaciones y costos acumulados por equipo.</p>
+            </div>
+            <div class="rounded-[2rem] bg-white p-6 shadow-suave">
+              <h3 class="text-xl font-black">Reportes</h3>
+              <p class="mt-4 text-slate-600">Disponibilidad, costos de mantenimiento y asignación por campo o responsable.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="bg-slate-950 text-white">
+    <div class="mx-auto flex max-w-7xl flex-col items-center gap-5 px-6 py-8 text-center">
+      <p class="text-sm text-white/70">AgroControl. Inventario organizado para decisiones más rápidas.</p>
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <a href="#" aria-label="Facebook" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4H16V5.5c-.2 0-.9-.1-1.8-.1-1.8 0-3.1 1.1-3.1 3.2v1.8H9v2.8h2.3v7h2.2Z"/></svg>
+        </a>
+        <a href="#" aria-label="Instagram" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M7.8 3h8.4A4.8 4.8 0 0 1 21 7.8v8.4a4.8 4.8 0 0 1-4.8 4.8H7.8A4.8 4.8 0 0 1 3 16.2V7.8A4.8 4.8 0 0 1 7.8 3Zm0 1.7A3.1 3.1 0 0 0 4.7 7.8v8.4a3.1 3.1 0 0 0 3.1 3.1h8.4a3.1 3.1 0 0 0 3.1-3.1V7.8a3.1 3.1 0 0 0-3.1-3.1H7.8Zm8.9 1.3a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.7A3.3 3.3 0 1 0 12 15.3 3.3 3.3 0 0 0 12 8.7Z"/></svg>
+        </a>
+        <a href="#" aria-label="LinkedIn" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M6.5 8.5A1.5 1.5 0 1 1 6.5 5a1.5 1.5 0 0 1 0 3.5ZM5.3 9.8h2.4V19H5.3V9.8Zm4 0h2.3V11h.1c.3-.6 1.1-1.4 2.4-1.4 2.6 0 3 1.7 3 4V19h-2.4v-4.8c0-1.1 0-2.5-1.5-2.5s-1.8 1.2-1.8 2.4V19H9.3V9.8Z"/></svg>
+        </a>
+        <a href="#" aria-label="WhatsApp" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.5L3 20.8l1.6-4.7a8.5 8.5 0 1 1 15.9-4.3Zm-8.5-6.8a6.8 6.8 0 0 0-5.8 10.4l.4.7-.9 2.5 2.6-.8.6.4A6.8 6.8 0 1 0 12 5Zm3.9 8.7c-.2-.1-1.2-.6-1.4-.7s-.3-.1-.4.1-.5.7-.6.8-.2.1-.4 0a5.5 5.5 0 0 1-1.6-1 6 6 0 0 1-1.1-1.4c-.1-.2 0-.3.1-.4l.3-.4.2-.3v-.3c0-.1-.4-1-.6-1.5s-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3s-.8.8-.8 1.9.8 2.2.9 2.4a10.2 10.2 0 0 0 3.9 3.5c.6.2 1 .4 1.3.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5.2-1 .2-1.1 0-.1-.1-.2-.3-.3Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="add-modal" class="fixed inset-0 z-40 hidden overflow-y-auto bg-slate-950/50 px-4 py-3">
+    <div class="mx-auto my-3 max-w-4xl rounded-[2rem] bg-white p-4 shadow-suave md:p-5">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.24em] text-hoja">Nuevo producto</p>
+          <h2 class="mt-1 text-xl font-black text-slate-900 md:text-2xl">Agregar registro al inventario</h2>
+          <p class="mt-1 text-sm text-slate-600">Completa los datos clave y guarda el registro en la categoría seleccionada.</p>
+        </div>
+        <button id="close-add-modal" type="button" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700">Cerrar</button>
+      </div>
+
+      <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-slate-500">
+        <span class="rounded-full bg-crema px-3 py-1">Formato compacto</span>
+        <span class="rounded-full bg-crema px-3 py-1">Guardado local</span>
+        <span class="rounded-full bg-crema px-3 py-1">Se refleja en la tabla</span>
+      </div>
+
+      <form id="add-product-form" class="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <label class="block">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Categoría</span>
+          <select id="product-category" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
+            <option value="insumos">Insumos</option>
+            <option value="abonos">Abonos</option>
+            <option value="herramientas">Herramientas y Maquinaria</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">ID</span>
+          <input id="product-id" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Ej: INS-027">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Nombre</span>
+          <input id="product-name" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Nombre del producto">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Subcategoría</span>
+          <input id="product-subcategory" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Semillas, orgánico, manual...">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Marca / proveedor</span>
+          <input id="product-source" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Proveedor o marca">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Cantidad</span>
+          <input id="product-quantity" type="number" min="0" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="0">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Unidad</span>
+          <input id="product-unit" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="kg, lt, und...">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Fecha clave</span>
+          <input id="product-date" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="12/2026 o 25/03/2026">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Precio / costo</span>
+          <input id="product-price" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="$0">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Uso / aplicación / ubicación</span>
+          <input id="product-usage" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Uso recomendado o ubicación">
+        </label>
+        <label class="block md:col-span-2 xl:col-span-3">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Observaciones</span>
+          <input id="product-notes" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Observaciones, estado o responsable">
+        </label>
+        <div class="md:col-span-2 xl:col-span-3 flex flex-wrap items-center justify-end gap-3 border-t border-slate-100 pt-3">
+          <button id="cancel-add-modal" type="button" class="rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700">Cancelar</button>
+          <button type="submit" class="rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white">Guardar producto</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="pagination-container" class="rounded-[2rem] bg-white px-5 py-4 shadow-suave">
+    <div class="flex flex-col items-center gap-3">
+      <p id="pagination-summary" class="text-center text-sm text-slate-600">Mostrando 6 productos por pagina.</p>
+      <div id="pagination-controls" class="flex flex-wrap items-center justify-center gap-2"></div>
+    </div>
+  </div>
+
+  <div id="detail-modal" class="fixed inset-0 z-40 hidden overflow-y-auto bg-slate-950/50 px-4 py-6">
+    <div class="mx-auto my-4 max-w-3xl rounded-[2rem] bg-white p-5 shadow-suave md:p-6">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.24em] text-hoja">Detalle del producto</p>
+          <h2 id="detail-title" class="mt-1 text-xl font-black text-slate-900 md:text-2xl">Información del producto</h2>
+          <p id="detail-subtitle" class="mt-1 text-sm text-slate-600">Consulta de uso y aplicación.</p>
+        </div>
+        <button id="close-detail-modal" type="button" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700">Cerrar</button>
+      </div>
+
+      <div id="detail-loading" class="py-12 text-center text-sm font-semibold text-slate-500">Consultando información...</div>
+
+      <div id="detail-content" class="hidden">
+        <div class="mt-5 grid gap-4 md:grid-cols-[0.85fr_1.15fr]">
+          <div class="rounded-[1.5rem] bg-crema p-4">
+            <img id="detail-image" src="" alt="Imagen del producto" class="h-56 w-full rounded-[1.25rem] object-cover shadow-sm">
+            <div class="mt-4 grid gap-3 text-sm text-slate-700">
+              <div class="rounded-xl bg-white px-4 py-3">
+                <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">ID</p>
+                <p id="detail-id" class="mt-1 font-semibold text-slate-900"></p>
+              </div>
+              <div class="rounded-xl bg-white px-4 py-3">
+                <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Categoría</p>
+                <p id="detail-category" class="mt-1 font-semibold text-slate-900"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div class="rounded-[1.5rem] bg-white p-4 shadow-sm ring-1 ring-slate-100">
+              <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Uso principal</p>
+              <p id="detail-usage" class="mt-2 text-sm leading-7 text-slate-700"></p>
+            </div>
+            <div class="rounded-[1.5rem] bg-white p-4 shadow-sm ring-1 ring-slate-100">
+              <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Se puede utilizar en</p>
+              <ul id="detail-applications" class="mt-2 space-y-2 text-sm leading-7 text-slate-700"></ul>
+            </div>
+            <div class="rounded-[1.5rem] bg-white p-4 shadow-sm ring-1 ring-slate-100">
+              <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Recomendación</p>
+              <p id="detail-recommendation" class="mt-2 text-sm leading-7 text-slate-700"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll(".category-btn");
+    const panels = document.querySelectorAll(".category-panel");
+    const openAddModalButton = document.getElementById("open-add-modal");
+    const closeAddModalButton = document.getElementById("close-add-modal");
+    const cancelAddModalButton = document.getElementById("cancel-add-modal");
+    const addModal = document.getElementById("add-modal");
+    const addProductForm = document.getElementById("add-product-form");
+    const productCategory = document.getElementById("product-category");
+    const productId = document.getElementById("product-id");
+    const productName = document.getElementById("product-name");
+    const productSubcategory = document.getElementById("product-subcategory");
+    const productSource = document.getElementById("product-source");
+    const productQuantity = document.getElementById("product-quantity");
+    const productUnit = document.getElementById("product-unit");
+    const productDate = document.getElementById("product-date");
+    const productPrice = document.getElementById("product-price");
+    const productUsage = document.getElementById("product-usage");
+    const productNotes = document.getElementById("product-notes");
+    const detailModal = document.getElementById("detail-modal");
+    const closeDetailModalButton = document.getElementById("close-detail-modal");
+    const detailLoading = document.getElementById("detail-loading");
+    const detailContent = document.getElementById("detail-content");
+    const detailTitle = document.getElementById("detail-title");
+    const detailSubtitle = document.getElementById("detail-subtitle");
+    const detailImage = document.getElementById("detail-image");
+    const detailId = document.getElementById("detail-id");
+    const detailCategory = document.getElementById("detail-category");
+    const detailUsage = document.getElementById("detail-usage");
+    const detailApplications = document.getElementById("detail-applications");
+    const detailRecommendation = document.getElementById("detail-recommendation");
+    const paginationContainer = document.getElementById("pagination-container");
+    const filterPanel = document.getElementById("filter-panel");
+    const toggleFilterButton = document.getElementById("toggle-filter");
+    const applyFilterButton = document.getElementById("apply-filter");
+    const clearFilterButton = document.getElementById("clear-filter");
+    const filterSearch = document.getElementById("filter-search");
+    const filterStatus = document.getElementById("filter-status");
+    const paginationControls = document.getElementById("pagination-controls");
+    const paginationSummary = document.getElementById("pagination-summary");
+    const rowClass = (index) => index === 0 ? "border-b border-slate-100" : "border-t border-slate-100";
+    const pageSize = 6;
+    const fallbackStockImage = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 240'><rect width='320' height='240' rx='28' fill='%23E7E1D3'/><rect x='26' y='28' width='268' height='184' rx='22' fill='%23F5F0E6'/><path d='M82 170h156' stroke='%233E6B48' stroke-width='10' stroke-linecap='round'/><path d='M110 170v-52h38l12 18h28v34' fill='none' stroke='%233E6B48' stroke-width='10' stroke-linejoin='round' stroke-linecap='round'/><circle cx='122' cy='178' r='18' fill='%23D9A441'/><circle cx='214' cy='178' r='18' fill='%23D9A441'/><path d='M86 102h84' stroke='%236B4F3A' stroke-width='10' stroke-linecap='round'/><path d='M208 84l28 16' stroke='%236B4F3A' stroke-width='10' stroke-linecap='round'/></svg>";
+    const stockImages = {
+      insumos: [
+        "https://images.unsplash.com/photo-1471193945509-9ad0617afabf?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1512428813834-c702c7702b78?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?auto=format&fit=crop&w=300&q=80"
+      ],
+      abonos: [
+        "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1492496913980-501348b61469?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=300&q=80"
+      ],
+      herramientas: [
+        "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=300&q=80",
+        "https://images.unsplash.com/photo-1504439468489-c8920d796a29?auto=format&fit=crop&w=300&q=80"
+      ]
+    };
+    const categoryLabels = {
+      insumos: "Insumos",
+      abonos: "Abonos",
+      herramientas: "Herramientas y Maquinaria"
+    };
+    const storageKeys = {
+      insumos: "agrocontrol-insumos-extra",
+      abonos: "agrocontrol-abonos-extra",
+      herramientas: "agrocontrol-herramientas-extra"
+    };
+
+    const insumos = [
+      ["INS-001", "Semilla de maiz premium", "Semillas", "AgroSeed", "240", "kg", "12/2026", "$85", "Cultivos extensivos", "Bodega seca", "Rotacion alta"],
+      ["INS-002", "Protector foliar", "Pesticidas", "CampoForte", "36", "lt", "08/2026", "$42", "Hortalizas", "Gabinete tecnico", "Reponer pronto"],
+      ["INS-003", "Semilla de arroz selecta", "Semillas", "BioCampo", "180", "kg", "10/2026", "$76", "Arroz tecnificado", "Bodega seca", "Disponible"],
+      ["INS-004", "Herbicida selectivo H12", "Pesticidas", "AgroNova", "54", "lt", "11/2026", "$38", "Control de malezas", "Zona quimica", "Uso frecuente"],
+      ["INS-005", "Bandejas de germinacion", "Accesorios", "Viveros Pro", "96", "und", "N/A", "$6", "Semilleros", "Estanteria 2", "Buen estado"],
+      ["INS-006", "Fungicida preventivo", "Pesticidas", "FitoGuard", "28", "lt", "09/2026", "$47", "Frutales", "Gabinete tecnico", "Stock medio"],
+      ["INS-007", "Semilla de tomate hibrido", "Semillas", "AgroSeed", "75", "kg", "07/2026", "$92", "Invernadero", "Bodega fria", "Alta salida"],
+      ["INS-008", "Insecticida organico", "Pesticidas", "EcoCampo", "48", "lt", "10/2026", "$33", "Hortalizas", "Zona quimica", "Certificado"],
+      ["INS-009", "Malla de sombreo", "Accesorios", "AgroTex", "30", "rollos", "N/A", "$58", "Viveros", "Estanteria 4", "Disponible"],
+      ["INS-010", "Semilla de pimiento", "Semillas", "BioCampo", "62", "kg", "06/2026", "$88", "Cultivo protegido", "Bodega seca", "Rotacion media"],
+      ["INS-011", "Adherente agricola", "Complementos", "CampoForte", "25", "lt", "12/2026", "$19", "Mezclas tecnicas", "Gabinete tecnico", "Disponible"],
+      ["INS-012", "Semilla de cebolla", "Semillas", "AgroSeed", "58", "kg", "05/2026", "$81", "Siembra regional", "Bodega seca", "Alta demanda"],
+      ["INS-013", "Desinfectante de suelo", "Pesticidas", "TerraClean", "22", "lt", "09/2026", "$51", "Preparacion de terreno", "Zona quimica", "Controlado"],
+      ["INS-014", "Trampas adhesivas", "Accesorios", "GreenTrap", "140", "und", "N/A", "$3", "Monitoreo de plagas", "Estanteria 1", "Disponible"],
+      ["INS-015", "Semilla de lechuga", "Semillas", "Viveros Pro", "44", "kg", "08/2026", "$73", "Hidroponia", "Bodega fria", "Salida constante"],
+      ["INS-016", "Bioestimulante radicular", "Complementos", "RootMax", "18", "lt", "11/2026", "$64", "Etapa inicial", "Gabinete tecnico", "Stock bajo"],
+      ["INS-017", "Semilla de frejol", "Semillas", "AgroNova", "132", "kg", "12/2026", "$67", "Campo abierto", "Bodega seca", "Disponible"],
+      ["INS-018", "Cinta de riego", "Accesorios", "RiegoMax", "52", "rollos", "N/A", "$24", "Riego por goteo", "Estanteria 5", "En uso"],
+      ["INS-019", "Nematicida liquido", "Pesticidas", "FitoGuard", "16", "lt", "07/2026", "$57", "Control de suelo", "Zona quimica", "Uso tecnico"],
+      ["INS-020", "Semilla de pepino", "Semillas", "AgroSeed", "41", "kg", "10/2026", "$79", "Invernadero", "Bodega fria", "Disponible"],
+      ["INS-021", "Guantes industriales", "Accesorios", "SafeFarm", "220", "pares", "N/A", "$4", "Proteccion de operarios", "Estanteria 3", "Buen stock"],
+      ["INS-022", "Coadyuvante foliar", "Complementos", "AgroMix", "29", "lt", "12/2026", "$21", "Aplicacion tecnica", "Gabinete tecnico", "Rotacion media"],
+      ["INS-023", "Semilla de sandia", "Semillas", "BioCampo", "36", "kg", "09/2026", "$95", "Siembra extensiva", "Bodega seca", "Alta demanda"],
+      ["INS-024", "Fungicida sistemico", "Pesticidas", "TerraClean", "20", "lt", "08/2026", "$54", "Frutales", "Zona quimica", "Reservado"],
+      ["INS-025", "Bolsas para vivero", "Accesorios", "Viveros Pro", "500", "und", "N/A", "$1", "Plantulas", "Estanteria 2", "Disponible"],
+      ["INS-026", "Semilla de cacao injertado", "Semillas", "AgroSeed", "27", "kg", "11/2026", "$120", "Renovacion de cultivo", "Bodega seca", "Control especial"]
+    ];
+
+    const abonos = [
+      ["ABO-001", "BioFert Plus", "Organico", "NPK + materia organica", "180", "sacos", "01/2026", "$18", "Frutales y hortalizas", "EcoCert", "Alta demanda"],
+      ["ABO-002", "FertiMax 20-20-20", "Quimico", "Nitrogeno, fosforo y potasio", "72", "kg", "02/2026", "$29", "Aplicacion foliar", "ISO proveedor", "Rotacion media"],
+      ["ABO-003", "Compost Premium", "Organico", "Materia organica estabilizada", "220", "sacos", "12/2025", "$12", "Mejora de suelo", "EcoCert", "Alta rotacion"],
+      ["ABO-004", "Cal agricola", "Quimico", "Carbonato de calcio", "95", "kg", "03/2026", "$14", "Correccion de pH", "Control interno", "Aplicacion estacional"],
+      ["ABO-005", "Humus granulado", "Organico", "Acidos humicos y fulvicos", "140", "kg", "01/2026", "$21", "Hortalizas y viveros", "Organico validado", "Disponible"],
+      ["ABO-006", "Fosforo Plus", "Quimico", "Alto contenido de fosforo", "60", "kg", "02/2026", "$31", "Enraizamiento", "Proveedor ISO", "Stock medio"],
+      ["ABO-007", "Urea tecnica", "Quimico", "46% nitrogeno", "125", "kg", "04/2026", "$24", "Crecimiento vegetativo", "Proveedor aprobado", "Alta salida"],
+      ["ABO-008", "Gallinaza compostada", "Organico", "Materia organica enriquecida", "210", "sacos", "11/2025", "$11", "Preparacion de camas", "Eco manejo", "Disponible"],
+      ["ABO-009", "Potasio K-Plus", "Quimico", "Sulfato de potasio", "58", "kg", "03/2026", "$27", "Floracion y fruto", "ISO proveedor", "Rotacion media"],
+      ["ABO-010", "Te de compost liquido", "Organico", "Extractos biologicos", "44", "lt", "01/2026", "$17", "Refuerzo biologico", "EcoCert", "Uso continuo"],
+      ["ABO-011", "Nitrato de calcio", "Quimico", "Calcio y nitrogeno", "86", "kg", "05/2026", "$26", "Fortalecimiento de fruto", "Proveedor tecnico", "Disponible"],
+      ["ABO-012", "Lombricompuesto", "Organico", "Microorganismos beneficos", "150", "sacos", "12/2025", "$13", "Viveros", "Organico validado", "Alta rotacion"],
+      ["ABO-013", "Magnesio foliar", "Quimico", "Magnesio soluble", "34", "lt", "06/2026", "$23", "Correccion nutricional", "Control interno", "Disponible"],
+      ["ABO-014", "Bokashi regional", "Organico", "Fermentado organico", "115", "sacos", "10/2025", "$15", "Recuperacion de suelo", "Eco manejo", "Salida media"],
+      ["ABO-015", "Triple 15", "Quimico", "Balance NPK", "90", "kg", "02/2026", "$28", "Cultivos mixtos", "Proveedor ISO", "Alta demanda"],
+      ["ABO-016", "Biofermento mineral", "Organico", "Minerales quelatados", "39", "lt", "01/2026", "$22", "Aplicacion complementaria", "EcoCert", "Disponible"],
+      ["ABO-017", "Sulfato de amonio", "Quimico", "Nitrogeno y azufre", "74", "kg", "04/2026", "$20", "Cereales", "Proveedor aprobado", "Stock medio"],
+      ["ABO-018", "Compost de cacao", "Organico", "Materia organica de cascara", "96", "sacos", "11/2025", "$14", "Recuperacion de lotes", "Organico validado", "Disponible"],
+      ["ABO-019", "Micorrizas activas", "Organico", "Hongos beneficos", "28", "kg", "03/2026", "$35", "Enraizamiento", "EcoCert", "Uso tecnico"],
+      ["ABO-020", "NPK 12-24-12", "Quimico", "Formula de arranque", "66", "kg", "05/2026", "$30", "Inicio de cultivo", "ISO proveedor", "Rotacion media"],
+      ["ABO-021", "Enmienda calcica", "Quimico", "Calcio estabilizado", "82", "kg", "02/2026", "$18", "Ajuste de suelo", "Control interno", "Disponible"],
+      ["ABO-022", "Abono verde procesado", "Organico", "Residuos vegetales compostados", "134", "sacos", "12/2025", "$10", "Cobertura y suelo", "Eco manejo", "Buen stock"],
+      ["ABO-023", "Silicio foliar", "Quimico", "Silicio soluble", "31", "lt", "06/2026", "$25", "Resistencia estructural", "Proveedor tecnico", "Disponible"],
+      ["ABO-024", "Harina de roca", "Organico", "Minerales naturales", "70", "kg", "01/2026", "$16", "Suelo agotado", "Organico validado", "Salida media"],
+      ["ABO-025", "Fertilizante potasico", "Quimico", "Potasio concentrado", "47", "kg", "03/2026", "$29", "Etapa de fruto", "ISO proveedor", "Reservado"],
+      ["ABO-026", "Compost microbiano", "Organico", "Consorcio biologico", "88", "sacos", "02/2026", "$19", "Mejora integral", "EcoCert", "Controlado"]
+    ];
+
+    const herramientas = [
+      ["HER-001", "Tractor T-90", "Maquinaria", "AgroMec", "Mantenimiento", "1", "04/2023", "$28,500", "Campo Norte", "25/03/2026", "Cambio de filtros / Luis M."],
+      ["HER-002", "Juego de palas reforzadas", "Manual", "CampoSur", "Disponible", "18", "07/2025", "$22", "Bodega central", "Sin novedad", "Asignable / Karla P."],
+      ["HER-003", "Motobomba MX-40", "Maquinaria", "RiegoMax", "Disponible", "2", "09/2024", "$1,250", "Campo Sur", "18/04/2026", "Operativa / Joel R."],
+      ["HER-004", "Tijeras de poda Pro", "Manual", "GreenCut", "Disponible", "24", "01/2025", "$14", "Bodega central", "Sin novedad", "Asignable / Marta C."],
+      ["HER-005", "Fumigadora de mochila", "Manual", "AgroJet", "Revision", "6", "05/2024", "$89", "Bodega tecnica", "28/03/2026", "Cambio de sello / Diego T."],
+      ["HER-006", "Cultivadora C-200", "Maquinaria", "TerraMaq", "Disponible", "1", "11/2023", "$8,900", "Campo Este", "10/05/2026", "Operativa / Ana V."],
+      ["HER-007", "Machete profesional", "Manual", "SafeFarm", "Disponible", "40", "03/2025", "$12", "Bodega central", "Sin novedad", "Asignable / Pedro L."],
+      ["HER-008", "Desbrozadora D-55", "Maquinaria", "GreenCut", "Disponible", "3", "08/2024", "$620", "Campo Oeste", "17/04/2026", "Operativa / Rosa T."],
+      ["HER-009", "Carretilla reforzada", "Manual", "TerraMaq", "Disponible", "12", "06/2025", "$58", "Bodega central", "Sin novedad", "Asignable / Ivan C."],
+      ["HER-010", "Arado liviano", "Maquinaria", "AgroMec", "En uso", "2", "04/2024", "$1,980", "Campo Norte", "20/05/2026", "Asignada / Luis M."],
+      ["HER-011", "Pulverizador de mano", "Manual", "AgroJet", "Disponible", "15", "02/2025", "$19", "Bodega tecnica", "Sin novedad", "Asignable / Sara G."],
+      ["HER-012", "Generador portatil", "Maquinaria", "PowerFarm", "Disponible", "2", "10/2023", "$840", "Taller", "15/04/2026", "Revisado / Joel R."],
+      ["HER-013", "Azadon reforzado", "Manual", "CampoSur", "Disponible", "28", "01/2025", "$16", "Bodega central", "Sin novedad", "Asignable / Marta C."],
+      ["HER-014", "Sembradora S-100", "Maquinaria", "TerraMaq", "Mantenimiento", "1", "09/2023", "$6,300", "Campo Este", "29/03/2026", "Ajuste de tolva / Ana V."],
+      ["HER-015", "Podadora electrica", "Manual", "GreenCut", "Disponible", "7", "07/2024", "$95", "Bodega tecnica", "02/05/2026", "Operativa / Diego T."],
+      ["HER-016", "Rastra de discos", "Maquinaria", "AgroMec", "Disponible", "1", "12/2022", "$9,100", "Campo Norte", "21/05/2026", "Operativa / Luis M."],
+      ["HER-017", "Escalera de aluminio", "Manual", "SafeFarm", "Disponible", "5", "03/2025", "$72", "Almacen", "Sin novedad", "Asignable / Pedro L."],
+      ["HER-018", "Bomba de riego BR-20", "Maquinaria", "RiegoMax", "Revision", "1", "05/2024", "$1,480", "Campo Sur", "30/03/2026", "Chequeo de presion / Rosa T."],
+      ["HER-019", "Taladro industrial", "Manual", "PowerFarm", "Disponible", "4", "08/2024", "$110", "Taller", "Sin novedad", "Asignable / Joel R."],
+      ["HER-020", "Remolque RT-4", "Maquinaria", "TerraMaq", "En uso", "1", "11/2023", "$4,200", "Campo Oeste", "12/06/2026", "Asignado / Ivan C."],
+      ["HER-021", "Rastrillo metalico", "Manual", "CampoSur", "Disponible", "22", "02/2025", "$9", "Bodega central", "Sin novedad", "Asignable / Sara G."],
+      ["HER-022", "Motosierra forestal", "Maquinaria", "GreenCut", "Disponible", "2", "09/2024", "$520", "Bodega tecnica", "08/05/2026", "Operativa / Diego T."],
+      ["HER-023", "Llave de impacto", "Manual", "PowerFarm", "Disponible", "3", "10/2024", "$135", "Taller", "Sin novedad", "Asignable / Joel R."],
+      ["HER-024", "Subsolador ST-2", "Maquinaria", "AgroMec", "Disponible", "1", "06/2023", "$5,600", "Campo Norte", "19/06/2026", "Operativa / Luis M."],
+      ["HER-025", "Kit de fumigacion", "Manual", "AgroJet", "Revision", "8", "04/2025", "$46", "Bodega tecnica", "05/04/2026", "Cambio de empaques / Rosa T."],
+      ["HER-026", "Mini tractor MT-35", "Maquinaria", "TerraMaq", "Disponible", "1", "01/2024", "$14,700", "Campo Sur", "22/05/2026", "Operativa / Ana V."]
+    ];
+    let activeCategory = "insumos";
+    let currentPage = 1;
+    let filteredRowsByCategory = {
+      insumos,
+      abonos,
+      herramientas
+    };
+
+    function getImageIndex(category, id) {
+      const seed = `${category}-${id}`;
+      let total = 0;
+
+      for (let index = 0; index < seed.length; index += 1) {
+        total += seed.charCodeAt(index);
+      }
+
+      return total % stockImages[category].length;
+    }
+
+    function getStockImage(category, row) {
+      return stockImages[category][getImageIndex(category, row[0])];
+    }
+
+    function renderRows(category, targetId, rows, isTools = false) {
+      const tbody = document.getElementById(targetId);
+      tbody.innerHTML = rows.map((row, index) => {
+        const estadoClass = isTools
+          ? row[4] === "Disponible"
+            ? " text-emerald-600"
+            : row[4] === "Mantenimiento" || row[4] === "Revision"
+            ? " text-amber-600"
+            : " text-slate-700"
+          : row[10] === "Reponer pronto" || row[10] === "Stock bajo"
+          ? " text-amber-600"
+          : " text-slate-700";
+
+        return `
+          <tr class="${rowClass(index)}">
+            <td class="px-3 py-4">
+              <img
+                src="${getStockImage(category, row)}"
+                alt="Imagen de ${row[1]}"
+                class="h-14 w-14 rounded-2xl object-cover shadow-sm"
+                onerror="this.onerror=null;this.src='${fallbackStockImage}'"
+                loading="lazy">
+            </td>
+            ${row.map((cell, cellIndex) => {
+              const base = cellIndex === 1 ? "px-3 py-4 font-semibold" : "px-3 py-4";
+              const extra = isTools
+                ? (cellIndex === 4 ? estadoClass : "")
+                : (cellIndex === 10 ? estadoClass : "");
+              return `<td class="${base}${extra}">${cell}</td>`;
+            }).join("")}
+            <td class="px-3 py-4">
+              <button
+                type="button"
+                class="detail-button rounded-full border border-hoja px-4 py-2 text-xs font-semibold text-hoja hover:bg-hoja hover:text-white"
+                data-category="${category}"
+                data-id="${row[0]}">
+                Ver info
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      tbody.querySelectorAll(".detail-button").forEach((button) => {
+        button.addEventListener("click", () => {
+          openDetailModal(button.dataset.category, button.dataset.id);
+        });
+      });
+    }
+
+    renderRows("insumos", "insumos-body", insumos);
+    renderRows("abonos", "abonos-body", abonos);
+    renderRows("herramientas", "herramientas-body", herramientas, true);
+
+    function loadStoredRows(category) {
+      const raw = localStorage.getItem(storageKeys[category]);
+      if (!raw) return [];
+
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveStoredRows(category, rows) {
+      localStorage.setItem(storageKeys[category], JSON.stringify(rows));
+    }
+
+    function getCategoryRows(category) {
+      if (category === "abonos") return abonos;
+      if (category === "herramientas") return herramientas;
+      return insumos;
+    }
+
+    function setCategoryRows(category, rows) {
+      if (category === "abonos") {
+        abonos.length = 0;
+        abonos.push(...rows);
+        return;
+      }
+
+      if (category === "herramientas") {
+        herramientas.length = 0;
+        herramientas.push(...rows);
+        return;
+      }
+
+      insumos.length = 0;
+      insumos.push(...rows);
+    }
+
+    function initializeStoredProducts() {
+      ["insumos", "abonos", "herramientas"].forEach((category) => {
+        const baseRows = getCategoryRows(category).slice();
+        const extraRows = loadStoredRows(category);
+        setCategoryRows(category, [...baseRows, ...extraRows]);
+      });
+
+      filteredRowsByCategory = {
+        insumos,
+        abonos,
+        herramientas
+      };
+    }
+
+    function renderCategory(category, rows) {
+      if (category === "abonos") {
+        renderRows("abonos", "abonos-body", rows);
+        return;
+      }
+
+      if (category === "herramientas") {
+        renderRows("herramientas", "herramientas-body", rows, true);
+        return;
+      }
+
+      renderRows("insumos", "insumos-body", rows);
+    }
+
+    function movePaginationToActivePanel(category) {
+      const panel = document.getElementById(category);
+      const host = panel.querySelector(".pagination-host");
+      if (host) {
+        host.appendChild(paginationContainer);
+      }
+    }
+
+    function updatePagination(category) {
+      movePaginationToActivePanel(category);
+
+      const rows = filteredRowsByCategory[category];
+      const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+
+      const start = (currentPage - 1) * pageSize;
+      const end = start + pageSize;
+      const visibleRows = rows.slice(start, end);
+
+      renderCategory(category, visibleRows);
+
+      const from = rows.length === 0 ? 0 : start + 1;
+      const to = Math.min(end, rows.length);
+      paginationSummary.textContent = `Mostrando ${from}-${to} de ${rows.length} productos. Paginas de ${pageSize} registros.`;
+
+      paginationControls.innerHTML = "";
+
+      const previousButton = document.createElement("button");
+      previousButton.type = "button";
+      previousButton.textContent = "Anterior";
+      previousButton.className = currentPage === 1
+        ? "rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-400"
+        : "rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700";
+      previousButton.disabled = currentPage === 1;
+      previousButton.addEventListener("click", () => {
+        if (currentPage > 1) {
+          currentPage -= 1;
+          updatePagination(category);
+        }
+      });
+      paginationControls.appendChild(previousButton);
+
+      for (let page = 1; page <= totalPages; page += 1) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = page;
+        button.className = page === currentPage
+          ? "rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white"
+          : "rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700";
+
+        button.addEventListener("click", () => {
+          currentPage = page;
+          updatePagination(category);
+        });
+
+        paginationControls.appendChild(button);
+      }
+
+      const nextButton = document.createElement("button");
+      nextButton.type = "button";
+      nextButton.textContent = "Siguiente";
+      nextButton.className = currentPage === totalPages
+        ? "rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-400"
+        : "rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700";
+      nextButton.disabled = currentPage === totalPages;
+      nextButton.addEventListener("click", () => {
+        if (currentPage < totalPages) {
+          currentPage += 1;
+          updatePagination(category);
+        }
+      });
+      paginationControls.appendChild(nextButton);
+    }
+
+    function applyFilters(resetPage = true) {
+      const searchValue = filterSearch.value.trim().toLowerCase();
+      const statusValue = filterStatus.value.trim().toLowerCase();
+      const sourceRows = getCategoryRows(activeCategory);
+
+      const filteredRows = sourceRows.filter((row) => {
+        const matchesSearch = !searchValue || row.some((cell) => String(cell).toLowerCase().includes(searchValue));
+        const matchesStatus = !statusValue || row.some((cell) => String(cell).toLowerCase().includes(statusValue));
+        return matchesSearch && matchesStatus;
+      });
+
+      filteredRowsByCategory[activeCategory] = filteredRows;
+
+      if (resetPage) {
+        currentPage = 1;
+      }
+
+      updatePagination(activeCategory);
+    }
+
+    function findRowById(category, id) {
+      return getCategoryRows(category).find((row) => row[0] === id);
+    }
+
+    function buildProductInfo(category, row) {
+      if (category === "abonos") {
+        return {
+          usage: `${row[1]} se utiliza como apoyo nutricional para mejorar el desarrollo del cultivo, reforzar etapas productivas y mantener un manejo más estable del suelo y la planta.`,
+          applications: [
+            `Aplicación en ${row[8].toLowerCase()}.`,
+            `Programas de fertilización según necesidad del lote y análisis técnico.`,
+            `Apoyo en suelos con requerimientos específicos de nutrición o recuperación.`
+          ],
+          recommendation: `Se recomienda revisar dosis, humedad del suelo y compatibilidad del producto antes de aplicarlo. Certificación registrada: ${row[9]}.`
+        };
+      }
+
+      if (category === "herramientas") {
+        return {
+          usage: `${row[1]} se utiliza como equipo de trabajo para tareas operativas en campo, mantenimiento del cultivo o soporte logístico dentro de la finca.`,
+          applications: [
+            `Uso en la ubicación o frente de trabajo: ${row[8]}.`,
+            `Apoyo en labores de preparación, mantenimiento o intervención técnica.`,
+            `Asignación por responsable según disponibilidad y estado del equipo.`
+          ],
+          recommendation: `Antes de utilizarlo, conviene validar estado actual, mantenimiento programado y responsable asignado. Estado registrado: ${row[4]}.`
+        };
+      }
+
+      return {
+        usage: `${row[1]} se utiliza dentro del manejo agrícola para apoyar la producción, protección o establecimiento del cultivo según la necesidad operativa.`,
+        applications: [
+          `Uso recomendado en ${row[8].toLowerCase()}.`,
+          `Aplicación en cultivos o lotes que requieran soporte de tipo ${row[2].toLowerCase()}.`,
+          `Integración con planes de compra, distribución y control de inventario.`
+        ],
+        recommendation: `Conviene revisar fecha clave, almacenamiento y disponibilidad antes de su uso. Proveedor o marca asociada: ${row[3]}.`
+      };
+    }
+
+    function getProductInfoFromApi(category, id) {
+      return new Promise((resolve, reject) => {
+        const row = findRowById(category, id);
+
+        window.setTimeout(() => {
+          if (!row) {
+            reject(new Error("Producto no encontrado"));
+            return;
+          }
+
+          resolve({
+            id: row[0],
+            name: row[1],
+            category: categoryLabels[category],
+            image: getStockImage(category, row),
+            ...buildProductInfo(category, row)
+          });
+        }, 450);
+      });
+    }
+
+    async function openDetailModal(category, id) {
+      detailModal.classList.remove("hidden");
+      detailLoading.classList.remove("hidden");
+      detailContent.classList.add("hidden");
+      detailTitle.textContent = "Información del producto";
+      detailSubtitle.textContent = "Consultando uso y aplicación...";
+
+      try {
+        const info = await getProductInfoFromApi(category, id);
+        detailTitle.textContent = info.name;
+        detailSubtitle.textContent = "Consulta de uso, aplicación y recomendación.";
+        detailImage.src = info.image;
+        detailImage.alt = `Imagen de ${info.name}`;
+        detailImage.onerror = () => {
+          detailImage.onerror = null;
+          detailImage.src = fallbackStockImage;
+        };
+        detailId.textContent = info.id;
+        detailCategory.textContent = info.category;
+        detailUsage.textContent = info.usage;
+        detailRecommendation.textContent = info.recommendation;
+        detailApplications.innerHTML = info.applications
+          .map((item) => `<li class="rounded-xl bg-crema px-4 py-3">${item}</li>`)
+          .join("");
+
+        detailLoading.classList.add("hidden");
+        detailContent.classList.remove("hidden");
+      } catch (error) {
+        detailTitle.textContent = "No se pudo cargar el detalle";
+        detailSubtitle.textContent = "La información del producto no estuvo disponible.";
+        detailLoading.textContent = "No se encontró información para este producto.";
+      }
+    }
+
+    function closeDetailModal() {
+      detailModal.classList.add("hidden");
+      detailLoading.textContent = "Consultando información...";
+      detailLoading.classList.remove("hidden");
+      detailContent.classList.add("hidden");
+    }
+
+    function openAddModal() {
+      productCategory.value = activeCategory;
+      addModal.classList.remove("hidden");
+    }
+
+    function closeAddModal() {
+      addModal.classList.add("hidden");
+      addProductForm.reset();
+      productCategory.value = activeCategory;
+    }
+
+    function buildRowFromForm(category) {
+      const id = productId.value.trim();
+      const name = productName.value.trim();
+      const subcategory = productSubcategory.value.trim();
+      const source = productSource.value.trim();
+      const quantity = productQuantity.value.trim();
+      const unit = productUnit.value.trim();
+      const date = productDate.value.trim();
+      const price = productPrice.value.trim();
+      const usage = productUsage.value.trim();
+      const notes = productNotes.value.trim();
+
+      if (category === "herramientas") {
+        return [
+          id,
+          name,
+          subcategory,
+          source || "Sin marca",
+          notes || "Disponible",
+          quantity,
+          date || "Pendiente",
+          price || "$0",
+          usage || "Sin ubicacion",
+          unit || "Pendiente",
+          "Registro manual"
+        ];
+      }
+
+      return [
+        id,
+        name,
+        subcategory,
+        source,
+        quantity,
+        unit,
+        date || "Pendiente",
+        price || "$0",
+        usage || "General",
+        notes || "Sin detalle",
+        notes || "Sin observaciones"
+      ];
+    }
+
+    function validateForm() {
+      const requiredValues = [
+        productId.value.trim(),
+        productName.value.trim(),
+        productSubcategory.value.trim(),
+        productSource.value.trim(),
+        productQuantity.value.trim(),
+        productUnit.value.trim()
+      ];
+
+      return requiredValues.every(Boolean);
+    }
+
+    initializeStoredProducts();
+    updatePagination(activeCategory);
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = button.dataset.target;
+        activeCategory = target;
+        currentPage = 1;
+
+        buttons.forEach((item) => {
+          item.classList.remove("bg-hoja", "text-white");
+          item.classList.add("border", "border-hoja", "text-hoja");
+        });
+
+        button.classList.add("bg-hoja", "text-white");
+        button.classList.remove("border", "border-hoja", "text-hoja");
+
+        panels.forEach((panel) => {
+          panel.classList.toggle("hidden", panel.id !== target);
+        });
+
+        applyFilters();
+      });
+    });
+
+    toggleFilterButton.addEventListener("click", () => {
+      filterPanel.classList.toggle("hidden");
+    });
+
+    applyFilterButton.addEventListener("click", applyFilters);
+
+    clearFilterButton.addEventListener("click", () => {
+      filterSearch.value = "";
+      filterStatus.value = "";
+      filteredRowsByCategory[activeCategory] = getCategoryRows(activeCategory);
+      currentPage = 1;
+      updatePagination(activeCategory);
+    });
+
+    openAddModalButton.addEventListener("click", openAddModal);
+    closeAddModalButton.addEventListener("click", closeAddModal);
+    cancelAddModalButton.addEventListener("click", closeAddModal);
+    addModal.addEventListener("click", (event) => {
+      if (event.target === addModal) {
+        closeAddModal();
+      }
+    });
+
+    closeDetailModalButton.addEventListener("click", closeDetailModal);
+    detailModal.addEventListener("click", (event) => {
+      if (event.target === detailModal) {
+        closeDetailModal();
+      }
+    });
+
+    addProductForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      if (!validateForm()) {
+        alert("Completa al menos los campos principales del producto.");
+        return;
+      }
+
+      const category = productCategory.value;
+      const newRow = buildRowFromForm(category);
+      const storedRows = loadStoredRows(category);
+      storedRows.push(newRow);
+      saveStoredRows(category, storedRows);
+
+      const updatedRows = [...getCategoryRows(category), newRow];
+      setCategoryRows(category, updatedRows);
+      filteredRowsByCategory[category] = updatedRows;
+      activeCategory = category;
+      currentPage = Math.max(1, Math.ceil(updatedRows.length / pageSize));
+
+      buttons.forEach((item) => {
+        const isActive = item.dataset.target === category;
+        item.classList.toggle("bg-hoja", isActive);
+        item.classList.toggle("text-white", isActive);
+        item.classList.toggle("border", !isActive);
+        item.classList.toggle("border-hoja", !isActive);
+        item.classList.toggle("text-hoja", !isActive);
+      });
+
+      panels.forEach((panel) => {
+        panel.classList.toggle("hidden", panel.id !== category);
+      });
+
+      filterSearch.value = "";
+      filterStatus.value = "";
+      filteredRowsByCategory[category] = getCategoryRows(category);
+      updatePagination(category);
+      closeAddModal();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgroControl | Contacto</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%233E6B48'/><path d='M20 39c0-10 7-18 18-20-2 3-3 6-3 10 0 6 3 11 9 15-3 1-5 1-8 1-10 0-16-6-16-6Z' fill='%23D9A441'/><path d='M23 42c4-7 11-12 21-14' stroke='%23F5F0E6' stroke-width='4' stroke-linecap='round'/></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            tierra: "#6B4F3A",
+            hoja: "#3E6B48",
+            musgo: "#6D8B4E",
+            crema: "#F5F0E6",
+            sol: "#D9A441"
+          },
+          boxShadow: {
+            suave: "0 20px 45px rgba(62, 107, 72, 0.16)"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-crema text-slate-800">
+  <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
+      </a>
+      <nav class="hidden gap-6 text-sm font-semibold md:flex">
+        <a href="index.html" class="hover:text-hoja">Inicio</a>
+        <a href="nosotros.html" class="hover:text-hoja">Nosotros</a>
+        <a href="inventario.html" class="hover:text-hoja">Inventario</a>
+        <a href="contacto.html" class="text-hoja">Contacto</a>
+      </nav>
+      <a href="inventario.html" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Ver sistema</a>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-6 py-16">
+    <section class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+      <div>
+        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Contacto</p>
+        <h1 class="mt-4 text-4xl font-black text-slate-900 md:text-5xl">Conecta con nuestra empresa y recibe soporte comercial o técnico.</h1>
+        <p class="mt-6 text-lg leading-8 text-slate-700">Atendemos consultas sobre abastecimiento agrícola, uso del sistema de inventario, soporte técnico y coordinación con proveedores autorizados.</p>
+
+        <div class="mt-8 space-y-4">
+          <div class="rounded-[1.5rem] bg-white p-5 shadow-suave">
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja">Dirección</p>
+            <p class="mt-2 text-slate-700">Av. Productiva 245, Zona Agroindustrial</p>
+          </div>
+          <div class="rounded-[1.5rem] bg-white p-5 shadow-suave">
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja">Teléfono</p>
+            <p class="mt-2 text-slate-700">+593 99 999 9999</p>
+          </div>
+          <div class="rounded-[1.5rem] bg-white p-5 shadow-suave">
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja">Correo electrónico</p>
+            <p class="mt-2 text-slate-700">contacto@agrocontrol.com</p>
+          </div>
+          <div class="rounded-[1.5rem] bg-white p-5 shadow-suave">
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja">Soporte técnico</p>
+            <p class="mt-2 text-slate-700">soporte@agrocontrol.com | Lunes a viernes de 08:00 a 18:00</p>
+          </div>
+          <div class="rounded-[1.5rem] bg-white p-5 shadow-suave">
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja">Proveedores autorizados</p>
+            <p class="mt-2 text-slate-700">Red comercial con atención para insumos, abonos y maquinaria agrícola.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <form class="rounded-[2rem] bg-white p-8 shadow-suave">
+          <h2 class="text-2xl font-black text-slate-900">Formulario de contacto</h2>
+          <div class="mt-6 grid gap-5 md:grid-cols-2">
+            <label class="block">
+              <span class="mb-2 block text-sm font-semibold text-slate-700">Nombre</span>
+              <input type="text" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 outline-none ring-0 focus:border-hoja" placeholder="Tu nombre">
+            </label>
+            <label class="block">
+              <span class="mb-2 block text-sm font-semibold text-slate-700">Correo</span>
+              <input type="email" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 outline-none ring-0 focus:border-hoja" placeholder="correo@empresa.com">
+            </label>
+            <label class="block md:col-span-2">
+              <span class="mb-2 block text-sm font-semibold text-slate-700">Tipo de consulta</span>
+              <select class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 outline-none focus:border-hoja">
+                <option>Insumos</option>
+                <option>Abonos</option>
+                <option>Herramientas y maquinaria</option>
+                <option>Soporte técnico</option>
+              </select>
+            </label>
+            <label class="block md:col-span-2">
+              <span class="mb-2 block text-sm font-semibold text-slate-700">Mensaje</span>
+              <textarea rows="5" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 outline-none focus:border-hoja" placeholder="Cuéntanos cómo podemos ayudarte"></textarea>
+            </label>
+          </div>
+          <button type="submit" class="mt-6 rounded-full bg-hoja px-6 py-3 font-semibold text-white shadow-suave">Enviar consulta</button>
+        </form>
+
+        <div class="rounded-[2rem] bg-white p-5 shadow-suave">
+          <h2 class="text-2xl font-black text-slate-900">Ubicación</h2>
+          <div class="mt-5 overflow-hidden rounded-[1.5rem] border border-slate-200">
+            <iframe
+              title="Mapa de ubicación"
+              src="https://www.google.com/maps?q=Guayaquil&output=embed"
+              class="h-80 w-full"
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-slate-950 text-white">
+    <div class="mx-auto flex max-w-7xl flex-col items-center gap-5 px-6 py-8 text-center">
+      <p class="text-sm text-white/70">AgroControl. Atención comercial y técnica para tu operación agrícola.</p>
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <a href="#" aria-label="Facebook" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4H16V5.5c-.2 0-.9-.1-1.8-.1-1.8 0-3.1 1.1-3.1 3.2v1.8H9v2.8h2.3v7h2.2Z"/></svg>
+        </a>
+        <a href="#" aria-label="Instagram" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M7.8 3h8.4A4.8 4.8 0 0 1 21 7.8v8.4a4.8 4.8 0 0 1-4.8 4.8H7.8A4.8 4.8 0 0 1 3 16.2V7.8A4.8 4.8 0 0 1 7.8 3Zm0 1.7A3.1 3.1 0 0 0 4.7 7.8v8.4a3.1 3.1 0 0 0 3.1 3.1h8.4a3.1 3.1 0 0 0 3.1-3.1V7.8a3.1 3.1 0 0 0-3.1-3.1H7.8Zm8.9 1.3a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.7A3.3 3.3 0 1 0 12 15.3 3.3 3.3 0 0 0 12 8.7Z"/></svg>
+        </a>
+        <a href="#" aria-label="LinkedIn" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M6.5 8.5A1.5 1.5 0 1 1 6.5 5a1.5 1.5 0 0 1 0 3.5ZM5.3 9.8h2.4V19H5.3V9.8Zm4 0h2.3V11h.1c.3-.6 1.1-1.4 2.4-1.4 2.6 0 3 1.7 3 4V19h-2.4v-4.8c0-1.1 0-2.5-1.5-2.5s-1.8 1.2-1.8 2.4V19H9.3V9.8Z"/></svg>
+        </a>
+        <a href="#" aria-label="WhatsApp" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.5L3 20.8l1.6-4.7a8.5 8.5 0 1 1 15.9-4.3Zm-8.5-6.8a6.8 6.8 0 0 0-5.8 10.4l.4.7-.9 2.5 2.6-.8.6.4A6.8 6.8 0 1 0 12 5Zm3.9 8.7c-.2-.1-1.2-.6-1.4-.7s-.3-.1-.4.1-.5.7-.6.8-.2.1-.4 0a5.5 5.5 0 0 1-1.6-1 6 6 0 0 1-1.1-1.4c-.1-.2 0-.3.1-.4l.3-.4.2-.3v-.3c0-.1-.4-1-.6-1.5s-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3s-.8.8-.8 1.9.8 2.2.9 2.4a10.2 10.2 0 0 0 3.9 3.5c.6.2 1 .4 1.3.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5.2-1 .2-1.1 0-.1-.1-.2-.3-.3Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
