@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgroControl | Iniciar sesión</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%233E6B48'/><path d='M20 39c0-10 7-18 18-20-2 3-3 6-3 10 0 6 3 11 9 15-3 1-5 1-8 1-10 0-16-6-16-6Z' fill='%23D9A441'/><path d='M23 42c4-7 11-12 21-14' stroke='%23F5F0E6' stroke-width='4' stroke-linecap='round'/></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            tierra: "#6B4F3A",
+            hoja: "#3E6B48",
+            musgo: "#6D8B4E",
+            crema: "#F5F0E6",
+            sol: "#D9A441"
+          },
+          boxShadow: {
+            suave: "0 20px 45px rgba(62, 107, 72, 0.16)"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="min-h-screen bg-crema text-slate-800">
+  <main class="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-12">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(217,164,65,0.22),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(62,107,72,0.18),_transparent_26%)]"></div>
+    <div class="relative grid w-full max-w-6xl gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+      <section class="rounded-[2.5rem] bg-slate-950 px-8 py-12 text-white shadow-suave">
+        <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-12 w-auto">
+        <p class="mt-8 text-sm font-bold uppercase tracking-[0.28em] text-sol">Acceso protegido</p>
+        <h1 class="mt-4 text-4xl font-black leading-tight md:text-5xl">Ingresa al sistema de inventario agrícola.</h1>
+        <p class="mt-5 max-w-2xl text-lg leading-8 text-white/75">Esta primera capa de acceso protege las áreas de inventario y movimientos. Más adelante podemos convertirla en un sistema completo con usuarios, roles y base de datos.</p>
+        <div class="mt-8 rounded-[1.75rem] bg-white/10 p-5">
+          <p class="text-sm font-bold uppercase tracking-[0.2em] text-white/70">Credenciales de prueba</p>
+          <div class="mt-4 space-y-2 text-sm">
+            <p><span class="font-semibold text-white">Usuario:</span> admin</p>
+            <p><span class="font-semibold text-white">Contraseña:</span> Agro2026!</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="rounded-[2.5rem] bg-white p-8 shadow-suave md:p-10">
+        <p class="text-sm font-bold uppercase tracking-[0.24em] text-hoja">Iniciar sesión</p>
+        <h2 class="mt-3 text-3xl font-black text-slate-900">Control de acceso simple</h2>
+        <p class="mt-3 text-sm leading-7 text-slate-600">Ingresa con el usuario de administrador para acceder al inventario y a los reportes de movimientos.</p>
+
+        <form id="login-form" class="mt-8 space-y-5">
+          <label class="block">
+            <span class="mb-1 block text-sm font-semibold text-slate-700">Usuario</span>
+            <input id="login-user" type="text" autocomplete="username" class="w-full rounded-xl border border-slate-200 bg-crema px-4 py-3 text-sm outline-none focus:border-hoja" placeholder="Ingresa tu usuario">
+          </label>
+          <label class="block">
+            <span class="mb-1 block text-sm font-semibold text-slate-700">Contraseña</span>
+            <input id="login-password" type="password" autocomplete="current-password" class="w-full rounded-xl border border-slate-200 bg-crema px-4 py-3 text-sm outline-none focus:border-hoja" placeholder="Ingresa tu contraseña">
+          </label>
+
+          <div id="login-message" class="hidden rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700"></div>
+
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button type="submit" class="rounded-full bg-hoja px-6 py-3 text-sm font-semibold text-white shadow-suave">Ingresar al sistema</button>
+            <a href="index.html" class="rounded-full border border-hoja px-6 py-3 text-sm font-semibold text-hoja">Volver al inicio</a>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const authStorageKey = "agrocontrol-auth-v1";
+    const validUser = "admin";
+    const validPassword = "Agro2026!";
+    const loginForm = document.getElementById("login-form");
+    const loginUser = document.getElementById("login-user");
+    const loginPassword = document.getElementById("login-password");
+    const loginMessage = document.getElementById("login-message");
+    const redirectTarget = new URLSearchParams(window.location.search).get("redirect") || "inventario.html";
+
+    function showMessage(message) {
+      loginMessage.textContent = message;
+      loginMessage.classList.remove("hidden");
+    }
+
+    function saveSession() {
+      localStorage.setItem(authStorageKey, JSON.stringify({
+        user: validUser,
+        loginAt: new Date().toISOString()
+      }));
+    }
+
+    function isAuthenticated() {
+      try {
+        return Boolean(JSON.parse(localStorage.getItem(authStorageKey) || "null"));
+      } catch {
+        return false;
+      }
+    }
+
+    if (isAuthenticated()) {
+      window.location.replace(redirectTarget);
+    }
+
+    loginForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      loginMessage.classList.add("hidden");
+
+      const user = loginUser.value.trim();
+      const password = loginPassword.value;
+
+      if (user !== validUser || password !== validPassword) {
+        showMessage("Usuario o contraseña incorrectos. Revisa las credenciales e inténtalo de nuevo.");
+        return;
+      }
+
+      saveSession();
+      window.location.replace(redirectTarget);
+    });
+  </script>
+</body>
+</html>

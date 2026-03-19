@@ -51,6 +51,25 @@
 
     <section class="mt-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
       <div class="space-y-6">
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div class="rounded-[1.75rem] bg-white p-5 shadow-suave">
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Cantidad entrada</p>
+            <p id="report-entry-qty" class="mt-3 text-3xl font-black text-slate-900">0</p>
+          </div>
+          <div class="rounded-[1.75rem] bg-white p-5 shadow-suave">
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Cantidad salida</p>
+            <p id="report-exit-qty" class="mt-3 text-3xl font-black text-slate-900">0</p>
+          </div>
+          <div class="rounded-[1.75rem] bg-white p-5 shadow-suave">
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Valor entrada</p>
+            <p id="report-entry-value" class="mt-3 text-3xl font-black text-emerald-700">$0.00</p>
+          </div>
+          <div class="rounded-[1.75rem] bg-white p-5 shadow-suave">
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Valor salida</p>
+            <p id="report-exit-value" class="mt-3 text-3xl font-black text-amber-700">$0.00</p>
+          </div>
+        </div>
+
         <div class="rounded-[2rem] bg-white p-6 shadow-suave">
           <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
@@ -64,9 +83,25 @@
           </div>
 
           <form id="movement-form" class="mt-6 grid gap-4 md:grid-cols-2">
-            <label class="block md:col-span-2">
+            <label class="block">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Categoría</span>
+              <select id="movement-category" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
+                <option value="insumos">Insumos</option>
+                <option value="abonos">Abonos</option>
+                <option value="herramientas">Herramientas y Maquinaria</option>
+              </select>
+            </label>
+            <label class="block">
               <span class="mb-1 block text-sm font-semibold text-slate-700">Producto</span>
               <select id="movement-product" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja"></select>
+            </label>
+            <label class="block">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Stock actual</span>
+              <input id="movement-stock" type="text" readonly class="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm text-slate-600 outline-none">
+            </label>
+            <label class="block">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Precio</span>
+              <input id="movement-price" type="text" readonly class="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm text-slate-600 outline-none">
             </label>
             <label class="block">
               <span class="mb-1 block text-sm font-semibold text-slate-700">Tipo</span>
@@ -87,6 +122,10 @@
               <span class="mb-1 block text-sm font-semibold text-slate-700">Responsable</span>
               <input id="movement-responsible" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Quién recibió o quién se lo llevó">
             </label>
+            <label class="block">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Proveedor</span>
+              <input id="movement-supplier" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Proveedor principal o fuente de compra">
+            </label>
             <label class="block md:col-span-2">
               <span class="mb-1 block text-sm font-semibold text-slate-700">Detalle del movimiento</span>
               <input id="movement-note" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Compra, entrega a campo, ajuste, mantenimiento...">
@@ -98,12 +137,43 @@
           </form>
         </div>
 
-        <div class="rounded-[2rem] bg-white p-6 shadow-suave">
-          <p class="text-sm font-bold uppercase tracking-[0.24em] text-hoja">Filtros</p>
-          <div class="mt-4 grid gap-4 md:grid-cols-3">
+      </div>
+
+      <div class="space-y-6">
+        <div class="rounded-[2rem] border border-white/50 bg-[linear-gradient(135deg,_rgba(245,240,230,0.98),_rgba(231,225,211,0.85))] p-6 shadow-suave">
+          <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <p class="text-sm font-bold uppercase tracking-[0.24em] text-hoja">Centro de reporte</p>
+              <h2 class="mt-2 text-2xl font-black text-slate-900">Tabla de movimientos</h2>
+              <p class="mt-2 max-w-2xl text-sm leading-7 text-slate-600">Consulta, filtra y prepara tu reporte operativo desde una sola barra de control antes de imprimir o revisar resultados.</p>
+            </div>
+            <div class="flex flex-col gap-3 md:items-end">
+              <p id="table-summary" class="rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm">Sin movimientos registrados.</p>
+              <div class="flex flex-wrap gap-3">
+                <button id="view-report" type="button" class="inline-flex items-center gap-2 rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:scale-[1.01]">
+                  <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 18.5v-13Zm2.5-.8a.8.8 0 0 0-.8.8v13c0 .4.4.8.8.8h11c.4 0 .8-.4.8-.8v-13a.8.8 0 0 0-.8-.8h-11ZM8 8h8v1.7H8V8Zm0 3.7h8v1.7H8v-1.7Zm0 3.7h5v1.7H8v-1.7Z"/></svg>
+                  Ver reporte
+                </button>
+                <button id="print-report" type="button" class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-hoja hover:text-hoja">
+                  <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M7 3h10v4H7V3Zm10 6H7a4 4 0 0 0-4 4v3h4v5h10v-5h4v-3a4 4 0 0 0-4-4Zm-2 10H9v-5h6v5Zm2-8.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></svg>
+                  Imprimir
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="mt-5 grid gap-4 rounded-[1.5rem] bg-white/75 p-4 ring-1 ring-white/70 md:grid-cols-5">
             <label class="block md:col-span-2">
               <span class="mb-1 block text-sm font-semibold text-slate-700">Filtrar por producto</span>
               <input id="filter-product" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Buscar por nombre o ID">
+            </label>
+            <label class="block">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Categoría</span>
+              <select id="filter-category" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
+                <option value="">Todas</option>
+                <option value="insumos">Insumos</option>
+                <option value="abonos">Abonos</option>
+                <option value="herramientas">Herramientas y Maquinaria</option>
+              </select>
             </label>
             <label class="block">
               <span class="mb-1 block text-sm font-semibold text-slate-700">Tipo</span>
@@ -113,18 +183,14 @@
                 <option value="Salida">Salida</option>
               </select>
             </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="space-y-6">
-        <div class="rounded-[2rem] bg-white p-6 shadow-suave">
-          <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p class="text-sm font-bold uppercase tracking-[0.24em] text-hoja">Detalle</p>
-              <h2 class="mt-2 text-2xl font-black text-slate-900">Tabla de movimientos</h2>
-            </div>
-            <p id="table-summary" class="text-sm text-slate-600">Sin movimientos registrados.</p>
+            <label class="block">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Desde</span>
+              <input id="filter-date-from" type="date" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
+            </label>
+            <label class="block">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Hasta</span>
+              <input id="filter-date-to" type="date" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
+            </label>
           </div>
           <div class="mt-6 overflow-x-auto">
             <table class="min-w-full text-left text-sm">
@@ -133,6 +199,9 @@
                   <th class="px-3 py-3">Fecha</th>
                   <th class="px-3 py-3">Producto</th>
                   <th class="px-3 py-3">Categoría</th>
+                  <th class="px-3 py-3">Precio</th>
+                  <th class="px-3 py-3">Valor total</th>
+                  <th class="px-3 py-3">Stock actual</th>
                   <th class="px-3 py-3">Entrada</th>
                   <th class="px-3 py-3">Salida</th>
                   <th class="px-3 py-3">Responsable</th>
@@ -141,6 +210,38 @@
               </thead>
               <tbody id="movement-table-body"></tbody>
             </table>
+          </div>
+          <div class="mt-5 flex flex-col items-center gap-3 text-center">
+            <p id="movement-pagination-summary" class="text-sm font-semibold text-slate-500">Mostrando 0-0 de 0 movimientos</p>
+            <div id="movement-pagination" class="flex flex-wrap items-center justify-center gap-2"></div>
+          </div>
+          <div class="mt-8 rounded-[1.5rem] bg-white/75 p-4 ring-1 ring-white/70">
+            <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p class="text-sm font-bold uppercase tracking-[0.24em] text-hoja">Resumen de inventario</p>
+                <p class="mt-1 text-sm text-slate-600">Este bloque también se incluirá al imprimir el reporte.</p>
+              </div>
+              <p id="inventory-report-summary" class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm">0 productos en reporte</p>
+            </div>
+            <div class="mt-4 overflow-x-auto">
+              <table class="min-w-full text-left text-sm">
+                <thead class="border-b border-slate-200 text-slate-500">
+                  <tr>
+                    <th class="px-3 py-3">Producto</th>
+                    <th class="px-3 py-3">Categoría</th>
+                    <th class="px-3 py-3">Precio</th>
+                    <th class="px-3 py-3">Stock actual</th>
+                    <th class="px-3 py-3">Entradas</th>
+                    <th class="px-3 py-3">Salidas</th>
+                  </tr>
+                </thead>
+                <tbody id="inventory-report-body"></tbody>
+              </table>
+            </div>
+            <div class="mt-5 flex flex-col items-center gap-3 text-center">
+              <p id="inventory-pagination-summary" class="text-sm font-semibold text-slate-500">Mostrando 0-0 de 0 productos</p>
+              <div id="inventory-pagination" class="flex flex-wrap items-center justify-center gap-2"></div>
+            </div>
           </div>
         </div>
 
@@ -178,22 +279,45 @@
     };
 
     const movementForm = document.getElementById("movement-form");
+    const movementCategory = document.getElementById("movement-category");
     const movementProduct = document.getElementById("movement-product");
+    const movementStock = document.getElementById("movement-stock");
+    const movementPrice = document.getElementById("movement-price");
     const movementType = document.getElementById("movement-type");
     const movementAmount = document.getElementById("movement-amount");
     const movementDate = document.getElementById("movement-date");
     const movementResponsible = document.getElementById("movement-responsible");
+    const movementSupplier = document.getElementById("movement-supplier");
     const movementNote = document.getElementById("movement-note");
     const filterProduct = document.getElementById("filter-product");
+    const filterCategory = document.getElementById("filter-category");
     const filterType = document.getElementById("filter-type");
+    const filterDateFrom = document.getElementById("filter-date-from");
+    const filterDateTo = document.getElementById("filter-date-to");
     const movementTableBody = document.getElementById("movement-table-body");
     const tableSummary = document.getElementById("table-summary");
+    const movementPaginationSummary = document.getElementById("movement-pagination-summary");
+    const movementPagination = document.getElementById("movement-pagination");
+    const inventoryReportSummary = document.getElementById("inventory-report-summary");
+    const inventoryReportBody = document.getElementById("inventory-report-body");
+    const inventoryPaginationSummary = document.getElementById("inventory-pagination-summary");
+    const inventoryPagination = document.getElementById("inventory-pagination");
     const summaryEntry = document.getElementById("summary-entry");
     const summaryExit = document.getElementById("summary-exit");
+    const reportEntryQty = document.getElementById("report-entry-qty");
+    const reportExitQty = document.getElementById("report-exit-qty");
+    const reportEntryValue = document.getElementById("report-entry-value");
+    const reportExitValue = document.getElementById("report-exit-value");
     const clearFormButton = document.getElementById("clear-form");
+    const viewReportButton = document.getElementById("view-report");
+    const printReportButton = document.getElementById("print-report");
 
     let inventoryState = null;
     let movementHistory = [];
+    let movementPage = 1;
+    const movementItemsPerPage = 6;
+    let inventoryPage = 1;
+    const inventoryItemsPerPage = 10;
 
     function loadInventoryState() {
       const raw = localStorage.getItem(stateStorageKey);
@@ -246,7 +370,8 @@
     }
 
     function getSelectedProduct() {
-      const [category, id] = movementProduct.value.split("|");
+      const category = movementCategory.value;
+      const id = movementProduct.value;
       const rows = inventoryState?.[category] || [];
       const row = rows.find((item) => item[0] === id);
       if (!row) return null;
@@ -259,49 +384,307 @@
       };
     }
 
+    function renderGroupedProductOptions() {
+      const selectedCategory = movementCategory.value || "insumos";
+      const previousValue = movementProduct.value;
+      const products = getAllProducts().filter((product) => product.category === selectedCategory);
+
+      if (products.length === 0) {
+        movementProduct.innerHTML = `<option value="">No hay productos en esta categoría</option>`;
+        movementProduct.value = "";
+        return;
+      }
+
+      movementProduct.innerHTML = products.map((product) =>
+        `<option value="${product.id}">${product.name} (${product.id}) · Stock: ${Number(product.row[product.quantityIndex]) || 0}</option>`
+      ).join("");
+
+      if (previousValue && movementProduct.querySelector(`option[value="${previousValue}"]`)) {
+        movementProduct.value = previousValue;
+      }
+    }
+
+    function refreshSelectedStock() {
+      const selected = getSelectedProduct();
+      if (!selected) {
+        movementStock.value = "Sin stock disponible";
+        movementPrice.value = "Sin precio";
+        return;
+      }
+
+      const currentQty = Number(selected.row[selected.quantityIndex]) || 0;
+      movementStock.value = `${currentQty} unidades disponibles`;
+      movementPrice.value = selected.row[7] || "Sin precio";
+    }
+
+    function renderMovementPagination(totalItems) {
+      const totalPages = Math.max(1, Math.ceil(totalItems / movementItemsPerPage));
+      movementPage = Math.min(Math.max(movementPage, 1), totalPages);
+
+      if (totalItems === 0) {
+        movementPaginationSummary.textContent = "Mostrando 0-0 de 0 movimientos";
+        movementPagination.innerHTML = "";
+        return { totalPages, paginatedItems: [] };
+      }
+
+      const startIndex = (movementPage - 1) * movementItemsPerPage;
+      const endIndex = Math.min(startIndex + movementItemsPerPage, totalItems);
+      movementPaginationSummary.textContent = `Mostrando ${startIndex + 1}-${endIndex} de ${totalItems} movimientos`;
+
+      const createButton = (label, page, disabled = false, active = false) => `
+        <button
+          type="button"
+          data-page="${page}"
+          ${disabled ? "disabled" : ""}
+          class="rounded-full px-3 py-2 text-sm font-semibold transition ${
+            active
+              ? "bg-hoja text-white shadow-sm"
+              : disabled
+                ? "cursor-not-allowed border border-slate-200 bg-slate-100 text-slate-400"
+                : "border border-slate-300 bg-white text-slate-700 hover:border-hoja hover:text-hoja"
+          }"
+        >${label}</button>
+      `;
+
+      const pageButtons = Array.from({ length: totalPages }, (_, index) => {
+        const page = index + 1;
+        return createButton(String(page), page, false, page === movementPage);
+      }).join("");
+
+      movementPagination.innerHTML = `
+        ${createButton("Anterior", movementPage - 1, movementPage === 1)}
+        ${pageButtons}
+        ${createButton("Siguiente", movementPage + 1, movementPage === totalPages)}
+      `;
+
+      movementPagination.querySelectorAll("button[data-page]").forEach((button) => {
+        button.addEventListener("click", () => {
+          if (button.disabled) return;
+          movementPage = Number(button.dataset.page);
+          renderMovementTable();
+        });
+      });
+
+      return {
+        totalPages,
+        paginatedItems: null
+      };
+    }
+
+    function renderInventoryReport(filteredMovements) {
+      const search = filterProduct.value.trim().toLowerCase();
+      const categoryFilter = filterCategory.value.trim();
+      const allProducts = getAllProducts().filter((product) => {
+        const matchesSearch = !search || product.name.toLowerCase().includes(search) || product.id.toLowerCase().includes(search);
+        const matchesCategory = !categoryFilter || product.category === categoryFilter;
+        return matchesSearch && matchesCategory;
+      });
+
+      const inventoryRows = allProducts.map((product) => {
+        const relatedMovements = filteredMovements.filter((movement) =>
+          movement.category === product.category && movement.id === product.id
+        );
+
+        const totalEntries = relatedMovements
+          .filter((movement) => movement.type === "Entrada")
+          .reduce((sum, movement) => sum + Number(movement.amount || 0), 0);
+
+        const totalExits = relatedMovements
+          .filter((movement) => movement.type === "Salida")
+          .reduce((sum, movement) => sum + Number(movement.amount || 0), 0);
+
+        return {
+          name: product.name,
+          id: product.id,
+          category: product.category,
+          price: product.row[7] || "Sin precio",
+          stock: Number(product.row[product.quantityIndex]) || 0,
+          totalEntries,
+          totalExits
+        };
+      });
+
+      inventoryReportSummary.textContent = `${inventoryRows.length} productos en reporte`;
+      const totalPages = Math.max(1, Math.ceil(inventoryRows.length / inventoryItemsPerPage));
+      inventoryPage = Math.min(Math.max(inventoryPage, 1), totalPages);
+      const startIndex = (inventoryPage - 1) * inventoryItemsPerPage;
+      const paginatedRows = inventoryRows.slice(startIndex, startIndex + inventoryItemsPerPage);
+
+      if (inventoryRows.length === 0) {
+        inventoryPaginationSummary.textContent = "Mostrando 0-0 de 0 productos";
+        inventoryPagination.innerHTML = "";
+        inventoryReportBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="px-3 py-8 text-center text-sm text-slate-500">No hay productos para mostrar en el resumen de inventario.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      inventoryPaginationSummary.textContent = `Mostrando ${startIndex + 1}-${Math.min(startIndex + inventoryItemsPerPage, inventoryRows.length)} de ${inventoryRows.length} productos`;
+
+      const createButton = (label, page, disabled = false, active = false) => `
+        <button
+          type="button"
+          data-inventory-page="${page}"
+          ${disabled ? "disabled" : ""}
+          class="rounded-full px-3 py-2 text-sm font-semibold transition ${
+            active
+              ? "bg-hoja text-white shadow-sm"
+              : disabled
+                ? "cursor-not-allowed border border-slate-200 bg-slate-100 text-slate-400"
+                : "border border-slate-300 bg-white text-slate-700 hover:border-hoja hover:text-hoja"
+          }"
+        >${label}</button>
+      `;
+
+      const pageButtons = Array.from({ length: totalPages }, (_, index) => {
+        const page = index + 1;
+        return createButton(String(page), page, false, page === inventoryPage);
+      }).join("");
+
+      inventoryPagination.innerHTML = `
+        ${createButton("Anterior", inventoryPage - 1, inventoryPage === 1)}
+        ${pageButtons}
+        ${createButton("Siguiente", inventoryPage + 1, inventoryPage === totalPages)}
+      `;
+
+      inventoryPagination.querySelectorAll("button[data-inventory-page]").forEach((button) => {
+        button.addEventListener("click", () => {
+          if (button.disabled) return;
+          inventoryPage = Number(button.dataset.inventoryPage);
+          renderMovementTable();
+        });
+      });
+
+      inventoryReportBody.innerHTML = paginatedRows.map((item, index) => `
+        <tr class="${index === 0 ? "border-b border-slate-100" : "border-t border-slate-100"}">
+          <td class="px-3 py-4 font-semibold">${item.name} <span class="text-xs text-slate-400">(${item.id})</span></td>
+          <td class="px-3 py-4">${categoryLabels[item.category]}</td>
+          <td class="px-3 py-4">${item.price}</td>
+          <td class="px-3 py-4 font-semibold text-slate-900">${item.stock}</td>
+          <td class="px-3 py-4 text-emerald-700 font-semibold">${item.totalEntries}</td>
+          <td class="px-3 py-4 text-amber-700 font-semibold">${item.totalExits}</td>
+        </tr>
+      `).join("");
+    }
+
     function renderMovementTable() {
       const search = filterProduct.value.trim().toLowerCase();
+      const categoryFilter = filterCategory.value.trim();
       const type = filterType.value.trim();
+      const dateFrom = filterDateFrom.value;
+      const dateTo = filterDateTo.value;
 
       const filtered = movementHistory.filter((movement) => {
         const matchesSearch = !search || movement.name.toLowerCase().includes(search) || movement.id.toLowerCase().includes(search);
+        const matchesCategory = !categoryFilter || movement.category === categoryFilter;
         const matchesType = !type || movement.type === type;
-        return matchesSearch && matchesType;
+        const matchesFrom = !dateFrom || movement.date >= dateFrom;
+        const matchesTo = !dateTo || movement.date <= dateTo;
+        return matchesSearch && matchesCategory && matchesType && matchesFrom && matchesTo;
       });
 
       tableSummary.textContent = filtered.length === 0
         ? "Sin movimientos registrados."
         : `${filtered.length} movimientos encontrados.`;
 
-      if (filtered.length === 0) {
+      const totalPages = Math.max(1, Math.ceil(filtered.length / movementItemsPerPage));
+      movementPage = Math.min(Math.max(movementPage, 1), totalPages);
+      const startIndex = (movementPage - 1) * movementItemsPerPage;
+      const paginated = filtered.slice(startIndex, startIndex + movementItemsPerPage);
+
+      if (paginated.length === 0) {
         movementTableBody.innerHTML = `
           <tr>
-            <td colspan="7" class="px-3 py-8 text-center text-sm text-slate-500">No hay movimientos para mostrar.</td>
+            <td colspan="10" class="px-3 py-8 text-center text-sm text-slate-500">No hay movimientos para mostrar.</td>
           </tr>
         `;
       } else {
-        movementTableBody.innerHTML = filtered.map((movement, index) => `
+        movementTableBody.innerHTML = paginated.map((movement, index) => `
           <tr class="${index === 0 ? "border-b border-slate-100" : "border-t border-slate-100"}">
             <td class="px-3 py-4">${movement.date}</td>
             <td class="px-3 py-4 font-semibold">${movement.name} <span class="text-xs text-slate-400">(${movement.id})</span></td>
             <td class="px-3 py-4">${categoryLabels[movement.category]}</td>
-            <td class="px-3 py-4 text-emerald-700">${movement.type === "Entrada" ? movement.amount : "-"}</td>
-            <td class="px-3 py-4 text-amber-700">${movement.type === "Salida" ? movement.amount : "-"}</td>
+            <td class="px-3 py-4">${movement.price}</td>
+            <td class="px-3 py-4 font-semibold text-slate-900">${movement.totalValue}</td>
+            <td class="px-3 py-4 font-semibold text-slate-900">${movement.stockAfter}</td>
+            <td class="px-3 py-4 text-emerald-700">
+              ${movement.type === "Entrada"
+                ? `<div class="font-semibold">${movement.amount} und</div><div class="text-xs text-emerald-600">${movement.totalValue}</div>`
+                : "-"}
+            </td>
+            <td class="px-3 py-4 text-amber-700">
+              ${movement.type === "Salida"
+                ? `<div class="font-semibold">${movement.amount} und</div><div class="text-xs text-amber-600">${movement.totalValue}</div>`
+                : "-"}
+            </td>
             <td class="px-3 py-4">${movement.responsible || "-"}</td>
-            <td class="px-3 py-4">${movement.note}</td>
+            <td class="max-w-[220px] px-3 py-4">
+              <div class="space-y-1 text-xs leading-5">
+                <div class="inline-flex rounded-full px-2.5 py-1 font-semibold ${movement.type === "Entrada" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}">
+                  ${movement.type}
+                </div>
+                <div class="truncate font-medium text-slate-700" title="${movement.note || "Sin detalle"}">${movement.note || "Sin detalle"}</div>
+                ${movement.type === "Entrada" && movement.supplier
+                  ? `<div class="truncate text-slate-500" title="Proveedor: ${movement.supplier}">Prov: ${movement.supplier}</div>`
+                  : ""}
+                ${movement.responsible
+                  ? `<div class="truncate text-slate-500" title="Responsable: ${movement.responsible}">Resp: ${movement.responsible}</div>`
+                  : ""}
+              </div>
+            </td>
           </tr>
         `).join("");
       }
+
+      renderMovementPagination(filtered.length);
+      renderInventoryReport(filtered);
 
       const totalEntries = movementHistory.filter((movement) => movement.type === "Entrada").length;
       const totalExits = movementHistory.filter((movement) => movement.type === "Salida").length;
       summaryEntry.textContent = `Entradas: ${totalEntries}`;
       summaryExit.textContent = `Salidas: ${totalExits}`;
+
+      const entryQty = filtered
+        .filter((movement) => movement.type === "Entrada")
+        .reduce((sum, movement) => sum + Number(movement.amount || 0), 0);
+      const exitQty = filtered
+        .filter((movement) => movement.type === "Salida")
+        .reduce((sum, movement) => sum + Number(movement.amount || 0), 0);
+      const entryValue = filtered
+        .filter((movement) => movement.type === "Entrada")
+        .reduce((sum, movement) => sum + parsePrice(movement.totalValue), 0);
+      const exitValue = filtered
+        .filter((movement) => movement.type === "Salida")
+        .reduce((sum, movement) => sum + parsePrice(movement.totalValue), 0);
+
+      reportEntryQty.textContent = String(entryQty);
+      reportExitQty.textContent = String(exitQty);
+      reportEntryValue.textContent = formatCurrency(entryValue);
+      reportExitValue.textContent = formatCurrency(exitValue);
     }
 
-    function clearForm() {
+    function clearForm(preserveCategory = false) {
+      const activeCategory = movementCategory.value || "insumos";
       movementForm.reset();
+      movementCategory.value = preserveCategory ? activeCategory : "insumos";
       movementDate.value = new Date().toISOString().slice(0, 10);
+      renderGroupedProductOptions();
+      refreshSelectedStock();
+    }
+
+    function parsePrice(value) {
+      const clean = String(value || "").replace(/[^0-9.,-]/g, "").replace(",", ".");
+      const parsed = Number(clean);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat("es-EC", {
+        style: "currency",
+        currency: "USD"
+      }).format(value);
     }
 
     movementForm.addEventListener("submit", (event) => {
@@ -321,6 +704,11 @@
 
       if (movementType.value === "Salida" && !movementResponsible.value.trim()) {
         alert("Indica quién se llevó el producto en una salida.");
+        return;
+      }
+
+      if (movementType.value === "Entrada" && !movementSupplier.value.trim()) {
+        alert("Indica el proveedor para registrar una entrada.");
         return;
       }
 
@@ -347,25 +735,66 @@
         amount,
         date: movementDate.value || new Date().toISOString().slice(0, 10),
         responsible: movementResponsible.value.trim(),
-        note: movementNote.value.trim() || "Sin detalle"
+        supplier: movementSupplier.value.trim(),
+        note: movementNote.value.trim() || "Sin detalle",
+        price: selected.row[7] || "Sin precio",
+        totalValue: formatCurrency(parsePrice(selected.row[7]) * amount),
+        stockAfter: nextQty
       });
 
       movementHistory = movementHistory.slice(0, 100);
       saveInventoryState();
       saveMovementHistory();
-      renderProductOptions();
+      movementPage = 1;
+      inventoryPage = 1;
+      renderGroupedProductOptions();
+      refreshSelectedStock();
       renderMovementTable();
-      clearForm();
+      clearForm(true);
     });
 
-    filterProduct.addEventListener("input", renderMovementTable);
-    filterType.addEventListener("change", renderMovementTable);
+    movementCategory.addEventListener("change", () => {
+      renderGroupedProductOptions();
+      refreshSelectedStock();
+    });
+    movementProduct.addEventListener("change", refreshSelectedStock);
+    filterProduct.addEventListener("input", () => {
+      movementPage = 1;
+      inventoryPage = 1;
+      renderMovementTable();
+    });
+    filterCategory.addEventListener("change", () => {
+      movementPage = 1;
+      inventoryPage = 1;
+      renderMovementTable();
+    });
+    filterType.addEventListener("change", () => {
+      movementPage = 1;
+      inventoryPage = 1;
+      renderMovementTable();
+    });
+    filterDateFrom.addEventListener("change", () => {
+      movementPage = 1;
+      inventoryPage = 1;
+      renderMovementTable();
+    });
+    filterDateTo.addEventListener("change", () => {
+      movementPage = 1;
+      inventoryPage = 1;
+      renderMovementTable();
+    });
     clearFormButton.addEventListener("click", clearForm);
+    viewReportButton.addEventListener("click", () => {
+      movementPage = 1;
+      inventoryPage = 1;
+      renderMovementTable();
+    });
+    printReportButton.addEventListener("click", () => window.print());
 
     inventoryState = loadInventoryState() || { insumos: [], abonos: [], herramientas: [] };
     movementHistory = loadMovementHistory();
-    renderProductOptions();
     clearForm();
+    refreshSelectedStock();
     renderMovementTable();
   </script>
 </body>

@@ -24,6 +24,21 @@
       }
     };
   </script>
+  <script>
+    const agroAuthKey = "agrocontrol-auth-v1";
+    let agroSession = null;
+
+    try {
+      agroSession = JSON.parse(localStorage.getItem(agroAuthKey) || "null");
+    } catch {
+      agroSession = null;
+    }
+
+    if (!agroSession) {
+      const nextPage = encodeURIComponent("inventario.html");
+      window.location.replace(`login.html?redirect=${nextPage}`);
+    }
+  </script>
 </head>
 <body class="bg-crema text-slate-800">
   <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
@@ -35,9 +50,10 @@
         <a href="index.html" class="hover:text-hoja">Inicio</a>
         <a href="nosotros.html" class="hover:text-hoja">Nosotros</a>
         <a href="inventario.html" class="text-hoja">Inventario</a>
+        <a href="movimientos.html" class="hover:text-hoja">Movimientos</a>
         <a href="contacto.html" class="hover:text-hoja">Contacto</a>
       </nav>
-      <a href="contacto.html" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Solicita demo</a>
+      <button id="logout-button" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Cerrar sesión</button>
     </div>
   </header>
 
@@ -58,7 +74,6 @@
               <button id="open-add-modal" class="rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white">Agregar</button>
               <button id="open-edit-modal" class="rounded-full border border-hoja px-4 py-2 text-sm font-semibold text-hoja">Editar</button>
               <button id="delete-product-button" class="rounded-full border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-600">Eliminar</button>
-              <a href="movimientos.html" class="rounded-full border border-hoja px-4 py-2 text-sm font-semibold text-hoja">Movimientos</a>
             </div>
           </div>
           <div class="rounded-[1.5rem] bg-crema p-4">
@@ -164,9 +179,9 @@
             <div class="rounded-[2rem] bg-white p-6 shadow-suave">
               <h3 class="text-xl font-black">Movimientos</h3>
               <ul class="mt-4 space-y-3 text-slate-600">
-                <li>Entradas por compras a proveedores principales</li>
-                <li>Salidas por distribución a cultivos o áreas de producción</li>
-                <li>Registro de lote y fecha para trazabilidad</li>
+                <li>Entradas registradas por compras realizadas a proveedores principales</li>
+                <li>Salidas controladas por distribución hacia cultivos o áreas de producción</li>
+                <li>Trazabilidad mediante registro de lote, fecha y responsable operativo</li>
               </ul>
               <a href="movimientos.html" class="mt-5 inline-flex rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white">Abrir movimientos</a>
             </div>
