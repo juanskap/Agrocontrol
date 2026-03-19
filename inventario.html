@@ -56,9 +56,14 @@
             <p class="font-bold text-slate-900">Acciones rápidas</p>
             <div class="mt-4 flex flex-wrap gap-3">
               <button id="open-add-modal" class="rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white">Agregar</button>
-              <button class="rounded-full border border-hoja px-4 py-2 text-sm font-semibold text-hoja">Editar</button>
-              <button class="rounded-full border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-600">Eliminar</button>
+              <button id="open-edit-modal" class="rounded-full border border-hoja px-4 py-2 text-sm font-semibold text-hoja">Editar</button>
+              <button id="delete-product-button" class="rounded-full border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-600">Eliminar</button>
+              <a href="movimientos.html" class="rounded-full border border-hoja px-4 py-2 text-sm font-semibold text-hoja">Movimientos</a>
             </div>
+          </div>
+          <div class="rounded-[1.5rem] bg-crema p-4">
+            <p class="font-bold text-slate-900">Producto seleccionado</p>
+            <p id="selected-product-label" class="mt-3 text-sm text-slate-600">Ningún producto seleccionado.</p>
           </div>
           <div class="rounded-[1.5rem] bg-crema p-4">
             <p class="font-bold text-slate-900">Alertas automáticas</p>
@@ -75,6 +80,12 @@
               <li>Usuarios y permisos por rol</li>
               <li>Parámetros de alertas</li>
             </ul>
+          </div>
+          <div class="rounded-[1.5rem] bg-crema p-4">
+            <p class="font-bold text-slate-900">Movimientos recientes</p>
+            <div id="recent-movements" class="mt-3 space-y-2 text-sm text-slate-600">
+              <p>No hay movimientos registrados.</p>
+            </div>
           </div>
         </div>
       </aside>
@@ -157,6 +168,7 @@
                 <li>Salidas por distribución a cultivos o áreas de producción</li>
                 <li>Registro de lote y fecha para trazabilidad</li>
               </ul>
+              <a href="movimientos.html" class="mt-5 inline-flex rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white">Abrir movimientos</a>
             </div>
             <div class="rounded-[2rem] bg-white p-6 shadow-suave">
               <h3 class="text-xl font-black">Reportes</h3>
@@ -215,6 +227,7 @@
                 <li>Aplicaciones registradas por campo o hectárea</li>
                 <li>Historial de lotes usados por temporada</li>
               </ul>
+              <a href="movimientos.html" class="mt-5 inline-flex rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white">Abrir movimientos</a>
             </div>
             <div class="rounded-[2rem] bg-white p-6 shadow-suave">
               <h3 class="text-xl font-black">Reportes</h3>
@@ -269,6 +282,7 @@
             <div class="rounded-[2rem] bg-white p-6 shadow-suave">
               <h3 class="text-xl font-black">Movimientos</h3>
               <p class="mt-4 text-slate-600">Registro de asignación a usuarios, salidas temporales y devoluciones por responsable.</p>
+              <a href="movimientos.html" class="mt-5 inline-flex rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white">Abrir movimientos</a>
             </div>
             <div class="rounded-[2rem] bg-white p-6 shadow-suave">
               <h3 class="text-xl font-black">Mantenimiento</h3>
@@ -288,16 +302,16 @@
     <div class="mx-auto flex max-w-7xl flex-col items-center gap-5 px-6 py-8 text-center">
       <p class="text-sm text-white/70">AgroControl. Inventario organizado para decisiones más rápidas.</p>
       <div class="flex flex-wrap items-center justify-center gap-3">
-        <a href="#" aria-label="Facebook" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+        <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
           <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4H16V5.5c-.2 0-.9-.1-1.8-.1-1.8 0-3.1 1.1-3.1 3.2v1.8H9v2.8h2.3v7h2.2Z"/></svg>
         </a>
-        <a href="#" aria-label="Instagram" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
           <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M7.8 3h8.4A4.8 4.8 0 0 1 21 7.8v8.4a4.8 4.8 0 0 1-4.8 4.8H7.8A4.8 4.8 0 0 1 3 16.2V7.8A4.8 4.8 0 0 1 7.8 3Zm0 1.7A3.1 3.1 0 0 0 4.7 7.8v8.4a3.1 3.1 0 0 0 3.1 3.1h8.4a3.1 3.1 0 0 0 3.1-3.1V7.8a3.1 3.1 0 0 0-3.1-3.1H7.8Zm8.9 1.3a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.7A3.3 3.3 0 1 0 12 15.3 3.3 3.3 0 0 0 12 8.7Z"/></svg>
         </a>
-        <a href="#" aria-label="LinkedIn" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+        <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
           <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M6.5 8.5A1.5 1.5 0 1 1 6.5 5a1.5 1.5 0 0 1 0 3.5ZM5.3 9.8h2.4V19H5.3V9.8Zm4 0h2.3V11h.1c.3-.6 1.1-1.4 2.4-1.4 2.6 0 3 1.7 3 4V19h-2.4v-4.8c0-1.1 0-2.5-1.5-2.5s-1.8 1.2-1.8 2.4V19H9.3V9.8Z"/></svg>
         </a>
-        <a href="#" aria-label="WhatsApp" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
+        <a href="https://www.whatsapp.com/" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
           <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.5L3 20.8l1.6-4.7a8.5 8.5 0 1 1 15.9-4.3Zm-8.5-6.8a6.8 6.8 0 0 0-5.8 10.4l.4.7-.9 2.5 2.6-.8.6.4A6.8 6.8 0 1 0 12 5Zm3.9 8.7c-.2-.1-1.2-.6-1.4-.7s-.3-.1-.4.1-.5.7-.6.8-.2.1-.4 0a5.5 5.5 0 0 1-1.6-1 6 6 0 0 1-1.1-1.4c-.1-.2 0-.3.1-.4l.3-.4.2-.3v-.3c0-.1-.4-1-.6-1.5s-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3s-.8.8-.8 1.9.8 2.2.9 2.4a10.2 10.2 0 0 0 3.9 3.5c.6.2 1 .4 1.3.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5.2-1 .2-1.1 0-.1-.1-.2-.3-.3Z"/></svg>
         </a>
       </div>
@@ -309,8 +323,8 @@
       <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
         <div>
           <p class="text-xs font-bold uppercase tracking-[0.24em] text-hoja">Nuevo producto</p>
-          <h2 class="mt-1 text-xl font-black text-slate-900 md:text-2xl">Agregar registro al inventario</h2>
-          <p class="mt-1 text-sm text-slate-600">Completa los datos clave y guarda el registro en la categoría seleccionada.</p>
+          <h2 id="form-modal-title" class="mt-1 text-xl font-black text-slate-900 md:text-2xl">Agregar registro al inventario</h2>
+          <p id="form-modal-subtitle" class="mt-1 text-sm text-slate-600">Completa los datos clave y guarda el registro en la categoría seleccionada.</p>
         </div>
         <button id="close-add-modal" type="button" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700">Cerrar</button>
       </div>
@@ -372,7 +386,7 @@
         </label>
         <div class="md:col-span-2 xl:col-span-3 flex flex-wrap items-center justify-end gap-3 border-t border-slate-100 pt-3">
           <button id="cancel-add-modal" type="button" class="rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700">Cancelar</button>
-          <button type="submit" class="rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white">Guardar producto</button>
+          <button id="submit-product-form" type="submit" class="rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white">Guardar producto</button>
         </div>
       </form>
     </div>
@@ -433,14 +447,66 @@
     </div>
   </div>
 
+  <div id="movement-modal" class="fixed inset-0 z-40 hidden overflow-y-auto bg-slate-950/50 px-4 py-6">
+    <div class="mx-auto my-4 max-w-2xl rounded-[2rem] bg-white p-5 shadow-suave md:p-6">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.24em] text-hoja">Movimiento de inventario</p>
+          <h2 id="movement-title" class="mt-1 text-xl font-black text-slate-900 md:text-2xl">Registrar movimiento</h2>
+          <p id="movement-subtitle" class="mt-1 text-sm text-slate-600">Actualiza la cantidad del producto seleccionado.</p>
+        </div>
+        <button id="close-movement-modal" type="button" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700">Cerrar</button>
+      </div>
+
+      <form id="movement-form" class="mt-5 grid gap-4 md:grid-cols-2">
+        <label class="block md:col-span-2">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Producto</span>
+          <input id="movement-product" type="text" readonly class="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm text-slate-600 outline-none">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Tipo</span>
+          <input id="movement-type" type="text" readonly class="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm text-slate-600 outline-none">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Cantidad actual</span>
+          <input id="movement-current-qty" type="text" readonly class="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm text-slate-600 outline-none">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Cantidad a mover</span>
+          <input id="movement-amount" type="number" min="1" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Ej: 10">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Fecha</span>
+          <input id="movement-date" type="date" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
+        </label>
+        <label class="block md:col-span-2">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Motivo / nota</span>
+          <input id="movement-note" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Compra, entrega a campo, ajuste de inventario...">
+        </label>
+        <div class="md:col-span-2 flex flex-wrap items-center justify-end gap-3 border-t border-slate-100 pt-3">
+          <button id="cancel-movement-modal" type="button" class="rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700">Cancelar</button>
+          <button id="submit-movement-form" type="submit" class="rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white">Guardar movimiento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     const buttons = document.querySelectorAll(".category-btn");
     const panels = document.querySelectorAll(".category-panel");
     const openAddModalButton = document.getElementById("open-add-modal");
+    const openEditModalButton = document.getElementById("open-edit-modal");
+    const deleteProductButton = document.getElementById("delete-product-button");
+    const openEntryModalButton = document.getElementById("open-entry-modal");
+    const openExitModalButton = document.getElementById("open-exit-modal");
     const closeAddModalButton = document.getElementById("close-add-modal");
     const cancelAddModalButton = document.getElementById("cancel-add-modal");
     const addModal = document.getElementById("add-modal");
     const addProductForm = document.getElementById("add-product-form");
+    const formModalTitle = document.getElementById("form-modal-title");
+    const formModalSubtitle = document.getElementById("form-modal-subtitle");
+    const submitProductFormButton = document.getElementById("submit-product-form");
+    const selectedProductLabel = document.getElementById("selected-product-label");
     const productCategory = document.getElementById("product-category");
     const productId = document.getElementById("product-id");
     const productName = document.getElementById("product-name");
@@ -465,6 +531,20 @@
     const detailApplications = document.getElementById("detail-applications");
     const detailRecommendation = document.getElementById("detail-recommendation");
     const paginationContainer = document.getElementById("pagination-container");
+    const recentMovements = document.getElementById("recent-movements");
+    const movementModal = document.getElementById("movement-modal");
+    const closeMovementModalButton = document.getElementById("close-movement-modal");
+    const cancelMovementModalButton = document.getElementById("cancel-movement-modal");
+    const movementForm = document.getElementById("movement-form");
+    const movementTitle = document.getElementById("movement-title");
+    const movementSubtitle = document.getElementById("movement-subtitle");
+    const movementProduct = document.getElementById("movement-product");
+    const movementType = document.getElementById("movement-type");
+    const movementCurrentQty = document.getElementById("movement-current-qty");
+    const movementAmount = document.getElementById("movement-amount");
+    const movementDate = document.getElementById("movement-date");
+    const movementNote = document.getElementById("movement-note");
+    const submitMovementFormButton = document.getElementById("submit-movement-form");
     const filterPanel = document.getElementById("filter-panel");
     const toggleFilterButton = document.getElementById("toggle-filter");
     const applyFilterButton = document.getElementById("apply-filter");
@@ -506,6 +586,8 @@
       abonos: "agrocontrol-abonos-extra",
       herramientas: "agrocontrol-herramientas-extra"
     };
+    const stateStorageKey = "agrocontrol-inventory-state-v2";
+    const movementStorageKey = "agrocontrol-movements-v1";
 
     const insumos = [
       ["INS-001", "Semilla de maiz premium", "Semillas", "AgroSeed", "240", "kg", "12/2026", "$85", "Cultivos extensivos", "Bodega seca", "Rotacion alta"],
@@ -595,6 +677,10 @@
     ];
     let activeCategory = "insumos";
     let currentPage = 1;
+    let selectedProduct = null;
+    let editMode = false;
+    let currentMovementType = "Entrada";
+    let movementHistory = [];
     let filteredRowsByCategory = {
       insumos,
       abonos,
@@ -647,17 +733,32 @@
               return `<td class="${base}${extra}">${cell}</td>`;
             }).join("")}
             <td class="px-3 py-4">
-              <button
-                type="button"
-                class="detail-button rounded-full border border-hoja px-4 py-2 text-xs font-semibold text-hoja hover:bg-hoja hover:text-white"
-                data-category="${category}"
-                data-id="${row[0]}">
-                Ver info
-              </button>
+              <div class="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  class="select-button rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:border-hoja hover:text-hoja"
+                  data-category="${category}"
+                  data-id="${row[0]}">
+                  Seleccionar
+                </button>
+                <button
+                  type="button"
+                  class="detail-button rounded-full border border-hoja px-4 py-2 text-xs font-semibold text-hoja hover:bg-hoja hover:text-white"
+                  data-category="${category}"
+                  data-id="${row[0]}">
+                  Ver info
+                </button>
+              </div>
             </td>
           </tr>
         `;
       }).join("");
+
+      tbody.querySelectorAll(".select-button").forEach((button) => {
+        button.addEventListener("click", () => {
+          setSelectedProduct(button.dataset.category, button.dataset.id);
+        });
+      });
 
       tbody.querySelectorAll(".detail-button").forEach((button) => {
         button.addEventListener("click", () => {
@@ -686,6 +787,42 @@
       localStorage.setItem(storageKeys[category], JSON.stringify(rows));
     }
 
+    function loadInventoryState() {
+      const raw = localStorage.getItem(stateStorageKey);
+      if (!raw) return null;
+
+      try {
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === "object" ? parsed : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function saveInventoryState() {
+      localStorage.setItem(stateStorageKey, JSON.stringify({
+        insumos,
+        abonos,
+        herramientas
+      }));
+    }
+
+    function loadMovementHistory() {
+      const raw = localStorage.getItem(movementStorageKey);
+      if (!raw) return [];
+
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveMovementHistory() {
+      localStorage.setItem(movementStorageKey, JSON.stringify(movementHistory));
+    }
+
     function getCategoryRows(category) {
       if (category === "abonos") return abonos;
       if (category === "herramientas") return herramientas;
@@ -710,17 +847,98 @@
     }
 
     function initializeStoredProducts() {
-      ["insumos", "abonos", "herramientas"].forEach((category) => {
-        const baseRows = getCategoryRows(category).slice();
-        const extraRows = loadStoredRows(category);
-        setCategoryRows(category, [...baseRows, ...extraRows]);
-      });
+      const state = loadInventoryState();
+
+      if (state?.insumos && state?.abonos && state?.herramientas) {
+        setCategoryRows("insumos", state.insumos);
+        setCategoryRows("abonos", state.abonos);
+        setCategoryRows("herramientas", state.herramientas);
+      } else {
+        ["insumos", "abonos", "herramientas"].forEach((category) => {
+          const baseRows = getCategoryRows(category).slice();
+          const extraRows = loadStoredRows(category);
+          setCategoryRows(category, [...baseRows, ...extraRows]);
+        });
+        saveInventoryState();
+      }
 
       filteredRowsByCategory = {
         insumos,
         abonos,
         herramientas
       };
+      movementHistory = loadMovementHistory();
+    }
+
+    function renderRecentMovements() {
+      const visible = movementHistory.slice(0, 6);
+
+      if (visible.length === 0) {
+        recentMovements.innerHTML = "<p>No hay movimientos registrados.</p>";
+        return;
+      }
+
+      recentMovements.innerHTML = visible.map((movement) => `
+        <div class="rounded-xl bg-white px-3 py-3">
+          <p class="font-semibold text-slate-900">${movement.type}: ${movement.name}</p>
+          <p class="mt-1 text-xs text-slate-500">${movement.date} · ${movement.amount} unidades</p>
+          <p class="mt-1 text-xs text-slate-600">${movement.note}</p>
+        </div>
+      `).join("");
+    }
+
+    function getQuantityIndex(category) {
+      return category === "herramientas" ? 5 : 4;
+    }
+
+    function getCurrentQuantity(category, row) {
+      return Number(row[getQuantityIndex(category)]) || 0;
+    }
+
+    function setSelectedProduct(category, id) {
+      const row = findRowById(category, id);
+      if (!row) return;
+
+      selectedProduct = { category, id };
+      selectedProductLabel.textContent = `${row[1]} (${row[0]}) seleccionado en ${categoryLabels[category]}.`;
+    }
+
+    function clearSelectedProduct() {
+      selectedProduct = null;
+      selectedProductLabel.textContent = "Ningún producto seleccionado.";
+    }
+
+    function openMovementModal(type) {
+      if (!selectedProduct) {
+        alert(`Primero selecciona un producto para registrar la ${type.toLowerCase()}.`);
+        return;
+      }
+
+      const row = findRowById(selectedProduct.category, selectedProduct.id);
+      if (!row) {
+        alert("El producto seleccionado ya no está disponible.");
+        clearSelectedProduct();
+        return;
+      }
+
+      currentMovementType = type;
+      movementTitle.textContent = `Registrar ${type.toLowerCase()}`;
+      movementSubtitle.textContent = type === "Entrada"
+        ? "Suma unidades al stock del producto seleccionado."
+        : "Descuenta unidades del stock del producto seleccionado.";
+      movementProduct.value = `${row[1]} (${row[0]})`;
+      movementType.value = type;
+      movementCurrentQty.value = String(getCurrentQuantity(selectedProduct.category, row));
+      movementAmount.value = "";
+      movementDate.value = new Date().toISOString().slice(0, 10);
+      movementNote.value = "";
+      submitMovementFormButton.textContent = `Guardar ${type.toLowerCase()}`;
+      movementModal.classList.remove("hidden");
+    }
+
+    function closeMovementModal() {
+      movementModal.classList.add("hidden");
+      movementForm.reset();
     }
 
     function renderCategory(category, rows) {
@@ -937,7 +1155,15 @@
     }
 
     function openAddModal() {
+      editMode = false;
+      formModalTitle.textContent = "Agregar registro al inventario";
+      formModalSubtitle.textContent = "Completa los datos clave y guarda el registro en la categoría seleccionada.";
+      submitProductFormButton.textContent = "Guardar producto";
       productCategory.value = activeCategory;
+      productCategory.removeAttribute("disabled");
+      productCategory.classList.remove("bg-slate-100", "text-slate-500");
+      productId.removeAttribute("readonly");
+      productId.classList.remove("bg-slate-100", "text-slate-500");
       addModal.classList.remove("hidden");
     }
 
@@ -945,6 +1171,84 @@
       addModal.classList.add("hidden");
       addProductForm.reset();
       productCategory.value = activeCategory;
+      editMode = false;
+    }
+
+    function openEditModal() {
+      if (!selectedProduct) {
+        alert("Primero selecciona un producto desde la tabla.");
+        return;
+      }
+
+      const row = findRowById(selectedProduct.category, selectedProduct.id);
+      if (!row) {
+        alert("El producto seleccionado ya no está disponible.");
+        return;
+      }
+
+      editMode = true;
+      formModalTitle.textContent = "Editar producto del inventario";
+      formModalSubtitle.textContent = "Actualiza la información del producto seleccionado y guarda los cambios.";
+      submitProductFormButton.textContent = "Guardar cambios";
+      productCategory.value = selectedProduct.category;
+      productId.value = row[0];
+      productName.value = row[1];
+      productSubcategory.value = row[2];
+      productSource.value = row[3];
+      productQuantity.value = row[5] && selectedProduct.category === "herramientas" ? row[5] : row[4];
+      productUnit.value = row[9] && selectedProduct.category === "herramientas" ? row[9] : row[5];
+      productDate.value = row[6];
+      productPrice.value = row[7];
+      productUsage.value = row[8];
+      productNotes.value = selectedProduct.category === "herramientas" ? row[4] : row[10];
+      productCategory.setAttribute("disabled", "disabled");
+      productCategory.classList.add("bg-slate-100", "text-slate-500");
+      productId.setAttribute("readonly", "readonly");
+      productId.classList.add("bg-slate-100", "text-slate-500");
+      addModal.classList.remove("hidden");
+    }
+
+    function deleteSelectedProduct() {
+      if (!selectedProduct) {
+        alert("Primero selecciona un producto para eliminar.");
+        return;
+      }
+
+      const row = findRowById(selectedProduct.category, selectedProduct.id);
+      if (!row) {
+        alert("El producto seleccionado ya no está disponible.");
+        clearSelectedProduct();
+        return;
+      }
+
+      const confirmed = window.confirm(`¿Deseas eliminar "${row[1]}" (${row[0]}) del inventario?`);
+      if (!confirmed) {
+        return;
+      }
+
+      const category = selectedProduct.category;
+      const updatedRows = getCategoryRows(category).filter((item) => item[0] !== selectedProduct.id);
+
+      setCategoryRows(category, updatedRows);
+      saveInventoryState();
+      filteredRowsByCategory[category] = updatedRows;
+      activeCategory = category;
+      currentPage = 1;
+      buttons.forEach((item) => {
+        const isActive = item.dataset.target === category;
+        item.classList.toggle("bg-hoja", isActive);
+        item.classList.toggle("text-white", isActive);
+        item.classList.toggle("border", !isActive);
+        item.classList.toggle("border-hoja", !isActive);
+        item.classList.toggle("text-hoja", !isActive);
+      });
+      panels.forEach((panel) => {
+        panel.classList.toggle("hidden", panel.id !== category);
+      });
+      filterSearch.value = "";
+      filterStatus.value = "";
+      updatePagination(category);
+      clearSelectedProduct();
     }
 
     function buildRowFromForm(category) {
@@ -1005,6 +1309,7 @@
 
     initializeStoredProducts();
     updatePagination(activeCategory);
+    renderRecentMovements();
 
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -1043,6 +1348,14 @@
     });
 
     openAddModalButton.addEventListener("click", openAddModal);
+    openEditModalButton.addEventListener("click", openEditModal);
+    deleteProductButton.addEventListener("click", deleteSelectedProduct);
+    if (openEntryModalButton) {
+      openEntryModalButton.addEventListener("click", () => openMovementModal("Entrada"));
+    }
+    if (openExitModalButton) {
+      openExitModalButton.addEventListener("click", () => openMovementModal("Salida"));
+    }
     closeAddModalButton.addEventListener("click", closeAddModal);
     cancelAddModalButton.addEventListener("click", closeAddModal);
     addModal.addEventListener("click", (event) => {
@@ -1058,6 +1371,14 @@
       }
     });
 
+    closeMovementModalButton.addEventListener("click", closeMovementModal);
+    cancelMovementModalButton.addEventListener("click", closeMovementModal);
+    movementModal.addEventListener("click", (event) => {
+      if (event.target === movementModal) {
+        closeMovementModal();
+      }
+    });
+
     addProductForm.addEventListener("submit", (event) => {
       event.preventDefault();
 
@@ -1067,13 +1388,23 @@
       }
 
       const category = productCategory.value;
-      const newRow = buildRowFromForm(category);
-      const storedRows = loadStoredRows(category);
-      storedRows.push(newRow);
-      saveStoredRows(category, storedRows);
+      let updatedRows;
 
-      const updatedRows = [...getCategoryRows(category), newRow];
+      if (editMode && selectedProduct) {
+        const currentRows = getCategoryRows(category);
+        const editedRow = buildRowFromForm(category);
+        updatedRows = currentRows.map((row) => row[0] === selectedProduct.id ? editedRow : row);
+        selectedProduct = { category, id: editedRow[0] };
+        selectedProductLabel.textContent = `${editedRow[1]} (${editedRow[0]}) seleccionado en ${categoryLabels[category]}.`;
+      } else {
+        const newRow = buildRowFromForm(category);
+        updatedRows = [...getCategoryRows(category), newRow];
+        selectedProduct = { category, id: newRow[0] };
+        selectedProductLabel.textContent = `${newRow[1]} (${newRow[0]}) seleccionado en ${categoryLabels[category]}.`;
+      }
+
       setCategoryRows(category, updatedRows);
+      saveInventoryState();
       filteredRowsByCategory[category] = updatedRows;
       activeCategory = category;
       currentPage = Math.max(1, Math.ceil(updatedRows.length / pageSize));
@@ -1096,6 +1427,65 @@
       filteredRowsByCategory[category] = getCategoryRows(category);
       updatePagination(category);
       closeAddModal();
+    });
+
+    movementForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      if (!selectedProduct) {
+        alert("Primero selecciona un producto.");
+        return;
+      }
+
+      const amount = Number(movementAmount.value);
+      if (!amount || amount <= 0) {
+        alert("Ingresa una cantidad válida para el movimiento.");
+        return;
+      }
+
+      const category = selectedProduct.category;
+      const row = findRowById(category, selectedProduct.id);
+      if (!row) {
+        alert("El producto seleccionado ya no está disponible.");
+        clearSelectedProduct();
+        closeMovementModal();
+        return;
+      }
+
+      const quantityIndex = getQuantityIndex(category);
+      const currentQty = getCurrentQuantity(category, row);
+      const nextQty = currentMovementType === "Entrada" ? currentQty + amount : currentQty - amount;
+
+      if (nextQty < 0) {
+        alert("La salida no puede dejar el stock en negativo.");
+        return;
+      }
+
+      const updatedRows = getCategoryRows(category).map((item) => {
+        if (item[0] !== selectedProduct.id) return item;
+        const next = [...item];
+        next[quantityIndex] = String(nextQty);
+        return next;
+      });
+
+      setCategoryRows(category, updatedRows);
+      saveInventoryState();
+      filteredRowsByCategory[category] = updatedRows;
+      movementHistory.unshift({
+        type: currentMovementType,
+        category,
+        id: row[0],
+        name: row[1],
+        amount,
+        date: movementDate.value || new Date().toISOString().slice(0, 10),
+        note: movementNote.value.trim() || "Sin detalle"
+      });
+      movementHistory = movementHistory.slice(0, 30);
+      saveMovementHistory();
+      renderRecentMovements();
+      setSelectedProduct(category, selectedProduct.id);
+      updatePagination(category);
+      closeMovementModal();
     });
   </script>
 </body>

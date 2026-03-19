@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgroControl | Movimientos</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%233E6B48'/><path d='M20 39c0-10 7-18 18-20-2 3-3 6-3 10 0 6 3 11 9 15-3 1-5 1-8 1-10 0-16-6-16-6Z' fill='%23D9A441'/><path d='M23 42c4-7 11-12 21-14' stroke='%23F5F0E6' stroke-width='4' stroke-linecap='round'/></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            tierra: "#6B4F3A",
+            hoja: "#3E6B48",
+            musgo: "#6D8B4E",
+            crema: "#F5F0E6",
+            sol: "#D9A441"
+          },
+          boxShadow: {
+            suave: "0 20px 45px rgba(62, 107, 72, 0.16)"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-crema text-slate-800">
+  <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
+      </a>
+      <nav class="hidden gap-6 text-sm font-semibold md:flex">
+        <a href="index.html" class="hover:text-hoja">Inicio</a>
+        <a href="nosotros.html" class="hover:text-hoja">Nosotros</a>
+        <a href="inventario.html" class="hover:text-hoja">Inventario</a>
+        <a href="movimientos.html" class="text-hoja">Movimientos</a>
+        <a href="contacto.html" class="hover:text-hoja">Contacto</a>
+      </nav>
+      <a href="inventario.html" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Volver al inventario</a>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-6 py-16">
+    <section class="rounded-[2.5rem] bg-slate-950 px-8 py-12 text-white shadow-suave">
+      <p class="text-sm font-bold uppercase tracking-[0.28em] text-sol">Movimientos</p>
+      <h1 class="mt-4 text-4xl font-black md:text-5xl">Entradas y salidas con trazabilidad operativa.</h1>
+      <p class="mt-5 max-w-3xl text-lg leading-8 text-white/75">Registra compras, entregas y ajustes del inventario. Cada movimiento actualiza la cantidad del producto y deja detalle de fecha, responsable y observación.</p>
+    </section>
+
+    <section class="mt-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+      <div class="space-y-6">
+        <div class="rounded-[2rem] bg-white p-6 shadow-suave">
+          <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p class="text-sm font-bold uppercase tracking-[0.24em] text-hoja">Registrar movimiento</p>
+              <h2 class="mt-2 text-2xl font-black text-slate-900">Formulario de entrada y salida</h2>
+            </div>
+            <div class="flex gap-3">
+              <span id="summary-entry" class="rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">Entradas: 0</span>
+              <span id="summary-exit" class="rounded-full bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700">Salidas: 0</span>
+            </div>
+          </div>
+
+          <form id="movement-form" class="mt-6 grid gap-4 md:grid-cols-2">
+            <label class="block md:col-span-2">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Producto</span>
+              <select id="movement-product" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja"></select>
+            </label>
+            <label class="block">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Tipo</span>
+              <select id="movement-type" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
+                <option value="Entrada">Entrada</option>
+                <option value="Salida">Salida</option>
+              </select>
+            </label>
+            <label class="block">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Cantidad</span>
+              <input id="movement-amount" type="number" min="1" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Ej: 10">
+            </label>
+            <label class="block">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Fecha</span>
+              <input id="movement-date" type="date" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
+            </label>
+            <label class="block">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Responsable</span>
+              <input id="movement-responsible" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Quién recibió o quién se lo llevó">
+            </label>
+            <label class="block md:col-span-2">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Detalle del movimiento</span>
+              <input id="movement-note" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Compra, entrega a campo, ajuste, mantenimiento...">
+            </label>
+            <div class="md:col-span-2 flex flex-wrap items-center justify-end gap-3 border-t border-slate-100 pt-3">
+              <button id="clear-form" type="button" class="rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700">Limpiar</button>
+              <button type="submit" class="rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white">Guardar movimiento</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="rounded-[2rem] bg-white p-6 shadow-suave">
+          <p class="text-sm font-bold uppercase tracking-[0.24em] text-hoja">Filtros</p>
+          <div class="mt-4 grid gap-4 md:grid-cols-3">
+            <label class="block md:col-span-2">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Filtrar por producto</span>
+              <input id="filter-product" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Buscar por nombre o ID">
+            </label>
+            <label class="block">
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Tipo</span>
+              <select id="filter-type" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
+                <option value="">Todos</option>
+                <option value="Entrada">Entrada</option>
+                <option value="Salida">Salida</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div class="rounded-[2rem] bg-white p-6 shadow-suave">
+          <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p class="text-sm font-bold uppercase tracking-[0.24em] text-hoja">Detalle</p>
+              <h2 class="mt-2 text-2xl font-black text-slate-900">Tabla de movimientos</h2>
+            </div>
+            <p id="table-summary" class="text-sm text-slate-600">Sin movimientos registrados.</p>
+          </div>
+          <div class="mt-6 overflow-x-auto">
+            <table class="min-w-full text-left text-sm">
+              <thead class="border-b border-slate-200 text-slate-500">
+                <tr>
+                  <th class="px-3 py-3">Fecha</th>
+                  <th class="px-3 py-3">Producto</th>
+                  <th class="px-3 py-3">Categoría</th>
+                  <th class="px-3 py-3">Entrada</th>
+                  <th class="px-3 py-3">Salida</th>
+                  <th class="px-3 py-3">Responsable</th>
+                  <th class="px-3 py-3">Detalle</th>
+                </tr>
+              </thead>
+              <tbody id="movement-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="rounded-[2rem] bg-white p-6 shadow-suave">
+          <p class="text-sm font-bold uppercase tracking-[0.24em] text-hoja">Ayuda operativa</p>
+          <ul class="mt-4 space-y-3 text-sm text-slate-600">
+            <li>Usa `Entrada` para compras, recepciones o ajustes positivos.</li>
+            <li>Usa `Salida` para entregas, consumo interno o asignaciones.</li>
+            <li>En salidas, el campo `Responsable` identifica quién se llevó el producto.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-slate-950 text-white">
+    <div class="mx-auto flex max-w-7xl flex-col items-center gap-5 px-6 py-8 text-center">
+      <p class="text-sm text-white/70">AgroControl. Registro de entradas y salidas con detalle operativo.</p>
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja"><svg viewBox="0 0 24 24" class="h-5 w-5 fill-current"><path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4H16V5.5c-.2 0-.9-.1-1.8-.1-1.8 0-3.1 1.1-3.1 3.2v1.8H9v2.8h2.3v7h2.2Z"/></svg></a>
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja"><svg viewBox="0 0 24 24" class="h-5 w-5 fill-current"><path d="M7.8 3h8.4A4.8 4.8 0 0 1 21 7.8v8.4a4.8 4.8 0 0 1-4.8 4.8H7.8A4.8 4.8 0 0 1 3 16.2V7.8A4.8 4.8 0 0 1 7.8 3Zm0 1.7A3.1 3.1 0 0 0 4.7 7.8v8.4a3.1 3.1 0 0 0 3.1 3.1h8.4a3.1 3.1 0 0 0 3.1-3.1V7.8a3.1 3.1 0 0 0-3.1-3.1H7.8Zm8.9 1.3a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.7A3.3 3.3 0 1 0 12 15.3 3.3 3.3 0 0 0 12 8.7Z"/></svg></a>
+        <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja"><svg viewBox="0 0 24 24" class="h-5 w-5 fill-current"><path d="M6.5 8.5A1.5 1.5 0 1 1 6.5 5a1.5 1.5 0 0 1 0 3.5ZM5.3 9.8h2.4V19H5.3V9.8Zm4 0h2.3V11h.1c.3-.6 1.1-1.4 2.4-1.4 2.6 0 3 1.7 3 4V19h-2.4v-4.8c0-1.1 0-2.5-1.5-2.5s-1.8 1.2-1.8 2.4V19H9.3V9.8Z"/></svg></a>
+        <a href="https://www.whatsapp.com/" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja"><svg viewBox="0 0 24 24" class="h-5 w-5 fill-current"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.5L3 20.8l1.6-4.7a8.5 8.5 0 1 1 15.9-4.3Zm-8.5-6.8a6.8 6.8 0 0 0-5.8 10.4l.4.7-.9 2.5 2.6-.8.6.4A6.8 6.8 0 1 0 12 5Zm3.9 8.7c-.2-.1-1.2-.6-1.4-.7s-.3-.1-.4.1-.5.7-.6.8-.2.1-.4 0a5.5 5.5 0 0 1-1.6-1 6 6 0 0 1-1.1-1.4c-.1-.2 0-.3.1-.4l.3-.4.2-.3v-.3c0-.1-.4-1-.6-1.5s-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3s-.8.8-.8 1.9.8 2.2.9 2.4a10.2 10.2 0 0 0 3.9 3.5c.6.2 1 .4 1.3.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5.2-1 .2-1.1 0-.1-.1-.2-.3-.3Z"/></svg></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const stateStorageKey = "agrocontrol-inventory-state-v2";
+    const movementStorageKey = "agrocontrol-movements-v1";
+    const categoryLabels = {
+      insumos: "Insumos",
+      abonos: "Abonos",
+      herramientas: "Herramientas y Maquinaria"
+    };
+
+    const movementForm = document.getElementById("movement-form");
+    const movementProduct = document.getElementById("movement-product");
+    const movementType = document.getElementById("movement-type");
+    const movementAmount = document.getElementById("movement-amount");
+    const movementDate = document.getElementById("movement-date");
+    const movementResponsible = document.getElementById("movement-responsible");
+    const movementNote = document.getElementById("movement-note");
+    const filterProduct = document.getElementById("filter-product");
+    const filterType = document.getElementById("filter-type");
+    const movementTableBody = document.getElementById("movement-table-body");
+    const tableSummary = document.getElementById("table-summary");
+    const summaryEntry = document.getElementById("summary-entry");
+    const summaryExit = document.getElementById("summary-exit");
+    const clearFormButton = document.getElementById("clear-form");
+
+    let inventoryState = null;
+    let movementHistory = [];
+
+    function loadInventoryState() {
+      const raw = localStorage.getItem(stateStorageKey);
+      if (!raw) return null;
+
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return null;
+      }
+    }
+
+    function saveInventoryState() {
+      localStorage.setItem(stateStorageKey, JSON.stringify(inventoryState));
+    }
+
+    function loadMovementHistory() {
+      const raw = localStorage.getItem(movementStorageKey);
+      if (!raw) return [];
+
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveMovementHistory() {
+      localStorage.setItem(movementStorageKey, JSON.stringify(movementHistory));
+    }
+
+    function getAllProducts() {
+      return Object.entries(inventoryState || {}).flatMap(([category, rows]) =>
+        rows.map((row) => ({
+          category,
+          id: row[0],
+          name: row[1],
+          quantityIndex: category === "herramientas" ? 5 : 4,
+          row
+        }))
+      );
+    }
+
+    function renderProductOptions() {
+      const products = getAllProducts();
+      movementProduct.innerHTML = products.map((product) =>
+        `<option value="${product.category}|${product.id}">${product.name} (${product.id}) · ${categoryLabels[product.category]}</option>`
+      ).join("");
+    }
+
+    function getSelectedProduct() {
+      const [category, id] = movementProduct.value.split("|");
+      const rows = inventoryState?.[category] || [];
+      const row = rows.find((item) => item[0] === id);
+      if (!row) return null;
+
+      return {
+        category,
+        id,
+        row,
+        quantityIndex: category === "herramientas" ? 5 : 4
+      };
+    }
+
+    function renderMovementTable() {
+      const search = filterProduct.value.trim().toLowerCase();
+      const type = filterType.value.trim();
+
+      const filtered = movementHistory.filter((movement) => {
+        const matchesSearch = !search || movement.name.toLowerCase().includes(search) || movement.id.toLowerCase().includes(search);
+        const matchesType = !type || movement.type === type;
+        return matchesSearch && matchesType;
+      });
+
+      tableSummary.textContent = filtered.length === 0
+        ? "Sin movimientos registrados."
+        : `${filtered.length} movimientos encontrados.`;
+
+      if (filtered.length === 0) {
+        movementTableBody.innerHTML = `
+          <tr>
+            <td colspan="7" class="px-3 py-8 text-center text-sm text-slate-500">No hay movimientos para mostrar.</td>
+          </tr>
+        `;
+      } else {
+        movementTableBody.innerHTML = filtered.map((movement, index) => `
+          <tr class="${index === 0 ? "border-b border-slate-100" : "border-t border-slate-100"}">
+            <td class="px-3 py-4">${movement.date}</td>
+            <td class="px-3 py-4 font-semibold">${movement.name} <span class="text-xs text-slate-400">(${movement.id})</span></td>
+            <td class="px-3 py-4">${categoryLabels[movement.category]}</td>
+            <td class="px-3 py-4 text-emerald-700">${movement.type === "Entrada" ? movement.amount : "-"}</td>
+            <td class="px-3 py-4 text-amber-700">${movement.type === "Salida" ? movement.amount : "-"}</td>
+            <td class="px-3 py-4">${movement.responsible || "-"}</td>
+            <td class="px-3 py-4">${movement.note}</td>
+          </tr>
+        `).join("");
+      }
+
+      const totalEntries = movementHistory.filter((movement) => movement.type === "Entrada").length;
+      const totalExits = movementHistory.filter((movement) => movement.type === "Salida").length;
+      summaryEntry.textContent = `Entradas: ${totalEntries}`;
+      summaryExit.textContent = `Salidas: ${totalExits}`;
+    }
+
+    function clearForm() {
+      movementForm.reset();
+      movementDate.value = new Date().toISOString().slice(0, 10);
+    }
+
+    movementForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const selected = getSelectedProduct();
+      if (!selected) {
+        alert("Selecciona un producto válido.");
+        return;
+      }
+
+      const amount = Number(movementAmount.value);
+      if (!amount || amount <= 0) {
+        alert("Ingresa una cantidad válida.");
+        return;
+      }
+
+      if (movementType.value === "Salida" && !movementResponsible.value.trim()) {
+        alert("Indica quién se llevó el producto en una salida.");
+        return;
+      }
+
+      const currentQty = Number(selected.row[selected.quantityIndex]) || 0;
+      const nextQty = movementType.value === "Entrada" ? currentQty + amount : currentQty - amount;
+
+      if (nextQty < 0) {
+        alert("La salida no puede dejar el stock en negativo.");
+        return;
+      }
+
+      inventoryState[selected.category] = inventoryState[selected.category].map((item) => {
+        if (item[0] !== selected.id) return item;
+        const next = [...item];
+        next[selected.quantityIndex] = String(nextQty);
+        return next;
+      });
+
+      movementHistory.unshift({
+        type: movementType.value,
+        category: selected.category,
+        id: selected.id,
+        name: selected.row[1],
+        amount,
+        date: movementDate.value || new Date().toISOString().slice(0, 10),
+        responsible: movementResponsible.value.trim(),
+        note: movementNote.value.trim() || "Sin detalle"
+      });
+
+      movementHistory = movementHistory.slice(0, 100);
+      saveInventoryState();
+      saveMovementHistory();
+      renderProductOptions();
+      renderMovementTable();
+      clearForm();
+    });
+
+    filterProduct.addEventListener("input", renderMovementTable);
+    filterType.addEventListener("change", renderMovementTable);
+    clearFormButton.addEventListener("click", clearForm);
+
+    inventoryState = loadInventoryState() || { insumos: [], abonos: [], herramientas: [] };
+    movementHistory = loadMovementHistory();
+    renderProductOptions();
+    clearForm();
+    renderMovementTable();
+  </script>
+</body>
+</html>
