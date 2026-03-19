@@ -24,8 +24,18 @@
       }
     };
   </script>
+  <script src="assets/i18n-helper.js"></script>
   <script>
     const agroAuthKey = "agrocontrol-auth-v1";
+    let currentMovementsLanguage = localStorage.getItem("agrocontrol-language") || "es";
+
+    function getMovementsText(key, fallback) {
+      if (!window.movementsTranslations) {
+        return fallback;
+      }
+
+      return getNestedTranslation(window.movementsTranslations, currentMovementsLanguage, key) || fallback;
+    }
 
     function getAgroSession() {
       try {
@@ -49,7 +59,7 @@
         return true;
       }
 
-      alert(`${actionLabel} requiere iniciar sesión. Estás en modo vista previa.`);
+      alert(getMovementsText("messages.previewAuth", `${actionLabel} requiere iniciar sesión. Estás en modo vista previa.`));
       redirectToLogin();
       return false;
     }
@@ -62,25 +72,35 @@
         <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
       </a>
       <nav class="hidden gap-6 text-sm font-semibold md:flex">
-        <a href="index.html" class="hover:text-hoja">Inicio</a>
-        <a href="nosotros.html" class="hover:text-hoja">Nosotros</a>
-        <a href="inventario.html" class="hover:text-hoja">Inventario</a>
-        <a href="movimientos.html" class="text-hoja">Movimientos</a>
-        <a href="contacto.html" class="hover:text-hoja">Contacto</a>
+        <a href="index.html" class="hover:text-hoja" data-i18n="nav.home">Inicio</a>
+        <a href="nosotros.html" class="hover:text-hoja" data-i18n="nav.about">Nosotros</a>
+        <a href="inventario.html" class="hover:text-hoja" data-i18n="nav.inventory">Inventario</a>
+        <a href="movimientos.html" class="text-hoja" data-i18n="nav.movements">Movimientos</a>
+        <a href="contacto.html" class="hover:text-hoja" data-i18n="nav.contact">Contacto</a>
       </nav>
-      <button id="logout-button" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Iniciar sesión</button>
+      <div class="flex items-center gap-3">
+        <button id="logout-button" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Iniciar sesión</button>
+        <div class="hidden items-center gap-2 rounded-full border border-slate-200 bg-white/90 p-1 shadow-sm md:flex">
+          <button type="button" class="language-option rounded-full px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-crema" data-lang="es" aria-label="Cambiar a español">
+            <span aria-hidden="true">🇪🇸</span> ES
+          </button>
+          <button type="button" class="language-option rounded-full px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-crema" data-lang="en" aria-label="Switch to English">
+            <span aria-hidden="true">🇺🇸</span> EN
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
   <main class="mx-auto max-w-7xl px-6 py-16">
     <section class="rounded-[2.5rem] bg-slate-950 px-8 py-12 text-white shadow-suave">
-      <p class="text-sm font-bold uppercase tracking-[0.28em] text-sol">Movimientos</p>
-      <h1 class="mt-4 text-4xl font-black md:text-5xl">Entradas y salidas con trazabilidad operativa.</h1>
-      <p class="mt-5 max-w-3xl text-lg leading-8 text-white/75">Registra compras, entregas y ajustes del inventario. Cada movimiento actualiza la cantidad del producto y deja detalle de fecha, responsable y observación.</p>
+      <p class="text-sm font-bold uppercase tracking-[0.28em] text-sol" data-i18n="hero.label">Movimientos</p>
+      <h1 class="mt-4 text-4xl font-black md:text-5xl" data-i18n="hero.title">Entradas y salidas con trazabilidad operativa.</h1>
+      <p class="mt-5 max-w-3xl text-lg leading-8 text-white/75" data-i18n="hero.description">Registra compras, entregas y ajustes del inventario. Cada movimiento actualiza la cantidad del producto y deja detalle de fecha, responsable y observación.</p>
     </section>
 
     <section id="preview-notice" class="mt-6 rounded-[2rem] border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-900 shadow-sm">
-      Estás en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesión.
+      <span data-i18n="preview.notice">Estás en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesión.</span>
     </section>
 
     <section class="mt-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
@@ -359,7 +379,9 @@
       const authenticated = isAuthenticated();
 
       if (logoutButton) {
-        logoutButton.textContent = authenticated ? "Cerrar sesión" : "Iniciar sesión";
+        logoutButton.textContent = authenticated
+          ? getMovementsText("auth.logout", "Cerrar sesión")
+          : getMovementsText("auth.login", "Iniciar sesión");
       }
 
       if (previewNotice) {
@@ -861,6 +883,38 @@
       localStorage.removeItem(agroAuthKey);
       updateAuthUI();
       window.location.href = "login.html";
+    });
+
+    window.movementsTranslations = {
+      es: {
+        pageTitle: "AgroControl | Movimientos",
+        nav: { home: "Inicio", about: "Nosotros", inventory: "Inventario", movements: "Movimientos", contact: "Contacto" },
+        auth: { login: "Iniciar sesión", logout: "Cerrar sesión" },
+        hero: {
+          label: "Movimientos",
+          title: "Entradas y salidas con trazabilidad operativa.",
+          description: "Registra compras, entregas y ajustes del inventario. Cada movimiento actualiza la cantidad del producto y deja detalle de fecha, responsable y observación."
+        },
+        preview: { notice: "Estás en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesión." },
+        messages: { previewAuth: "Esta acción requiere iniciar sesión. Estás en modo vista previa." }
+      },
+      en: {
+        pageTitle: "AgroControl | Movements",
+        nav: { home: "Home", about: "About us", inventory: "Inventory", movements: "Movements", contact: "Contact" },
+        auth: { login: "Log in", logout: "Log out" },
+        hero: {
+          label: "Movements",
+          title: "Entries and exits with operational traceability.",
+          description: "Record purchases, deliveries, and inventory adjustments. Each movement updates the product quantity and stores the date, owner, and note."
+        },
+        preview: { notice: "You are in preview mode. You can review movements and filter results, but you must sign in to save changes or generate reports." },
+        messages: { previewAuth: "This action requires signing in. You are in preview mode." }
+      }
+    };
+
+    currentMovementsLanguage = initPageI18n(window.movementsTranslations, (lang) => {
+      currentMovementsLanguage = lang;
+      updateAuthUI();
     });
 
     inventoryState = loadInventoryState() || { insumos: [], abonos: [], herramientas: [] };

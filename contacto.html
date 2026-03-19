@@ -24,6 +24,7 @@
       }
     };
   </script>
+  <script src="assets/i18n-helper.js"></script>
 </head>
 <body class="bg-crema text-slate-800">
   <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
@@ -32,81 +33,92 @@
         <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
       </a>
       <nav class="hidden gap-6 text-sm font-semibold md:flex">
-        <a href="index.html" class="hover:text-hoja">Inicio</a>
-        <a href="nosotros.html" class="hover:text-hoja">Nosotros</a>
-        <a href="inventario.html" class="hover:text-hoja">Inventario</a>
-        <a href="movimientos.html" class="hover:text-hoja">Movimientos</a>
-        <a href="contacto.html" class="text-hoja">Contacto</a>
+        <a href="index.html" class="hover:text-hoja" data-i18n="nav.home">Inicio</a>
+        <a href="nosotros.html" class="hover:text-hoja" data-i18n="nav.about">Nosotros</a>
+        <a href="inventario.html" class="hover:text-hoja" data-i18n="nav.inventory">Inventario</a>
+        <a href="movimientos.html" class="hover:text-hoja" data-i18n="nav.movements">Movimientos</a>
+        <a href="contacto.html" class="text-hoja" data-i18n="nav.contact">Contacto</a>
       </nav>
-      <a href="login.html?redirect=inventario.html" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Iniciar sesion</a>
+      <div class="flex items-center gap-3">
+        <a href="login.html?redirect=inventario.html" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave" data-i18n="nav.login">Iniciar sesion</a>
+        <div class="hidden items-center gap-2 rounded-full border border-slate-200 bg-white/90 p-1 shadow-sm md:flex">
+          <button type="button" class="language-option rounded-full px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-crema" data-lang="es" aria-label="Cambiar a español">
+            <span aria-hidden="true">🇪🇸</span> ES
+          </button>
+          <button type="button" class="language-option rounded-full px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-crema" data-lang="en" aria-label="Switch to English">
+            <span aria-hidden="true">🇺🇸</span> EN
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
   <main class="mx-auto max-w-7xl px-6 py-16">
     <section class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
       <div>
-        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Contacto</p>
-        <h1 class="mt-4 text-4xl font-black text-slate-900 md:text-5xl">Conecta con nuestra empresa y recibe soporte comercial o técnico.</h1>
-        <p class="mt-6 text-lg leading-8 text-slate-700">Atendemos consultas sobre abastecimiento agrícola, uso del sistema de inventario, soporte técnico y coordinación con proveedores autorizados.</p>
+        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja" data-i18n="hero.label">Contacto</p>
+        <h1 class="mt-4 text-4xl font-black text-slate-900 md:text-5xl" data-i18n="hero.title">Conecta con nuestra empresa y recibe soporte comercial o técnico.</h1>
+        <p class="mt-6 text-lg leading-8 text-slate-700" data-i18n="hero.description">Atendemos consultas sobre abastecimiento agrícola, uso del sistema de inventario, soporte técnico y coordinación con proveedores autorizados.</p>
 
         <div class="mt-8 space-y-4">
           <div class="rounded-[1.5rem] bg-white p-5 shadow-suave">
-            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja">Dirección</p>
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja" data-i18n="info.addressLabel">Dirección</p>
             <p class="mt-2 text-slate-700">Av. Productiva 245, Zona Agroindustrial</p>
           </div>
           <div class="rounded-[1.5rem] bg-white p-5 shadow-suave">
-            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja">Teléfono</p>
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja" data-i18n="info.phoneLabel">Teléfono</p>
             <p class="mt-2 text-slate-700">+593 99 999 9999</p>
           </div>
           <div class="rounded-[1.5rem] bg-white p-5 shadow-suave">
-            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja">Correo electrónico</p>
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja" data-i18n="info.emailLabel">Correo electrónico</p>
             <p class="mt-2 text-slate-700">contacto@agrocontrol.com</p>
           </div>
           <div class="rounded-[1.5rem] bg-white p-5 shadow-suave">
-            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja">Soporte técnico</p>
-            <p class="mt-2 text-slate-700">soporte@agrocontrol.com | Lunes a viernes de 08:00 a 18:00</p>
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja" data-i18n="info.supportLabel">Soporte técnico</p>
+            <p class="mt-2 text-slate-700" data-i18n="info.supportValue">soporte@agrocontrol.com | Lunes a viernes de 08:00 a 18:00</p>
           </div>
           <div class="rounded-[1.5rem] bg-white p-5 shadow-suave">
-            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja">Proveedores autorizados</p>
-            <p class="mt-2 text-slate-700">Red comercial con atención para insumos, abonos y maquinaria agrícola.</p>
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-hoja" data-i18n="info.suppliersLabel">Proveedores autorizados</p>
+            <p class="mt-2 text-slate-700" data-i18n="info.suppliersValue">Red comercial con atención para insumos, abonos y maquinaria agrícola.</p>
           </div>
         </div>
       </div>
 
       <div class="space-y-6">
         <form class="rounded-[2rem] bg-white p-8 shadow-suave">
-          <h2 class="text-2xl font-black text-slate-900">Formulario de contacto</h2>
+          <h2 class="text-2xl font-black text-slate-900" data-i18n="form.title">Formulario de contacto</h2>
           <div class="mt-6 grid gap-5 md:grid-cols-2">
             <label class="block">
-              <span class="mb-2 block text-sm font-semibold text-slate-700">Nombre</span>
-              <input type="text" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 outline-none ring-0 focus:border-hoja" placeholder="Tu nombre">
+              <span class="mb-2 block text-sm font-semibold text-slate-700" data-i18n="form.nameLabel">Nombre</span>
+              <input type="text" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 outline-none ring-0 focus:border-hoja" data-i18n-placeholder="form.namePlaceholder" placeholder="Tu nombre">
             </label>
             <label class="block">
-              <span class="mb-2 block text-sm font-semibold text-slate-700">Correo</span>
-              <input type="email" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 outline-none ring-0 focus:border-hoja" placeholder="correo@empresa.com">
+              <span class="mb-2 block text-sm font-semibold text-slate-700" data-i18n="form.emailLabel">Correo</span>
+              <input type="email" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 outline-none ring-0 focus:border-hoja" data-i18n-placeholder="form.emailPlaceholder" placeholder="correo@empresa.com">
             </label>
             <label class="block md:col-span-2">
-              <span class="mb-2 block text-sm font-semibold text-slate-700">Tipo de consulta</span>
+              <span class="mb-2 block text-sm font-semibold text-slate-700" data-i18n="form.typeLabel">Tipo de consulta</span>
               <select class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 outline-none focus:border-hoja">
-                <option>Insumos</option>
-                <option>Abonos</option>
-                <option>Herramientas y maquinaria</option>
-                <option>Soporte técnico</option>
+                <option data-i18n="form.optionInputs">Insumos</option>
+                <option data-i18n="form.optionFertilizers">Abonos</option>
+                <option data-i18n="form.optionTools">Herramientas y maquinaria</option>
+                <option data-i18n="form.optionSupport">Soporte técnico</option>
               </select>
             </label>
             <label class="block md:col-span-2">
-              <span class="mb-2 block text-sm font-semibold text-slate-700">Mensaje</span>
-              <textarea rows="5" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 outline-none focus:border-hoja" placeholder="Cuéntanos cómo podemos ayudarte"></textarea>
+              <span class="mb-2 block text-sm font-semibold text-slate-700" data-i18n="form.messageLabel">Mensaje</span>
+              <textarea rows="5" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 outline-none focus:border-hoja" data-i18n-placeholder="form.messagePlaceholder" placeholder="Cuéntanos cómo podemos ayudarte"></textarea>
             </label>
           </div>
-          <button type="submit" class="mt-6 rounded-full bg-hoja px-6 py-3 font-semibold text-white shadow-suave">Enviar consulta</button>
+          <button type="submit" class="mt-6 rounded-full bg-hoja px-6 py-3 font-semibold text-white shadow-suave" data-i18n="form.submit">Enviar consulta</button>
         </form>
 
         <div class="rounded-[2rem] bg-white p-5 shadow-suave">
-          <h2 class="text-2xl font-black text-slate-900">Ubicación</h2>
+          <h2 class="text-2xl font-black text-slate-900" data-i18n="map.title">Ubicación</h2>
           <div class="mt-5 overflow-hidden rounded-[1.5rem] border border-slate-200">
             <iframe
               title="Mapa de ubicación"
+              data-i18n-title="map.frameTitle"
               src="https://www.google.com/maps?q=Guayaquil&output=embed"
               class="h-80 w-full"
               loading="lazy">
@@ -120,7 +132,7 @@
 
   <footer class="bg-slate-950 text-white">
     <div class="mx-auto flex max-w-7xl flex-col items-center gap-5 px-6 py-8 text-center">
-      <p class="text-sm text-white/70">AgroControl. Atención comercial y técnica para tu operación agrícola.</p>
+      <p class="text-sm text-white/70" data-i18n="footer.description">AgroControl. Atención comercial y técnica para tu operación agrícola.</p>
       <div class="flex flex-wrap items-center justify-center gap-3">
         <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
           <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4H16V5.5c-.2 0-.9-.1-1.8-.1-1.8 0-3.1 1.1-3.1 3.2v1.8H9v2.8h2.3v7h2.2Z"/></svg>
@@ -137,5 +149,103 @@
       </div>
     </div>
   </footer>
+  <script>
+    initPageI18n({
+      es: {
+        pageTitle: "AgroControl | Contacto",
+        nav: {
+          home: "Inicio",
+          about: "Nosotros",
+          inventory: "Inventario",
+          movements: "Movimientos",
+          contact: "Contacto",
+          login: "Iniciar sesión"
+        },
+        hero: {
+          label: "Contacto",
+          title: "Conecta con nuestra empresa y recibe soporte comercial o técnico.",
+          description: "Atendemos consultas sobre abastecimiento agrícola, uso del sistema de inventario, soporte técnico y coordinación con proveedores autorizados."
+        },
+        info: {
+          addressLabel: "Dirección",
+          phoneLabel: "Teléfono",
+          emailLabel: "Correo electrónico",
+          supportLabel: "Soporte técnico",
+          supportValue: "soporte@agrocontrol.com | Lunes a viernes de 08:00 a 18:00",
+          suppliersLabel: "Proveedores autorizados",
+          suppliersValue: "Red comercial con atención para insumos, abonos y maquinaria agrícola."
+        },
+        form: {
+          title: "Formulario de contacto",
+          nameLabel: "Nombre",
+          namePlaceholder: "Tu nombre",
+          emailLabel: "Correo",
+          emailPlaceholder: "correo@empresa.com",
+          typeLabel: "Tipo de consulta",
+          optionInputs: "Insumos",
+          optionFertilizers: "Abonos",
+          optionTools: "Herramientas y maquinaria",
+          optionSupport: "Soporte técnico",
+          messageLabel: "Mensaje",
+          messagePlaceholder: "Cuéntanos cómo podemos ayudarte",
+          submit: "Enviar consulta"
+        },
+        map: {
+          title: "Ubicación",
+          frameTitle: "Mapa de ubicación"
+        },
+        footer: {
+          description: "AgroControl. Atención comercial y técnica para tu operación agrícola."
+        }
+      },
+      en: {
+        pageTitle: "AgroControl | Contact",
+        nav: {
+          home: "Home",
+          about: "About us",
+          inventory: "Inventory",
+          movements: "Movements",
+          contact: "Contact",
+          login: "Log in"
+        },
+        hero: {
+          label: "Contact",
+          title: "Connect with our company and receive commercial or technical support.",
+          description: "We assist with questions about agricultural supply, inventory system usage, technical support, and coordination with authorized suppliers."
+        },
+        info: {
+          addressLabel: "Address",
+          phoneLabel: "Phone",
+          emailLabel: "Email",
+          supportLabel: "Technical support",
+          supportValue: "soporte@agrocontrol.com | Monday to Friday from 08:00 to 18:00",
+          suppliersLabel: "Authorized suppliers",
+          suppliersValue: "Commercial network supporting supplies, fertilizers, and agricultural machinery."
+        },
+        form: {
+          title: "Contact form",
+          nameLabel: "Name",
+          namePlaceholder: "Your name",
+          emailLabel: "Email",
+          emailPlaceholder: "email@company.com",
+          typeLabel: "Inquiry type",
+          optionInputs: "Supplies",
+          optionFertilizers: "Fertilizers",
+          optionTools: "Tools and machinery",
+          optionSupport: "Technical support",
+          messageLabel: "Message",
+          messagePlaceholder: "Tell us how we can help you",
+          submit: "Send inquiry"
+        },
+        map: {
+          title: "Location",
+          frameTitle: "Location map"
+        },
+        footer: {
+          description: "AgroControl. Commercial and technical support for your agricultural operation."
+        }
+      }
+    });
+  </script>
 </body>
 </html>

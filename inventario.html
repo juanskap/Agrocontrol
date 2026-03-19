@@ -24,8 +24,18 @@
       }
     };
   </script>
+  <script src="assets/i18n-helper.js"></script>
   <script>
     const agroAuthKey = "agrocontrol-auth-v1";
+    let currentInventoryLanguage = localStorage.getItem("agrocontrol-language") || "es";
+
+    function getInventoryText(key, fallback) {
+      if (!window.inventoryTranslations) {
+        return fallback;
+      }
+
+      return getNestedTranslation(window.inventoryTranslations, currentInventoryLanguage, key) || fallback;
+    }
 
     function getAgroSession() {
       try {
@@ -49,7 +59,7 @@
         return true;
       }
 
-      alert(`${actionLabel} requiere iniciar sesión. Estás en modo vista previa.`);
+      alert(getInventoryText("messages.previewAuth", `${actionLabel} requiere iniciar sesión. Estás en modo vista previa.`));
       redirectToLogin();
       return false;
     }
@@ -62,40 +72,50 @@
         <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
       </a>
       <nav class="hidden gap-6 text-sm font-semibold md:flex">
-        <a href="index.html" class="hover:text-hoja">Inicio</a>
-        <a href="nosotros.html" class="hover:text-hoja">Nosotros</a>
-        <a href="inventario.html" class="text-hoja">Inventario</a>
-        <a href="movimientos.html" class="hover:text-hoja">Movimientos</a>
-        <a href="contacto.html" class="hover:text-hoja">Contacto</a>
+        <a href="index.html" class="hover:text-hoja" data-i18n="nav.home">Inicio</a>
+        <a href="nosotros.html" class="hover:text-hoja" data-i18n="nav.about">Nosotros</a>
+        <a href="inventario.html" class="text-hoja" data-i18n="nav.inventory">Inventario</a>
+        <a href="movimientos.html" class="hover:text-hoja" data-i18n="nav.movements">Movimientos</a>
+        <a href="contacto.html" class="hover:text-hoja" data-i18n="nav.contact">Contacto</a>
       </nav>
-      <button id="logout-button" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Iniciar sesión</button>
+      <div class="flex items-center gap-3">
+        <button id="logout-button" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Iniciar sesión</button>
+        <div class="hidden items-center gap-2 rounded-full border border-slate-200 bg-white/90 p-1 shadow-sm md:flex">
+          <button type="button" class="language-option rounded-full px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-crema" data-lang="es" aria-label="Cambiar a español">
+            <span aria-hidden="true">🇪🇸</span> ES
+          </button>
+          <button type="button" class="language-option rounded-full px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-crema" data-lang="en" aria-label="Switch to English">
+            <span aria-hidden="true">🇺🇸</span> EN
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
   <main class="mx-auto max-w-7xl px-6 py-16">
     <section class="rounded-[1.75rem] bg-slate-950 px-6 py-5 text-white shadow-suave">
-      <h1 class="text-2xl font-black md:text-3xl">Inventario central</h1>
+      <h1 class="text-2xl font-black md:text-3xl" data-i18n="hero.title">Inventario central</h1>
     </section>
 
     <section id="preview-notice" class="mt-6 rounded-[2rem] border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-900 shadow-sm">
-      Estás en modo vista previa. Puedes consultar inventario y movimientos recientes, pero para agregar, editar, eliminar o registrar cambios debes iniciar sesión.
+      <span data-i18n="preview.notice">Estás en modo vista previa. Puedes consultar inventario y movimientos recientes, pero para agregar, editar, eliminar o registrar cambios debes iniciar sesión.</span>
     </section>
 
     <section class="mt-10 grid gap-6 lg:grid-cols-[0.72fr_1.28fr]">
       <aside class="rounded-[2rem] bg-white p-6 shadow-suave ring-1 ring-slate-200/80">
-        <p class="text-sm font-black uppercase tracking-[0.28em] text-slate-900">Panel lateral</p>
+        <p class="text-sm font-black uppercase tracking-[0.28em] text-slate-900" data-i18n="sidebar.label">Panel lateral</p>
         <div class="mt-6 space-y-4">
           <div class="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-sm">
-            <p class="text-base font-black text-slate-900">Acciones rápidas</p>
+            <p class="text-base font-black text-slate-900" data-i18n="sidebar.quickActions">Acciones rápidas</p>
             <div class="mt-4 flex flex-wrap gap-3">
-              <button id="open-add-modal" class="rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white">Agregar</button>
-              <button id="open-edit-modal" class="rounded-full border border-hoja px-4 py-2 text-sm font-semibold text-hoja">Editar</button>
-              <button id="delete-product-button" class="rounded-full border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-600">Eliminar</button>
+              <button id="open-add-modal" class="rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white" data-i18n="actions.add">Agregar</button>
+              <button id="open-edit-modal" class="rounded-full border border-hoja px-4 py-2 text-sm font-semibold text-hoja" data-i18n="actions.edit">Editar</button>
+              <button id="delete-product-button" class="rounded-full border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-600" data-i18n="actions.delete">Eliminar</button>
             </div>
           </div>
           <div class="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 shadow-sm">
-            <p class="text-base font-black text-slate-900">Producto seleccionado</p>
-            <p id="selected-product-label" class="mt-3 text-sm leading-6 text-slate-700">Ningún producto seleccionado.</p>
+            <p class="text-base font-black text-slate-900" data-i18n="sidebar.selectedProduct">Producto seleccionado</p>
+            <p id="selected-product-label" class="mt-3 text-sm leading-6 text-slate-700" data-i18n="sidebar.noSelectedProduct">Ningún producto seleccionado.</p>
           </div>
           <div class="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 shadow-sm">
             <p class="text-base font-black text-slate-900">Alertas automáticas</p>
@@ -124,10 +144,10 @@
 
       <section class="space-y-6">
         <div class="flex flex-wrap items-center gap-3">
-          <button class="category-btn rounded-full bg-hoja px-5 py-3 text-sm font-semibold text-white" data-target="insumos">Insumos</button>
-          <button class="category-btn rounded-full border border-hoja px-5 py-3 text-sm font-semibold text-hoja" data-target="abonos">Abonos</button>
-          <button class="category-btn rounded-full border border-hoja px-5 py-3 text-sm font-semibold text-hoja" data-target="herramientas">Herramientas y Maquinaria</button>
-          <button id="toggle-filter" class="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:border-hoja hover:text-hoja">Filtrar productos</button>
+          <button class="category-btn rounded-full bg-hoja px-5 py-3 text-sm font-semibold text-white" data-target="insumos" data-i18n="categories.inputs">Insumos</button>
+          <button class="category-btn rounded-full border border-hoja px-5 py-3 text-sm font-semibold text-hoja" data-target="abonos" data-i18n="categories.fertilizers">Abonos</button>
+          <button class="category-btn rounded-full border border-hoja px-5 py-3 text-sm font-semibold text-hoja" data-target="herramientas" data-i18n="categories.tools">Herramientas y Maquinaria</button>
+          <button id="toggle-filter" class="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:border-hoja hover:text-hoja" data-i18n="filters.toggle">Filtrar productos</button>
         </div>
 
         <div id="filter-panel" class="hidden rounded-[2rem] bg-white p-6 shadow-suave">
@@ -725,7 +745,9 @@
       const authenticated = isAuthenticated();
 
       if (logoutButton) {
-        logoutButton.textContent = authenticated ? "Cerrar sesión" : "Iniciar sesión";
+        logoutButton.textContent = authenticated
+          ? getInventoryText("auth.logout", "Cerrar sesión")
+          : getInventoryText("auth.login", "Iniciar sesión");
       }
 
       if (previewNotice) {
@@ -1364,6 +1386,48 @@
 
       return requiredValues.every(Boolean);
     }
+
+    window.inventoryTranslations = {
+      es: {
+        pageTitle: "AgroControl | Inventario",
+        nav: { home: "Inicio", about: "Nosotros", inventory: "Inventario", movements: "Movimientos", contact: "Contacto" },
+        auth: { login: "Iniciar sesión", logout: "Cerrar sesión" },
+        hero: { title: "Inventario central" },
+        preview: { notice: "Estás en modo vista previa. Puedes consultar inventario y movimientos recientes, pero para agregar, editar, eliminar o registrar cambios debes iniciar sesión." },
+        sidebar: {
+          label: "Panel lateral",
+          quickActions: "Acciones rápidas",
+          selectedProduct: "Producto seleccionado",
+          noSelectedProduct: "Ningún producto seleccionado."
+        },
+        actions: { add: "Agregar", edit: "Editar", delete: "Eliminar" },
+        categories: { inputs: "Insumos", fertilizers: "Abonos", tools: "Herramientas y Maquinaria" },
+        filters: { toggle: "Filtrar productos" },
+        messages: { previewAuth: "Esta acción requiere iniciar sesión. Estás en modo vista previa." }
+      },
+      en: {
+        pageTitle: "AgroControl | Inventory",
+        nav: { home: "Home", about: "About us", inventory: "Inventory", movements: "Movements", contact: "Contact" },
+        auth: { login: "Log in", logout: "Log out" },
+        hero: { title: "Central inventory" },
+        preview: { notice: "You are in preview mode. You can review inventory and recent movements, but you must log in to add, edit, delete, or register changes." },
+        sidebar: {
+          label: "Side panel",
+          quickActions: "Quick actions",
+          selectedProduct: "Selected product",
+          noSelectedProduct: "No product selected."
+        },
+        actions: { add: "Add", edit: "Edit", delete: "Delete" },
+        categories: { inputs: "Supplies", fertilizers: "Fertilizers", tools: "Tools and Machinery" },
+        filters: { toggle: "Filter products" },
+        messages: { previewAuth: "This action requires signing in. You are in preview mode." }
+      }
+    };
+
+    currentInventoryLanguage = initPageI18n(window.inventoryTranslations, (lang) => {
+      currentInventoryLanguage = lang;
+      updateAuthUI();
+    });
 
     initializeStoredProducts();
     updateAuthUI();

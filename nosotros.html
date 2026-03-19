@@ -24,6 +24,7 @@
       }
     };
   </script>
+  <script src="assets/i18n-helper.js"></script>
 </head>
 <body class="bg-crema text-slate-800">
   <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
@@ -32,111 +33,121 @@
         <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
       </a>
       <nav class="hidden gap-6 text-sm font-semibold md:flex">
-        <a href="index.html" class="hover:text-hoja">Inicio</a>
-        <a href="nosotros.html" class="text-hoja">Nosotros</a>
-        <a href="inventario.html" class="hover:text-hoja">Inventario</a>
-        <a href="movimientos.html" class="hover:text-hoja">Movimientos</a>
-        <a href="contacto.html" class="hover:text-hoja">Contacto</a>
+        <a href="index.html" class="hover:text-hoja" data-i18n="nav.home">Inicio</a>
+        <a href="nosotros.html" class="text-hoja" data-i18n="nav.about">Nosotros</a>
+        <a href="inventario.html" class="hover:text-hoja" data-i18n="nav.inventory">Inventario</a>
+        <a href="movimientos.html" class="hover:text-hoja" data-i18n="nav.movements">Movimientos</a>
+        <a href="contacto.html" class="hover:text-hoja" data-i18n="nav.contact">Contacto</a>
       </nav>
-      <a href="login.html?redirect=inventario.html" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Iniciar sesion</a>
+      <div class="flex items-center gap-3">
+        <a href="login.html?redirect=inventario.html" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave" data-i18n="nav.login">Iniciar sesion</a>
+        <div class="hidden items-center gap-2 rounded-full border border-slate-200 bg-white/90 p-1 shadow-sm md:flex">
+          <button type="button" class="language-option rounded-full px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-crema" data-lang="es" aria-label="Cambiar a español">
+            <span aria-hidden="true">🇪🇸</span> ES
+          </button>
+          <button type="button" class="language-option rounded-full px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-crema" data-lang="en" aria-label="Switch to English">
+            <span aria-hidden="true">🇺🇸</span> EN
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
   <main class="mx-auto max-w-7xl px-6 py-16">
     <section class="grid gap-10 lg:grid-cols-[1fr_0.95fr] lg:items-center">
       <div>
-        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Nosotros</p>
-        <h1 class="mt-4 text-4xl font-black text-slate-900 md:text-5xl">Una empresa creada para ordenar el abastecimiento agrícola con calidad, trazabilidad y visión corporativa.</h1>
-        <p class="mt-6 text-lg leading-8 text-slate-700">Nacimos para responder a una necesidad real del sector: administrar mejor los recursos del campo, reducir pérdidas y trabajar con información confiable. Hoy integramos comercialización, control de inventario y seguimiento técnico en una misma operación.</p>
+        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja" data-i18n="hero.label">Nosotros</p>
+        <h1 class="mt-4 text-4xl font-black text-slate-900 md:text-5xl" data-i18n="hero.title">Una empresa creada para ordenar el abastecimiento agrícola con calidad, trazabilidad y visión corporativa.</h1>
+        <p class="mt-6 text-lg leading-8 text-slate-700" data-i18n="hero.description">Nacimos para responder a una necesidad real del sector: administrar mejor los recursos del campo, reducir pérdidas y trabajar con información confiable. Hoy integramos comercialización, control de inventario y seguimiento técnico en una misma operación.</p>
       </div>
       <div class="h-[430px] rounded-[2.5rem] bg-[linear-gradient(180deg,_rgba(62,107,72,0.18),_rgba(62,107,72,0.72)),url('https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center shadow-suave"></div>
     </section>
 
     <section class="mt-16 grid gap-6 md:grid-cols-3">
       <article class="rounded-[2rem] bg-white p-8 shadow-suave">
-        <h2 class="text-2xl font-black text-slate-900">Historia</h2>
-        <p class="mt-4 text-slate-600">Comenzamos abasteciendo insumos esenciales para productores de la región y evolucionamos hacia una estructura más completa con control digital, seguimiento por categorías y reportes operativos para decisiones más inteligentes.</p>
+        <h2 class="text-2xl font-black text-slate-900" data-i18n="pillars.historyTitle">Historia</h2>
+        <p class="mt-4 text-slate-600" data-i18n="pillars.historyDescription">Comenzamos abasteciendo insumos esenciales para productores de la región y evolucionamos hacia una estructura más completa con control digital, seguimiento por categorías y reportes operativos para decisiones más inteligentes.</p>
       </article>
       <article class="rounded-[2rem] bg-white p-8 shadow-suave">
-        <h2 class="text-2xl font-black text-slate-900">Misión</h2>
-        <p class="mt-4 text-slate-600">Impulsar la productividad agrícola con recursos confiables, orden logístico y herramientas de gestión que fortalezcan la operación diaria de nuestros clientes.</p>
+        <h2 class="text-2xl font-black text-slate-900" data-i18n="pillars.missionTitle">Misión</h2>
+        <p class="mt-4 text-slate-600" data-i18n="pillars.missionDescription">Impulsar la productividad agrícola con recursos confiables, orden logístico y herramientas de gestión que fortalezcan la operación diaria de nuestros clientes.</p>
       </article>
       <article class="rounded-[2rem] bg-white p-8 shadow-suave">
-        <h2 class="text-2xl font-black text-slate-900">Visión</h2>
-        <p class="mt-4 text-slate-600">Ser una referencia regional en suministro agrícola e inteligencia de inventario, con procesos eficientes, sostenibles y orientados a resultados.</p>
+        <h2 class="text-2xl font-black text-slate-900" data-i18n="pillars.visionTitle">Visión</h2>
+        <p class="mt-4 text-slate-600" data-i18n="pillars.visionDescription">Ser una referencia regional en suministro agrícola e inteligencia de inventario, con procesos eficientes, sostenibles y orientados a resultados.</p>
       </article>
     </section>
 
     <section class="mt-16 rounded-[2.5rem] bg-hoja px-8 py-12 text-white shadow-suave">
-      <p class="text-sm font-bold uppercase tracking-[0.28em] text-white/75">Valores corporativos</p>
+      <p class="text-sm font-bold uppercase tracking-[0.28em] text-white/75" data-i18n="values.label">Valores corporativos</p>
       <div class="mt-6 grid gap-4 md:grid-cols-4">
-        <div class="rounded-[1.5rem] bg-white/10 p-5">Compromiso con el productor</div>
-        <div class="rounded-[1.5rem] bg-white/10 p-5">Calidad en cada suministro</div>
-        <div class="rounded-[1.5rem] bg-white/10 p-5">Transparencia operativa</div>
-        <div class="rounded-[1.5rem] bg-white/10 p-5">Mejora continua y seguridad</div>
+        <div class="rounded-[1.5rem] bg-white/10 p-5" data-i18n="values.item1">Compromiso con el productor</div>
+        <div class="rounded-[1.5rem] bg-white/10 p-5" data-i18n="values.item2">Calidad en cada suministro</div>
+        <div class="rounded-[1.5rem] bg-white/10 p-5" data-i18n="values.item3">Transparencia operativa</div>
+        <div class="rounded-[1.5rem] bg-white/10 p-5" data-i18n="values.item4">Mejora continua y seguridad</div>
       </div>
     </section>
 
     <section class="mt-16">
       <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
-          <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Equipo</p>
-          <h2 class="mt-2 text-3xl font-black text-slate-900">Perfiles que sostienen la operación</h2>
+          <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja" data-i18n="team.label">Equipo</p>
+          <h2 class="mt-2 text-3xl font-black text-slate-900" data-i18n="team.title">Perfiles que sostienen la operación</h2>
         </div>
-        <p class="max-w-2xl text-slate-600">Cada área combina experiencia comercial, control de inventario y soporte técnico para mantener disponibilidad, trazabilidad y atención oportuna.</p>
+        <p class="max-w-2xl text-slate-600" data-i18n="team.description">Cada área combina experiencia comercial, control de inventario y soporte técnico para mantener disponibilidad, trazabilidad y atención oportuna.</p>
       </div>
       <div class="mt-8 grid gap-6 md:grid-cols-3">
         <article class="rounded-[2rem] bg-white p-8 shadow-suave">
-          <h3 class="text-xl font-black">Dirección General</h3>
-          <p class="mt-3 text-slate-600">Define estrategia, alianzas comerciales y expansión del portafolio agrícola.</p>
+          <h3 class="text-xl font-black" data-i18n="team.role1Title">Dirección General</h3>
+          <p class="mt-3 text-slate-600" data-i18n="team.role1Description">Define estrategia, alianzas comerciales y expansión del portafolio agrícola.</p>
         </article>
         <article class="rounded-[2rem] bg-white p-8 shadow-suave">
-          <h3 class="text-xl font-black">Coordinación de Inventario</h3>
-          <p class="mt-3 text-slate-600">Supervisa stock, movimientos, vencimientos y reportes por categoría.</p>
+          <h3 class="text-xl font-black" data-i18n="team.role2Title">Coordinación de Inventario</h3>
+          <p class="mt-3 text-slate-600" data-i18n="team.role2Description">Supervisa stock, movimientos, vencimientos y reportes por categoría.</p>
         </article>
         <article class="rounded-[2rem] bg-white p-8 shadow-suave">
-          <h3 class="text-xl font-black">Asistencia Técnica</h3>
-          <p class="mt-3 text-slate-600">Acompaña recomendaciones de uso, aplicación y mantenimiento de equipos.</p>
+          <h3 class="text-xl font-black" data-i18n="team.role3Title">Asistencia Técnica</h3>
+          <p class="mt-3 text-slate-600" data-i18n="team.role3Description">Acompaña recomendaciones de uso, aplicación y mantenimiento de equipos.</p>
         </article>
       </div>
     </section>
 
     <section class="mt-16 grid gap-6 lg:grid-cols-2">
       <div class="rounded-[2rem] bg-white p-8 shadow-suave">
-        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Nuestros rubros</p>
+        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja" data-i18n="areas.label">Nuestros rubros</p>
         <div class="mt-6 space-y-5">
           <div>
-            <h3 class="text-xl font-black">Insumos certificados</h3>
-            <p class="mt-2 text-slate-600">Trabajamos con proveedores evaluados, control de trazabilidad y productos alineados a las necesidades productivas de la región.</p>
+            <h3 class="text-xl font-black" data-i18n="areas.item1Title">Insumos certificados</h3>
+            <p class="mt-2 text-slate-600" data-i18n="areas.item1Description">Trabajamos con proveedores evaluados, control de trazabilidad y productos alineados a las necesidades productivas de la región.</p>
           </div>
           <div>
-            <h3 class="text-xl font-black">Abonos adaptados al terreno</h3>
-            <p class="mt-2 text-slate-600">Disponemos de opciones orgánicas y químicas con fichas claras de composición, aplicación y certificación.</p>
+            <h3 class="text-xl font-black" data-i18n="areas.item2Title">Abonos adaptados al terreno</h3>
+            <p class="mt-2 text-slate-600" data-i18n="areas.item2Description">Disponemos de opciones orgánicas y químicas con fichas claras de composición, aplicación y certificación.</p>
           </div>
           <div>
-            <h3 class="text-xl font-black">Herramientas y maquinaria operativa</h3>
-            <p class="mt-2 text-slate-600">Mantenemos control sobre estado, disponibilidad, mantenimiento y asignación de equipos para evitar interrupciones.</p>
+            <h3 class="text-xl font-black" data-i18n="areas.item3Title">Herramientas y maquinaria operativa</h3>
+            <p class="mt-2 text-slate-600" data-i18n="areas.item3Description">Mantenemos control sobre estado, disponibilidad, mantenimiento y asignación de equipos para evitar interrupciones.</p>
           </div>
         </div>
       </div>
       <div class="rounded-[2rem] bg-white p-8 shadow-suave">
-        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Certificaciones y reconocimientos</p>
+        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja" data-i18n="certifications.label">Certificaciones y reconocimientos</p>
         <div class="mt-6 grid gap-4 sm:grid-cols-2">
           <div class="rounded-[1.5rem] bg-crema p-5">
-            <p class="font-bold text-slate-900">Buenas prácticas de almacenamiento</p>
-            <p class="mt-2 text-sm text-slate-600">Procesos internos orientados a seguridad, orden y control de vencimientos.</p>
+            <p class="font-bold text-slate-900" data-i18n="certifications.item1Title">Buenas prácticas de almacenamiento</p>
+            <p class="mt-2 text-sm text-slate-600" data-i18n="certifications.item1Description">Procesos internos orientados a seguridad, orden y control de vencimientos.</p>
           </div>
           <div class="rounded-[1.5rem] bg-crema p-5">
-            <p class="font-bold text-slate-900">Red de proveedores aprobados</p>
-            <p class="mt-2 text-sm text-slate-600">Selección de marcas con respaldo técnico y cumplimiento comercial.</p>
+            <p class="font-bold text-slate-900" data-i18n="certifications.item2Title">Red de proveedores aprobados</p>
+            <p class="mt-2 text-sm text-slate-600" data-i18n="certifications.item2Description">Selección de marcas con respaldo técnico y cumplimiento comercial.</p>
           </div>
           <div class="rounded-[1.5rem] bg-crema p-5">
-            <p class="font-bold text-slate-900">Trazabilidad documental</p>
-            <p class="mt-2 text-sm text-slate-600">Registro de compras, aplicaciones, mantenimientos y responsables operativos.</p>
+            <p class="font-bold text-slate-900" data-i18n="certifications.item3Title">Trazabilidad documental</p>
+            <p class="mt-2 text-sm text-slate-600" data-i18n="certifications.item3Description">Registro de compras, aplicaciones, mantenimientos y responsables operativos.</p>
           </div>
           <div class="rounded-[1.5rem] bg-crema p-5">
-            <p class="font-bold text-slate-900">Compromiso con la calidad</p>
-            <p class="mt-2 text-sm text-slate-600">Orientación continua a mejora, soporte técnico y satisfacción del cliente.</p>
+            <p class="font-bold text-slate-900" data-i18n="certifications.item4Title">Compromiso con la calidad</p>
+            <p class="mt-2 text-sm text-slate-600" data-i18n="certifications.item4Description">Orientación continua a mejora, soporte técnico y satisfacción del cliente.</p>
           </div>
         </div>
       </div>
@@ -145,7 +156,7 @@
 
   <footer class="bg-slate-950 text-white">
     <div class="mx-auto flex max-w-7xl flex-col items-center gap-5 px-6 py-8 text-center">
-      <p class="text-sm text-white/70">AgroControl. Nuestra historia se construye con orden, calidad y trabajo en campo.</p>
+      <p class="text-sm text-white/70" data-i18n="footer.description">AgroControl. Nuestra historia se construye con orden, calidad y trabajo en campo.</p>
       <div class="flex flex-wrap items-center justify-center gap-3">
         <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
           <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4H16V5.5c-.2 0-.9-.1-1.8-.1-1.8 0-3.1 1.1-3.1 3.2v1.8H9v2.8h2.3v7h2.2Z"/></svg>
@@ -162,5 +173,121 @@
       </div>
     </div>
   </footer>
+  <script>
+    initPageI18n({
+      es: {
+        pageTitle: "AgroControl | Nosotros",
+        nav: { home: "Inicio", about: "Nosotros", inventory: "Inventario", movements: "Movimientos", contact: "Contacto", login: "Iniciar sesión" },
+        hero: {
+          label: "Nosotros",
+          title: "Una empresa creada para ordenar el abastecimiento agrícola con calidad, trazabilidad y visión corporativa.",
+          description: "Nacimos para responder a una necesidad real del sector: administrar mejor los recursos del campo, reducir pérdidas y trabajar con información confiable. Hoy integramos comercialización, control de inventario y seguimiento técnico en una misma operación."
+        },
+        pillars: {
+          historyTitle: "Historia",
+          historyDescription: "Comenzamos abasteciendo insumos esenciales para productores de la región y evolucionamos hacia una estructura más completa con control digital, seguimiento por categorías y reportes operativos para decisiones más inteligentes.",
+          missionTitle: "Misión",
+          missionDescription: "Impulsar la productividad agrícola con recursos confiables, orden logístico y herramientas de gestión que fortalezcan la operación diaria de nuestros clientes.",
+          visionTitle: "Visión",
+          visionDescription: "Ser una referencia regional en suministro agrícola e inteligencia de inventario, con procesos eficientes, sostenibles y orientados a resultados."
+        },
+        values: {
+          label: "Valores corporativos",
+          item1: "Compromiso con el productor",
+          item2: "Calidad en cada suministro",
+          item3: "Transparencia operativa",
+          item4: "Mejora continua y seguridad"
+        },
+        team: {
+          label: "Equipo",
+          title: "Perfiles que sostienen la operación",
+          description: "Cada área combina experiencia comercial, control de inventario y soporte técnico para mantener disponibilidad, trazabilidad y atención oportuna.",
+          role1Title: "Dirección General",
+          role1Description: "Define estrategia, alianzas comerciales y expansión del portafolio agrícola.",
+          role2Title: "Coordinación de Inventario",
+          role2Description: "Supervisa stock, movimientos, vencimientos y reportes por categoría.",
+          role3Title: "Asistencia Técnica",
+          role3Description: "Acompaña recomendaciones de uso, aplicación y mantenimiento de equipos."
+        },
+        areas: {
+          label: "Nuestros rubros",
+          item1Title: "Insumos certificados",
+          item1Description: "Trabajamos con proveedores evaluados, control de trazabilidad y productos alineados a las necesidades productivas de la región.",
+          item2Title: "Abonos adaptados al terreno",
+          item2Description: "Disponemos de opciones orgánicas y químicas con fichas claras de composición, aplicación y certificación.",
+          item3Title: "Herramientas y maquinaria operativa",
+          item3Description: "Mantenemos control sobre estado, disponibilidad, mantenimiento y asignación de equipos para evitar interrupciones."
+        },
+        certifications: {
+          label: "Certificaciones y reconocimientos",
+          item1Title: "Buenas prácticas de almacenamiento",
+          item1Description: "Procesos internos orientados a seguridad, orden y control de vencimientos.",
+          item2Title: "Red de proveedores aprobados",
+          item2Description: "Selección de marcas con respaldo técnico y cumplimiento comercial.",
+          item3Title: "Trazabilidad documental",
+          item3Description: "Registro de compras, aplicaciones, mantenimientos y responsables operativos.",
+          item4Title: "Compromiso con la calidad",
+          item4Description: "Orientación continua a mejora, soporte técnico y satisfacción del cliente."
+        },
+        footer: { description: "AgroControl. Nuestra historia se construye con orden, calidad y trabajo en campo." }
+      },
+      en: {
+        pageTitle: "AgroControl | About Us",
+        nav: { home: "Home", about: "About us", inventory: "Inventory", movements: "Movements", contact: "Contact", login: "Log in" },
+        hero: {
+          label: "About us",
+          title: "A company created to organize agricultural supply with quality, traceability, and a corporate vision.",
+          description: "We were born to respond to a real sector need: manage field resources better, reduce losses, and work with reliable information. Today we integrate commercialization, inventory control, and technical follow-up into one operation."
+        },
+        pillars: {
+          historyTitle: "History",
+          historyDescription: "We started by supplying essential inputs to regional producers and evolved into a more complete structure with digital control, category tracking, and operational reports for smarter decisions.",
+          missionTitle: "Mission",
+          missionDescription: "Boost agricultural productivity with reliable resources, logistical order, and management tools that strengthen our clients' daily operations.",
+          visionTitle: "Vision",
+          visionDescription: "To be a regional benchmark in agricultural supply and inventory intelligence, with efficient, sustainable, and results-oriented processes."
+        },
+        values: {
+          label: "Corporate values",
+          item1: "Commitment to growers",
+          item2: "Quality in every supply",
+          item3: "Operational transparency",
+          item4: "Continuous improvement and safety"
+        },
+        team: {
+          label: "Team",
+          title: "Profiles that sustain the operation",
+          description: "Each area combines commercial experience, inventory control, and technical support to maintain availability, traceability, and timely service.",
+          role1Title: "General Management",
+          role1Description: "Defines strategy, commercial partnerships, and agricultural portfolio expansion.",
+          role2Title: "Inventory Coordination",
+          role2Description: "Oversees stock, movements, expirations, and category reports.",
+          role3Title: "Technical Assistance",
+          role3Description: "Supports recommendations for use, application, and equipment maintenance."
+        },
+        areas: {
+          label: "Our business areas",
+          item1Title: "Certified supplies",
+          item1Description: "We work with evaluated suppliers, traceability control, and products aligned with regional production needs.",
+          item2Title: "Fertilizers adapted to the land",
+          item2Description: "We offer organic and chemical options with clear composition, application, and certification sheets.",
+          item3Title: "Operational tools and machinery",
+          item3Description: "We maintain control over status, availability, maintenance, and equipment assignment to avoid interruptions."
+        },
+        certifications: {
+          label: "Certifications and recognitions",
+          item1Title: "Good storage practices",
+          item1Description: "Internal processes focused on safety, order, and expiration control.",
+          item2Title: "Approved supplier network",
+          item2Description: "Selection of brands with technical backing and commercial compliance.",
+          item3Title: "Document traceability",
+          item3Description: "Records of purchases, applications, maintenance, and operational owners.",
+          item4Title: "Commitment to quality",
+          item4Description: "Continuous focus on improvement, technical support, and customer satisfaction."
+        },
+        footer: { description: "AgroControl. Our story is built with order, quality, and field work." }
+      }
+    });
+  </script>
 </body>
 </html>
