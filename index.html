@@ -25,21 +25,21 @@
     };
   </script>
 </head>
-<body class="bg-crema text-slate-800">
+<body class="flex min-h-screen flex-col bg-crema text-slate-800">
   <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
       <a href="index.html" class="flex items-center gap-3">
         <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
       </a>
       <nav class="hidden gap-6 text-sm font-semibold md:flex">
-        <a href="index.html" class="text-hoja" data-i18n="nav.home">Inicio</a>
-        <a href="nosotros.html" class="hover:text-hoja" data-i18n="nav.about">Nosotros</a>
-        <a href="inventario.html" class="hover:text-hoja" data-i18n="nav.inventory">Inventario</a>
-        <a href="movimientos.html" class="hover:text-hoja" data-i18n="nav.movements">Movimientos</a>
-        <a href="contacto.html" class="hover:text-hoja" data-i18n="nav.contact">Contacto</a>
+        <a href="index.html" class="border-b-2 border-hoja pb-1 text-hoja" data-i18n="nav.home">Inicio</a>
+        <a href="nosotros.html" class="border-b-2 border-transparent pb-1 transition hover:border-hoja/40 hover:text-hoja" data-i18n="nav.about">Nosotros</a>
+        <a href="inventario.html" class="border-b-2 border-transparent pb-1 transition hover:border-hoja/40 hover:text-hoja" data-i18n="nav.inventory">Inventario</a>
+        <a href="movimientos.html" class="border-b-2 border-transparent pb-1 transition hover:border-hoja/40 hover:text-hoja" data-i18n="nav.movements">Movimientos</a>
+        <a href="contacto.html" class="border-b-2 border-transparent pb-1 transition hover:border-hoja/40 hover:text-hoja" data-i18n="nav.contact">Contacto</a>
       </nav>
       <div class="flex items-center gap-3">
-        <a href="login.html?redirect=inventario.html" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave" data-i18n="nav.login">Iniciar sesion</a>
+        <a href="login.html?redirect=inventario.html" class="inline-flex items-center gap-2 rounded-full bg-hoja/85 px-5 py-2 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(62,107,72,0.14)] transition hover:bg-hoja/95" data-i18n="nav.login">👤 Iniciar sesion</a>
         <div class="hidden items-center gap-1 rounded-full border border-hoja/15 bg-gradient-to-r from-white via-crema to-white p-1.5 shadow-[0_10px_30px_rgba(62,107,72,0.14)] md:flex">
           <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-hoja transition duration-200 hover:bg-white/80" data-lang="es" aria-label="Cambiar a español">
             <span aria-hidden="true" class="inline-flex h-4 w-5 overflow-hidden rounded-[3px] shadow-sm">
@@ -69,45 +69,33 @@
     </div>
   </header>
 
-  <main>
+  <main class="flex-1">
     <section class="relative overflow-hidden">
       <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(217,164,65,0.28),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(62,107,72,0.22),_transparent_30%)]"></div>
       <div class="relative mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div>
-          <span class="inline-flex rounded-full bg-white/80 px-4 py-1 text-sm font-semibold text-hoja" data-i18n="hero.badge">Empresa corporativa + sistema de inventario agrícola</span>
           <h1 class="mt-6 max-w-2xl text-4xl font-black leading-tight text-slate-900 md:text-6xl" data-i18n="hero.title">Control total de tu inventario agrícola con una gestión clara, moderna y confiable.</h1>
           <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-700" data-i18n="hero.description">Centraliza insumos, abonos, herramientas y maquinaria en una sola plataforma visual. Mejora tus compras, anticipa vencimientos y organiza cada movimiento del campo con datos en tiempo real.</p>
-          <div class="mt-8 flex flex-wrap gap-4">
-            <a href="login.html?redirect=inventario.html" class="rounded-full bg-hoja px-6 py-3 font-semibold text-white shadow-suave" data-i18n="hero.primaryCta">Entrar al sistema</a>
-            <a href="contacto.html" class="rounded-full border border-hoja px-6 py-3 font-semibold text-hoja" data-i18n="hero.secondaryCta">Solicita demo</a>
-          </div>
-          <div class="mt-10 grid gap-4 sm:grid-cols-3">
-            <div class="rounded-3xl bg-white p-5 shadow-suave">
-              <p class="text-3xl font-black text-hoja">+450</p>
-              <p class="mt-2 text-sm text-slate-600" data-i18n="stats.products">productos y equipos controlados</p>
-            </div>
-            <div class="rounded-3xl bg-white p-5 shadow-suave">
-              <p class="text-3xl font-black text-hoja">24/7</p>
-              <p class="mt-2 text-sm text-slate-600" data-i18n="stats.monitoring">seguimiento de stock y alertas</p>
-            </div>
-            <div class="rounded-3xl bg-white p-5 shadow-suave">
-              <p class="text-3xl font-black text-hoja">98%</p>
-              <p class="mt-2 text-sm text-slate-600" data-i18n="stats.reports">precisión en reportes operativos</p>
-            </div>
-          </div>
         </div>
 
-        <div class="rounded-[2rem] border border-white/50 bg-white p-5 shadow-suave">
-          <div class="grid gap-4">
-            <div class="h-64 rounded-[1.5rem] bg-[linear-gradient(135deg,_rgba(62,107,72,0.82),_rgba(109,139,78,0.58)),url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=90')] bg-cover bg-center"></div>
-            <div class="grid gap-4 sm:grid-cols-2">
-              <div class="rounded-[1.5rem] bg-crema p-5">
-                <p class="text-sm font-semibold uppercase tracking-[0.2em] text-hoja" data-i18n="heroCard.monitoringLabel">Monitoreo</p>
-                <p class="mt-3 text-xl font-bold" data-i18n="heroCard.monitoringText">Inventario por categoría y subcategoría</p>
+        <div class="flex items-center justify-center">
+          <div class="w-full max-w-xl rounded-[2.25rem] border border-white/50 bg-white/90 p-5 shadow-suave backdrop-blur-sm">
+            <div id="hero-slider" class="relative overflow-hidden rounded-[1.75rem] shadow-[0_24px_60px_rgba(62,107,72,0.22)]">
+              <div class="hero-slide absolute inset-0 opacity-100 transition-opacity duration-1000 bg-[linear-gradient(135deg,_rgba(62,107,72,0.42),_rgba(109,139,78,0.18)),url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=90')] bg-cover bg-center"></div>
+              <div class="hero-slide absolute inset-0 opacity-0 transition-opacity duration-1000 bg-[linear-gradient(135deg,_rgba(62,107,72,0.38),_rgba(217,164,65,0.16)),url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1800&q=90')] bg-cover bg-center"></div>
+              <div class="hero-slide absolute inset-0 opacity-0 transition-opacity duration-1000 bg-[linear-gradient(135deg,_rgba(62,107,72,0.45),_rgba(107,79,58,0.2)),url('https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?auto=format&fit=crop&w=1800&q=90')] bg-cover bg-center"></div>
+              <div class="relative flex h-[340px] items-end p-6 md:h-[420px]">
+                <div class="rounded-[1.5rem] bg-slate-950/50 px-5 py-4 text-white backdrop-blur-sm">
+                  <p class="text-xs font-bold uppercase tracking-[0.24em] text-white/70">Vista operativa</p>
+                  <p class="mt-2 max-w-sm text-sm leading-6 text-white/90">Control visual del campo, abastecimiento y operación agrícola en una sola vista.</p>
+                </div>
               </div>
-              <div class="rounded-[1.5rem] bg-crema p-5">
-                <p class="text-sm font-semibold uppercase tracking-[0.2em] text-hoja" data-i18n="heroCard.alertsLabel">Alertas</p>
-                <p class="mt-3 text-xl font-bold" data-i18n="heroCard.alertsText">Stock bajo, vencimientos y mantenimientos</p>
+              <div class="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center">
+                <div class="flex items-center gap-2 rounded-full bg-white/70 px-3 py-2 backdrop-blur-sm">
+                  <span class="hero-dot h-2.5 w-2.5 rounded-full bg-hoja"></span>
+                  <span class="hero-dot h-2.5 w-2.5 rounded-full bg-slate-300"></span>
+                  <span class="hero-dot h-2.5 w-2.5 rounded-full bg-slate-300"></span>
+                </div>
               </div>
             </div>
           </div>
@@ -116,61 +104,78 @@
     </section>
 
     <section class="mx-auto max-w-7xl px-6 py-16">
-      <div class="max-w-3xl">
-        <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja" data-i18n="about.label">Sobre la empresa</p>
-        <h2 class="mt-3 text-3xl font-black text-slate-900 md:text-4xl" data-i18n="about.title">Gestionamos recursos agrícolas con enfoque corporativo, experiencia operativa y visión de crecimiento.</h2>
-        <p class="mt-5 text-lg leading-8 text-slate-700" data-i18n="about.description">Somos una empresa dedicada a la comercialización y control estratégico de recursos agrícolas. Trabajamos con procesos ordenados, proveedores confiables y herramientas de seguimiento que ayudan a tomar decisiones más rápidas y seguras.</p>
+      <div class="grid gap-8 lg:grid-cols-2 lg:items-stretch">
+        <div class="flex">
+          <div class="w-full rounded-[2.5rem] bg-white p-8 shadow-suave md:p-10">
+          <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja" data-i18n="about.label">Sobre la empresa</p>
+          <h2 class="mt-4 max-w-3xl text-3xl font-black leading-tight text-slate-900 md:text-4xl" data-i18n="about.title">Gestionamos recursos agrícolas con enfoque corporativo, experiencia operativa y visión de crecimiento.</h2>
+          <p class="mt-5 max-w-2xl text-lg leading-8 text-slate-700" data-i18n="about.description">Somos una empresa dedicada a la comercialización y control estratégico de recursos agrícolas. Trabajamos con procesos ordenados, proveedores confiables y herramientas de seguimiento que ayudan a tomar decisiones más rápidas y seguras.</p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <span class="rounded-full bg-crema px-4 py-2 text-sm font-semibold text-hoja">Procesos ordenados</span>
+            <span class="rounded-full bg-crema px-4 py-2 text-sm font-semibold text-hoja">Trazabilidad operativa</span>
+            <span class="rounded-full bg-crema px-4 py-2 text-sm font-semibold text-hoja">Soporte confiable</span>
+          </div>
+        </div>
+        </div>
+        <div class="flex items-center justify-center">
+          <div class="relative w-full max-w-xl overflow-hidden rounded-[2.5rem] border border-white/60 bg-white p-4 shadow-suave">
+            <div class="h-[360px] rounded-[2rem] bg-[linear-gradient(180deg,_rgba(62,107,72,0.12),_rgba(15,23,42,0.38)),url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center"></div>
+            <div class="absolute inset-x-8 bottom-8 rounded-[1.75rem] bg-white/88 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.14)] backdrop-blur-sm">
+              <div class="grid gap-3 sm:grid-cols-3">
+                <div class="rounded-[1.25rem] bg-crema px-4 py-4">
+                  <p class="text-xs font-bold uppercase tracking-[0.2em] text-hoja">Enfoque</p>
+                  <p class="mt-2 text-sm font-semibold text-slate-800">Gestión clara</p>
+                </div>
+                <div class="rounded-[1.25rem] bg-crema px-4 py-4">
+                  <p class="text-xs font-bold uppercase tracking-[0.2em] text-hoja">Modelo</p>
+                  <p class="mt-2 text-sm font-semibold text-slate-800">Control agrícola</p>
+                </div>
+                <div class="rounded-[1.25rem] bg-crema px-4 py-4">
+                  <p class="text-xs font-bold uppercase tracking-[0.2em] text-hoja">Meta</p>
+                  <p class="mt-2 text-sm font-semibold text-slate-800">Decisiones seguras</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <section class="mx-auto max-w-7xl px-6 py-6">
       <div class="grid gap-6 lg:grid-cols-3">
         <article class="overflow-hidden rounded-[2rem] bg-white shadow-suave">
-          <div class="h-52 bg-[linear-gradient(180deg,_rgba(62,107,72,0.15),_rgba(62,107,72,0.7)),url('https://images.unsplash.com/photo-1471193945509-9ad0617afabf?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+          <div class="category-slider relative h-52 overflow-hidden" data-slider="inputs">
+            <div class="category-slide absolute inset-0 opacity-100 transition-opacity duration-1000 bg-[linear-gradient(180deg,_rgba(62,107,72,0.15),_rgba(62,107,72,0.7)),url('https://images.unsplash.com/photo-1471193945509-9ad0617afabf?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+            <div class="category-slide absolute inset-0 opacity-0 transition-opacity duration-1000 bg-[linear-gradient(180deg,_rgba(62,107,72,0.18),_rgba(62,107,72,0.68)),url('https://images.unsplash.com/photo-1512428813834-c702c7702b78?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+            <div class="category-slide absolute inset-0 opacity-0 transition-opacity duration-1000 bg-[linear-gradient(180deg,_rgba(62,107,72,0.12),_rgba(62,107,72,0.72)),url('https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+          </div>
           <div class="p-6">
             <h3 class="text-2xl font-black text-slate-900" data-i18n="cards.inputsTitle">Insumos</h3>
             <p class="mt-3 text-slate-600" data-i18n="cards.inputsDescription">Semillas, pesticidas y recursos esenciales con control de vencimiento, proveedor, disponibilidad y uso recomendado.</p>
           </div>
         </article>
         <article class="overflow-hidden rounded-[2rem] bg-white shadow-suave">
-          <div class="h-52 bg-[linear-gradient(180deg,_rgba(107,79,58,0.1),_rgba(109,139,78,0.78)),url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+          <div class="category-slider relative h-52 overflow-hidden" data-slider="fertilizers">
+            <div class="category-slide absolute inset-0 opacity-100 transition-opacity duration-1000 bg-[linear-gradient(180deg,_rgba(107,79,58,0.1),_rgba(109,139,78,0.78)),url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+            <div class="category-slide absolute inset-0 opacity-0 transition-opacity duration-1000 bg-[linear-gradient(180deg,_rgba(107,79,58,0.12),_rgba(109,139,78,0.76)),url('https://images.unsplash.com/photo-1492496913980-501348b61469?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+            <div class="category-slide absolute inset-0 opacity-0 transition-opacity duration-1000 bg-[linear-gradient(180deg,_rgba(107,79,58,0.08),_rgba(109,139,78,0.78)),url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+          </div>
           <div class="p-6">
             <h3 class="text-2xl font-black text-slate-900" data-i18n="cards.fertilizersTitle">Abonos</h3>
             <p class="mt-3 text-slate-600" data-i18n="cards.fertilizersDescription">Fertilizantes orgánicos y químicos con composición detallada, aplicaciones recomendadas y certificaciones visibles.</p>
           </div>
         </article>
         <article class="overflow-hidden rounded-[2rem] bg-white shadow-suave">
-          <div class="h-52 bg-[linear-gradient(180deg,_rgba(217,164,65,0.16),_rgba(62,107,72,0.78)),url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+          <div class="category-slider relative h-52 overflow-hidden" data-slider="tools">
+            <div class="category-slide absolute inset-0 opacity-100 transition-opacity duration-1000 bg-[linear-gradient(180deg,_rgba(217,164,65,0.16),_rgba(62,107,72,0.78)),url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+            <div class="category-slide absolute inset-0 opacity-0 transition-opacity duration-1000 bg-[linear-gradient(180deg,_rgba(217,164,65,0.14),_rgba(62,107,72,0.76)),url('https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+            <div class="category-slide absolute inset-0 opacity-0 transition-opacity duration-1000 bg-[linear-gradient(180deg,_rgba(217,164,65,0.14),_rgba(62,107,72,0.8)),url('https://images.unsplash.com/photo-1517022812141-23620dba5c23?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+          </div>
           <div class="p-6">
             <h3 class="text-2xl font-black text-slate-900" data-i18n="cards.toolsTitle">Herramientas y Maquinaria</h3>
             <p class="mt-3 text-slate-600" data-i18n="cards.toolsDescription">Activos manuales y equipos pesados con historial de mantenimiento, responsable y ubicación operativa.</p>
           </div>
         </article>
-      </div>
-    </section>
-
-    <section class="mx-auto max-w-7xl px-6 py-16">
-      <div class="rounded-[2.5rem] bg-hoja px-8 py-12 text-white shadow-suave">
-        <div class="grid gap-8 lg:grid-cols-2">
-          <div>
-            <p class="text-sm font-bold uppercase tracking-[0.28em] text-white/75" data-i18n="benefits.label">Beneficios del sistema</p>
-            <h2 class="mt-4 text-3xl font-black md:text-4xl" data-i18n="benefits.title">Menos pérdidas, más trazabilidad y decisiones mejor respaldadas.</h2>
-          </div>
-          <div class="grid gap-4 sm:grid-cols-3">
-            <div class="rounded-[1.5rem] bg-white/10 p-5">
-              <p class="font-bold" data-i18n="benefits.realTimeTitle">Control en tiempo real</p>
-              <p class="mt-2 text-sm text-white/80" data-i18n="benefits.realTimeDescription">Consulta el estado exacto del inventario y los movimientos operativos.</p>
-            </div>
-            <div class="rounded-[1.5rem] bg-white/10 p-5">
-              <p class="font-bold" data-i18n="benefits.purchasesTitle">Optimización de compras</p>
-              <p class="mt-2 text-sm text-white/80" data-i18n="benefits.purchasesDescription">Detecta necesidades antes de que afecten la operación agrícola.</p>
-            </div>
-            <div class="rounded-[1.5rem] bg-white/10 p-5">
-              <p class="font-bold" data-i18n="benefits.reportsTitle">Reportes precisos</p>
-              <p class="mt-2 text-sm text-white/80" data-i18n="benefits.reportsDescription">Convierte datos del inventario en información clara para planificar.</p>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -190,9 +195,10 @@
     </section>
   </main>
 
-  <footer class="mt-12 bg-slate-950 text-white">
-    <div class="mx-auto flex max-w-7xl flex-col items-center gap-5 px-6 py-8 text-center">
-      <p class="text-sm text-white/70" data-i18n="footer.description">AgroControl. Gestión corporativa e inventario para productos agrícolas.</p>
+  <footer class="mt-auto bg-slate-950 text-white">
+    <div class="mx-auto flex max-w-7xl flex-col items-center gap-4 px-6 py-5 text-center">
+      <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-7 w-auto opacity-90">
+      <p class="max-w-2xl text-sm leading-6 text-white/70" data-i18n="footer.description">AgroControl. Gestión corporativa e inventario para productos agrícolas.</p>
       <div class="flex flex-wrap items-center justify-center gap-3">
         <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
           <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4H16V5.5c-.2 0-.9-.1-1.8-.1-1.8 0-3.1 1.1-3.1 3.2v1.8H9v2.8h2.3v7h2.2Z"/></svg>
@@ -215,12 +221,12 @@
       es: {
         pageTitle: "AgroControl | Inicio",
         nav: {
-          home: "Inicio",
-          about: "Nosotros",
-          inventory: "Inventario",
-          movements: "Movimientos",
-          contact: "Contacto",
-          login: "Iniciar sesión"
+          home: "🏠 Inicio",
+          about: "🌿 Nosotros",
+          inventory: "📦 Inventario",
+          movements: "🔄 Movimientos",
+          contact: "✉️ Contacto",
+          login: "👤 Iniciar sesión"
         },
         hero: {
           badge: "Empresa corporativa + sistema de inventario agrícola",
@@ -275,12 +281,12 @@
       en: {
         pageTitle: "AgroControl | Home",
         nav: {
-          home: "Home",
-          about: "About us",
-          inventory: "Inventory",
-          movements: "Movements",
-          contact: "Contact",
-          login: "Log in"
+          home: "🏠 Home",
+          about: "🌿 About us",
+          inventory: "📦 Inventory",
+          movements: "🔄 Movements",
+          contact: "✉️ Contact",
+          login: "👤 Log in"
         },
         hero: {
           badge: "Corporate company + agricultural inventory system",
@@ -364,13 +370,86 @@
       updateLanguageButtons(nextLang);
     }
 
+    const authStorageKey = "agrocontrol-auth-v1";
+    const loginLink = document.querySelector('[data-i18n="nav.login"]');
+    const inventoryLink = document.querySelector('[data-i18n="nav.inventory"]');
+    const movementsLink = document.querySelector('[data-i18n="nav.movements"]');
+    const authTranslations = {
+      es: { login: "👤 Iniciar sesion", logout: "Cerrar sesion" },
+      en: { login: "👤 Log in", logout: "Log out" }
+    };
     const savedLanguage = localStorage.getItem(languageStorageKey) || "es";
+
+    function isAuthenticated() {
+      try {
+        return Boolean(JSON.parse(localStorage.getItem(authStorageKey) || "null"));
+      } catch {
+        return false;
+      }
+    }
+
+    function updateAuthLink(lang) {
+      if (!loginLink) return;
+      const copy = authTranslations[lang] || authTranslations.es;
+      const authenticated = isAuthenticated();
+      loginLink.textContent = authenticated ? copy.logout : copy.login;
+      loginLink.setAttribute("href", authenticated ? "#" : "login.html?redirect=inventario.html");
+      inventoryLink?.setAttribute("href", authenticated ? "inventario.html" : "login.html?redirect=inventario.html");
+      movementsLink?.setAttribute("href", authenticated ? "movimientos.html" : "login.html?redirect=movimientos.html");
+    }
     setLanguage(savedLanguage);
+    updateAuthLink(savedLanguage);
 
     document.querySelectorAll(".language-option").forEach((button) => {
       button.addEventListener("click", () => {
         setLanguage(button.dataset.lang);
+        updateAuthLink(button.dataset.lang || "es");
       });
+    });
+
+    loginLink?.addEventListener("click", (event) => {
+      if (!isAuthenticated()) return;
+      event.preventDefault();
+      localStorage.removeItem(authStorageKey);
+      updateAuthLink(localStorage.getItem(languageStorageKey) || "es");
+    });
+
+    const heroSlides = Array.from(document.querySelectorAll(".hero-slide"));
+    const heroDots = Array.from(document.querySelectorAll(".hero-dot"));
+    let activeHeroSlide = 0;
+
+    function renderHeroSlide(index) {
+      heroSlides.forEach((slide, slideIndex) => {
+        slide.classList.toggle("opacity-100", slideIndex === index);
+        slide.classList.toggle("opacity-0", slideIndex !== index);
+      });
+
+      heroDots.forEach((dot, dotIndex) => {
+        dot.classList.toggle("bg-hoja", dotIndex === index);
+        dot.classList.toggle("bg-slate-300", dotIndex !== index);
+      });
+    }
+
+    if (heroSlides.length > 1) {
+      window.setInterval(() => {
+        activeHeroSlide = (activeHeroSlide + 1) % heroSlides.length;
+        renderHeroSlide(activeHeroSlide);
+      }, 4500);
+    }
+
+    document.querySelectorAll(".category-slider").forEach((slider, sliderIndex) => {
+      const slides = Array.from(slider.querySelectorAll(".category-slide"));
+      let activeSlide = 0;
+
+      if (slides.length <= 1) return;
+
+      window.setInterval(() => {
+        activeSlide = (activeSlide + 1) % slides.length;
+        slides.forEach((slide, index) => {
+          slide.classList.toggle("opacity-100", index === activeSlide);
+          slide.classList.toggle("opacity-0", index !== activeSlide);
+        });
+      }, 3600 + (sliderIndex * 500));
     });
   </script>
 </body>

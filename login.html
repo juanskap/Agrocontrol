@@ -27,10 +27,10 @@
   <script src="assets/i18n-helper.js"></script>
 </head>
 <body class="min-h-screen bg-crema text-slate-800">
-  <main class="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-12">
+  <main class="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-8">
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(217,164,65,0.22),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(62,107,72,0.18),_transparent_26%)]"></div>
-    <div class="relative grid w-full max-w-6xl gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-      <section class="rounded-[2.5rem] bg-slate-950 px-8 py-12 text-white shadow-suave">
+    <div class="relative grid w-full max-w-5xl gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
+      <section class="flex h-full flex-col rounded-[2.25rem] bg-slate-950 px-7 py-9 text-white shadow-suave">
         <div class="flex items-center justify-between gap-4">
           <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-12 w-auto">
           <div class="flex items-center gap-1 rounded-full border border-white/15 bg-gradient-to-r from-white/10 via-white/5 to-white/10 p-1.5 shadow-[0_12px_30px_rgba(15,23,42,0.28)]">
@@ -59,38 +59,42 @@
             </button>
           </div>
         </div>
-        <p class="mt-8 text-sm font-bold uppercase tracking-[0.28em] text-sol" data-i18n="hero.label">Acceso protegido</p>
-        <h1 class="mt-4 text-4xl font-black leading-tight md:text-5xl" data-i18n="hero.title">Ingresa al sistema de inventario agrícola.</h1>
-        <p class="mt-5 max-w-2xl text-lg leading-8 text-white/75" data-i18n="hero.description">Esta primera capa de acceso protege las áreas de inventario y movimientos. Más adelante podemos convertirla en un sistema completo con usuarios, roles y base de datos.</p>
-        <div class="mt-8 rounded-[1.75rem] bg-white/10 p-5">
-          <p class="text-sm font-bold uppercase tracking-[0.2em] text-white/70" data-i18n="hero.credentials">Credenciales de prueba</p>
-          <div class="mt-4 space-y-2 text-sm">
-            <p><span class="font-semibold text-white" data-i18n="hero.userLabel">Usuario:</span> admin</p>
-            <p><span class="font-semibold text-white" data-i18n="hero.passwordLabel">Contraseña:</span> Agro2026.</p>
+        <p class="mt-6 text-xs font-bold uppercase tracking-[0.28em] text-sol" data-i18n="hero.label">Acceso protegido</p>
+        <h1 class="mt-3 text-3xl font-black leading-tight md:text-4xl" data-i18n="hero.title">Ingresa al sistema de inventario agrícola.</h1>
+        <p class="mt-4 max-w-xl text-base leading-7 text-white/75" data-i18n="hero.description">Esta primera capa de acceso protege las áreas de inventario y movimientos. Más adelante podemos convertirla en un sistema completo con usuarios, roles y base de datos.</p>
+        <div class="mt-auto space-y-4 pt-8">
+          <div class="rounded-[1.5rem] border border-sol/25 bg-sol/10 px-4 py-4">
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-sol" data-i18n="hero.redirectLabel">Destino del acceso</p>
+            <p id="login-redirect-label" class="mt-2 text-sm text-white/85">Serás enviado al panel privado después de iniciar sesión.</p>
           </div>
         </div>
       </section>
 
-      <section class="rounded-[2.5rem] bg-white p-8 shadow-suave md:p-10">
-        <p class="text-sm font-bold uppercase tracking-[0.24em] text-hoja" data-i18n="form.label">Iniciar sesión</p>
-        <h2 class="mt-3 text-3xl font-black text-slate-900" data-i18n="form.title">Control de acceso simple</h2>
+      <section class="flex h-full flex-col rounded-[2.25rem] bg-white p-7 shadow-suave md:p-8">
+        <p class="text-xs font-bold uppercase tracking-[0.24em] text-hoja" data-i18n="form.label">Iniciar sesión</p>
+        <h2 class="mt-3 text-2xl font-black text-slate-900 md:text-3xl" data-i18n="form.title">Control de acceso simple</h2>
         <p class="mt-3 text-sm leading-7 text-slate-600" data-i18n="form.description">Ingresa con el usuario de administrador para acceder al inventario y a los reportes de movimientos.</p>
 
-        <form id="login-form" class="mt-8 space-y-5">
+        <form id="login-form" class="mt-6 flex flex-1 flex-col space-y-4">
           <label class="block">
             <span class="mb-1 block text-sm font-semibold text-slate-700" data-i18n="form.userLabel">Usuario</span>
-            <input id="login-user" type="text" autocomplete="username" class="w-full rounded-xl border border-slate-200 bg-crema px-4 py-3 text-sm outline-none focus:border-hoja" data-i18n-placeholder="form.userPlaceholder" placeholder="Ingresa tu usuario">
+            <input id="login-user" type="text" autocomplete="username" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 text-sm outline-none transition focus:border-hoja focus:bg-white" data-i18n-placeholder="form.userPlaceholder" placeholder="Ingresa tu usuario">
           </label>
           <label class="block">
             <span class="mb-1 block text-sm font-semibold text-slate-700" data-i18n="form.passwordLabel">Contraseña</span>
-            <input id="login-password" type="password" autocomplete="current-password" class="w-full rounded-xl border border-slate-200 bg-crema px-4 py-3 text-sm outline-none focus:border-hoja" data-i18n-placeholder="form.passwordPlaceholder" placeholder="Ingresa tu contraseña">
+            <div class="flex items-center gap-2 rounded-2xl border border-slate-200 bg-crema px-4 py-2.5 transition focus-within:border-hoja focus-within:bg-white">
+              <input id="login-password" type="password" autocomplete="current-password" class="w-full bg-transparent text-sm outline-none" data-i18n-placeholder="form.passwordPlaceholder" placeholder="Ingresa tu contraseña">
+              <button id="toggle-password" type="button" class="rounded-full border border-hoja/15 bg-hoja/15 p-1 text-hoja transition hover:bg-hoja/25 hover:text-hoja" aria-label="Mostrar contraseña">
+                <svg id="toggle-password-icon" viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M12 5c5.5 0 9.5 5.6 9.7 5.8l.3.4-.3.4C21.5 11.8 17.5 17.4 12 17.4S2.5 11.8 2.3 11.6l-.3-.4.3-.4C2.5 10.6 6.5 5 12 5Zm0 2c-3.6 0-6.6 3.2-7.6 4.2 1 1.1 4 4.2 7.6 4.2s6.6-3.2 7.6-4.2C18.6 10.2 15.6 7 12 7Zm0 1.5a2.7 2.7 0 1 1 0 5.4 2.7 2.7 0 0 1 0-5.4Z"/></svg>
+              </button>
+            </div>
           </label>
 
           <div id="login-message" class="hidden rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700"></div>
 
-          <div class="flex flex-wrap items-center gap-3 pt-2">
-            <button type="submit" class="rounded-full bg-hoja px-6 py-3 text-sm font-semibold text-white shadow-suave" data-i18n="form.submit">Ingresar al sistema</button>
-            <a href="index.html" class="rounded-full border border-hoja px-6 py-3 text-sm font-semibold text-hoja" data-i18n="form.back">Volver al inicio</a>
+          <div class="mt-auto flex flex-wrap items-center gap-3 pt-3">
+            <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-hoja px-6 py-3 text-sm font-semibold text-white shadow-suave" data-i18n="form.submit"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M10 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7v-2h7V5h-7V3Zm1.7 4.3 1.4 1.4-1.9 1.8H21v2h-9.8l1.9 1.8-1.4 1.4L7.4 12l4.3-4.7Z"/></svg>Ingresar al sistema</button>
+            <a href="index.html" class="inline-flex items-center gap-2 rounded-full border border-hoja px-6 py-3 text-sm font-semibold text-hoja" data-i18n="form.back"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m10.7 17.7 1.4 1.4L5 12l7.1-7.1-1.4-1.4L2.2 12l8.5 5.7ZM22 11H6v2h16v-2Z"/></svg>Volver al inicio</a>
           </div>
         </form>
       </section>
@@ -102,20 +106,24 @@
       es: {
         pageTitle: "AgroControl | Iniciar sesión",
         hero: {
-          label: "Acceso protegido",
+          label: "🛡️ Acceso protegido",
           title: "Ingresa al sistema de inventario agrícola.",
           description: "Esta primera capa de acceso protege las áreas de inventario y movimientos. Más adelante podemos convertirla en un sistema completo con usuarios, roles y base de datos.",
           credentials: "Credenciales de prueba",
           userLabel: "Usuario:",
-          passwordLabel: "Contraseña:"
+          passwordLabel: "Contraseña:",
+          redirectLabel: "➡️ Destino del acceso",
+          redirectInventory: "Serás enviado al panel de inventario después de iniciar sesión.",
+          redirectMovements: "Serás enviado al panel de movimientos después de iniciar sesión.",
+          redirectPrivate: "Serás enviado al panel privado después de iniciar sesión."
         },
         form: {
-          label: "Iniciar sesión",
-          title: "Control de acceso simple",
+          label: "🔐 Iniciar sesión",
+          title: "🔐 Control de acceso simple",
           description: "Ingresa con el usuario de administrador para acceder al inventario y a los reportes de movimientos.",
-          userLabel: "Usuario",
+          userLabel: "👤 Usuario",
           userPlaceholder: "Ingresa tu usuario",
-          passwordLabel: "Contraseña",
+          passwordLabel: "🔑 Contraseña",
           passwordPlaceholder: "Ingresa tu contraseña",
           submit: "Ingresar al sistema",
           back: "Volver al inicio",
@@ -125,20 +133,24 @@
       en: {
         pageTitle: "AgroControl | Log in",
         hero: {
-          label: "Protected access",
+          label: "🛡️ Protected access",
           title: "Sign in to the agricultural inventory system.",
           description: "This first access layer protects the inventory and movement areas. Later we can turn it into a complete system with users, roles, and a database.",
           credentials: "Demo credentials",
           userLabel: "User:",
-          passwordLabel: "Password:"
+          passwordLabel: "Password:",
+          redirectLabel: "➡️ Access destination",
+          redirectInventory: "You will be sent to the inventory panel after signing in.",
+          redirectMovements: "You will be sent to the movements panel after signing in.",
+          redirectPrivate: "You will be sent to the private panel after signing in."
         },
         form: {
-          label: "Log in",
-          title: "Simple access control",
+          label: "🔐 Log in",
+          title: "🔐 Simple access control",
           description: "Sign in with the administrator account to access inventory and movement reports.",
-          userLabel: "User",
+          userLabel: "👤 User",
           userPlaceholder: "Enter your user name",
-          passwordLabel: "Password",
+          passwordLabel: "🔑 Password",
           passwordPlaceholder: "Enter your password",
           submit: "Enter the system",
           back: "Back to home",
@@ -154,12 +166,43 @@
     const loginUser = document.getElementById("login-user");
     const loginPassword = document.getElementById("login-password");
     const loginMessage = document.getElementById("login-message");
+    const togglePasswordButton = document.getElementById("toggle-password");
+    const togglePasswordIcon = document.getElementById("toggle-password-icon");
+    const redirectLabel = document.getElementById("login-redirect-label");
     const redirectTarget = new URLSearchParams(window.location.search).get("redirect") || "inventario.html";
     let currentLanguage = "es";
 
     function showMessage(message) {
       loginMessage.textContent = message;
       loginMessage.classList.remove("hidden");
+    }
+
+    function updateRedirectLabel(lang) {
+      if (!redirectLabel) return;
+      const translations = loginTranslations[lang] || loginTranslations.es;
+      if (redirectTarget.includes("movimientos")) {
+        redirectLabel.textContent = translations.hero.redirectMovements;
+        return;
+      }
+      if (redirectTarget.includes("inventario")) {
+        redirectLabel.textContent = translations.hero.redirectInventory;
+        return;
+      }
+      redirectLabel.textContent = translations.hero.redirectPrivate;
+    }
+
+    function updatePasswordToggleIcon() {
+      if (!togglePasswordButton || !togglePasswordIcon) return;
+
+      const showingPassword = loginPassword.type === "text";
+      togglePasswordButton.setAttribute(
+        "aria-label",
+        showingPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+      );
+
+      togglePasswordIcon.innerHTML = showingPassword
+        ? '<path d="m3.3 4.7 16 16-1.4 1.4-3.1-3.1A12.8 12.8 0 0 1 12 17.4c-5.5 0-9.5-5.6-9.7-5.8l-.3-.4.3-.4A22 22 0 0 1 7 6.2L1.9 1.1 3.3-.3Zm6.3 6.3a2.7 2.7 0 0 0 3.4 3.4L9.6 11Zm2.4-6c5.5 0 9.5 5.6 9.7 5.8l.3.4-.3.4a22 22 0 0 1-5.3 4.7l-1.5-1.5c1.8-.9 3.4-2.4 4.7-3.8-1-1.1-4-4.2-7.6-4.2-.9 0-1.8.2-2.6.5L8 6.1A8.6 8.6 0 0 1 12 5Zm-.2 3.5a2.7 2.7 0 0 1 2.7 2.7c0 .4-.1.8-.3 1.1l-3.5-3.5c.3-.2.7-.3 1.1-.3Z"/>'
+        : '<path d="M12 5c5.5 0 9.5 5.6 9.7 5.8l.3.4-.3.4C21.5 11.8 17.5 17.4 12 17.4S2.5 11.8 2.3 11.6l-.3-.4.3-.4C2.5 10.6 6.5 5 12 5Zm0 2c-3.6 0-6.6 3.2-7.6 4.2 1 1.1 4 4.2 7.6 4.2s6.6-3.2 7.6-4.2C18.6 10.2 15.6 7 12 7Zm0 1.5a2.7 2.7 0 1 1 0 5.4 2.7 2.7 0 0 1 0-5.4Z"/>';
     }
 
     function saveSession() {
@@ -199,7 +242,17 @@
 
     currentLanguage = initPageI18n(loginTranslations, (lang) => {
       currentLanguage = lang;
+      updateRedirectLabel(lang);
+      updatePasswordToggleIcon();
     });
+
+    togglePasswordButton.addEventListener("click", () => {
+      loginPassword.type = loginPassword.type === "password" ? "text" : "password";
+      updatePasswordToggleIcon();
+    });
+
+    updateRedirectLabel(currentLanguage);
+    updatePasswordToggleIcon();
   </script>
 </body>
 </html>

@@ -4,7 +4,7 @@
         {
             "type": "pwa-chrome",
             "request": "launch",
-            "name": "Abrir index.html en Chrome",
+   o         "name": "Abrir index.html en Chrome",
             "file": "${workspaceFolder}/index.html",
             "webRoot": "${workspaceFolder}"
         }

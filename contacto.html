@@ -26,21 +26,21 @@
   </script>
   <script src="assets/i18n-helper.js"></script>
 </head>
-<body class="bg-crema text-slate-800">
+<body class="flex min-h-screen flex-col bg-crema text-slate-800">
   <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
       <a href="index.html" class="flex items-center gap-3">
         <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
       </a>
       <nav class="hidden gap-6 text-sm font-semibold md:flex">
-        <a href="index.html" class="hover:text-hoja" data-i18n="nav.home">Inicio</a>
-        <a href="nosotros.html" class="hover:text-hoja" data-i18n="nav.about">Nosotros</a>
-        <a href="inventario.html" class="hover:text-hoja" data-i18n="nav.inventory">Inventario</a>
-        <a href="movimientos.html" class="hover:text-hoja" data-i18n="nav.movements">Movimientos</a>
-        <a href="contacto.html" class="text-hoja" data-i18n="nav.contact">Contacto</a>
+        <a href="index.html" class="border-b-2 border-transparent pb-1 transition hover:border-hoja/40 hover:text-hoja" data-i18n="nav.home">Inicio</a>
+        <a href="nosotros.html" class="border-b-2 border-transparent pb-1 transition hover:border-hoja/40 hover:text-hoja" data-i18n="nav.about">Nosotros</a>
+        <a href="inventario.html" class="border-b-2 border-transparent pb-1 transition hover:border-hoja/40 hover:text-hoja" data-i18n="nav.inventory">Inventario</a>
+        <a href="movimientos.html" class="border-b-2 border-transparent pb-1 transition hover:border-hoja/40 hover:text-hoja" data-i18n="nav.movements">Movimientos</a>
+        <a href="contacto.html" class="border-b-2 border-hoja pb-1 text-hoja" data-i18n="nav.contact">Contacto</a>
       </nav>
       <div class="flex items-center gap-3">
-        <a href="login.html?redirect=inventario.html" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave" data-i18n="nav.login">Iniciar sesion</a>
+        <a href="login.html?redirect=inventario.html" class="inline-flex items-center gap-2 rounded-full bg-hoja/85 px-5 py-2 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(62,107,72,0.14)] transition hover:bg-hoja/95" data-i18n="nav.login">👤 Iniciar sesion</a>
         <div class="hidden items-center gap-1 rounded-full border border-hoja/15 bg-gradient-to-r from-white via-crema to-white p-1.5 shadow-[0_10px_30px_rgba(62,107,72,0.14)] md:flex">
           <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-hoja transition duration-200 hover:bg-white/80" data-lang="es" aria-label="Cambiar a español">
             <span aria-hidden="true" class="inline-flex h-4 w-5 overflow-hidden rounded-[3px] shadow-sm">
@@ -70,7 +70,7 @@
     </div>
   </header>
 
-  <main class="mx-auto max-w-7xl px-6 py-16">
+  <main class="mx-auto max-w-7xl flex-1 px-6 py-16">
     <section class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
       <div>
         <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja" data-i18n="hero.label">Contacto</p>
@@ -127,7 +127,7 @@
               <textarea rows="5" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 outline-none focus:border-hoja" data-i18n-placeholder="form.messagePlaceholder" placeholder="Cuéntanos cómo podemos ayudarte"></textarea>
             </label>
           </div>
-          <button type="submit" class="mt-6 rounded-full bg-hoja px-6 py-3 font-semibold text-white shadow-suave" data-i18n="form.submit">Enviar consulta</button>
+          <button type="submit" class="mt-6 inline-flex items-center gap-2 rounded-full bg-hoja px-6 py-3 font-semibold text-white shadow-suave" data-i18n="form.submit"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M3 5h18v14H3V5Zm2 2v.2l7 4.9 7-4.9V7H5Zm14 10V9.6l-7 4.9-7-4.9V17h14Z"/></svg>Enviar consulta</button>
         </form>
 
         <div class="rounded-[2rem] bg-white p-5 shadow-suave">
@@ -147,9 +147,10 @@
     </section>
   </main>
 
-  <footer class="bg-slate-950 text-white">
-    <div class="mx-auto flex max-w-7xl flex-col items-center gap-5 px-6 py-8 text-center">
-      <p class="text-sm text-white/70" data-i18n="footer.description">AgroControl. Atención comercial y técnica para tu operación agrícola.</p>
+  <footer class="mt-auto bg-slate-950 text-white">
+    <div class="mx-auto flex max-w-7xl flex-col items-center gap-4 px-6 py-5 text-center">
+      <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-7 w-auto opacity-90">
+      <p class="max-w-2xl text-sm leading-6 text-white/70" data-i18n="footer.description">AgroControl. Atención comercial y técnica para tu operación agrícola.</p>
       <div class="flex flex-wrap items-center justify-center gap-3">
         <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
           <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4H16V5.5c-.2 0-.9-.1-1.8-.1-1.8 0-3.1 1.1-3.1 3.2v1.8H9v2.8h2.3v7h2.2Z"/></svg>
@@ -167,16 +168,43 @@
     </div>
   </footer>
   <script>
+    const authStorageKey = "agrocontrol-auth-v1";
+    const loginLink = document.querySelector('[data-i18n="nav.login"]');
+    const inventoryLink = document.querySelector('[data-i18n="nav.inventory"]');
+    const movementsLink = document.querySelector('[data-i18n="nav.movements"]');
+    const authTranslations = {
+      es: { login: "👤 Iniciar sesion", logout: "Cerrar sesion" },
+      en: { login: "👤 Log in", logout: "Log out" }
+    };
+
+    function isAuthenticated() {
+      try {
+        return Boolean(JSON.parse(localStorage.getItem(authStorageKey) || "null"));
+      } catch {
+        return false;
+      }
+    }
+
+    function updateAuthLink(lang) {
+      if (!loginLink) return;
+      const copy = authTranslations[lang] || authTranslations.es;
+      const authenticated = isAuthenticated();
+      loginLink.textContent = authenticated ? copy.logout : copy.login;
+      loginLink.setAttribute("href", authenticated ? "#" : "login.html?redirect=inventario.html");
+      inventoryLink?.setAttribute("href", authenticated ? "inventario.html" : "login.html?redirect=inventario.html");
+      movementsLink?.setAttribute("href", authenticated ? "movimientos.html" : "login.html?redirect=movimientos.html");
+    }
+
     initPageI18n({
       es: {
         pageTitle: "AgroControl | Contacto",
         nav: {
-          home: "Inicio",
-          about: "Nosotros",
-          inventory: "Inventario",
-          movements: "Movimientos",
-          contact: "Contacto",
-          login: "Iniciar sesión"
+          home: "🏠 Inicio",
+          about: "🌿 Nosotros",
+          inventory: "📦 Inventario",
+          movements: "🔄 Movimientos",
+          contact: "✉️ Contacto",
+          login: "👤 Iniciar sesión"
         },
         hero: {
           label: "Contacto",
@@ -218,12 +246,12 @@
       en: {
         pageTitle: "AgroControl | Contact",
         nav: {
-          home: "Home",
-          about: "About us",
-          inventory: "Inventory",
-          movements: "Movements",
-          contact: "Contact",
-          login: "Log in"
+          home: "🏠 Home",
+          about: "🌿 About us",
+          inventory: "📦 Inventory",
+          movements: "🔄 Movements",
+          contact: "✉️ Contact",
+          login: "👤 Log in"
         },
         hero: {
           label: "Contact",
@@ -262,6 +290,13 @@
           description: "AgroControl. Commercial and technical support for your agricultural operation."
         }
       }
+    }, updateAuthLink);
+
+    loginLink?.addEventListener("click", (event) => {
+      if (!isAuthenticated()) return;
+      event.preventDefault();
+      localStorage.removeItem(authStorageKey);
+      updateAuthLink(localStorage.getItem("agrocontrol-language") || "es");
     });
   </script>
 </body>

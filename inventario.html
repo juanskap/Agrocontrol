@@ -63,25 +63,28 @@
       redirectToLogin();
       return false;
     }
+
+    if (!isAuthenticated()) {
+      redirectToLogin();
+    }
   </script>
 </head>
-<body class="bg-crema text-slate-800">
-  <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
+<body class="flex min-h-screen flex-col bg-crema text-slate-800">
+  <header class="sticky top-0 z-30 border-b border-slate-900/10 bg-slate-950/95 text-white backdrop-blur">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
       <a href="index.html" class="flex items-center gap-3">
         <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
+        <span class="hidden rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-white/75 md:inline-flex">Panel privado</span>
       </a>
       <nav class="hidden gap-6 text-sm font-semibold md:flex">
-        <a href="index.html" class="hover:text-hoja" data-i18n="nav.home">Inicio</a>
-        <a href="nosotros.html" class="hover:text-hoja" data-i18n="nav.about">Nosotros</a>
-        <a href="inventario.html" class="text-hoja" data-i18n="nav.inventory">Inventario</a>
-        <a href="movimientos.html" class="hover:text-hoja" data-i18n="nav.movements">Movimientos</a>
-        <a href="contacto.html" class="hover:text-hoja" data-i18n="nav.contact">Contacto</a>
+        <a href="inventario.html" class="border-b-2 border-sol pb-1 text-sol" data-i18n="nav.inventory">Inventario</a>
+        <a href="movimientos.html" class="border-b-2 border-transparent pb-1 transition hover:border-white/35 hover:text-sol" data-i18n="nav.movements">Movimientos</a>
+        <a href="index.html" class="border-b-2 border-transparent pb-1 transition hover:border-white/35 hover:text-sol">Volver al sitio</a>
       </nav>
       <div class="flex items-center gap-3">
-        <button id="logout-button" class="rounded-full bg-hoja px-5 py-2 text-sm font-semibold text-white shadow-suave">Iniciar sesión</button>
-        <div class="hidden items-center gap-1 rounded-full border border-hoja/15 bg-gradient-to-r from-white via-crema to-white p-1.5 shadow-[0_10px_30px_rgba(62,107,72,0.14)] md:flex">
-          <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-hoja transition duration-200 hover:bg-white/80" data-lang="es" aria-label="Cambiar a español">
+        <button id="logout-button" class="inline-flex items-center gap-2 rounded-full bg-hoja/85 px-5 py-2 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(62,107,72,0.14)] transition hover:bg-hoja/95">👤 Iniciar sesión</button>
+        <div class="hidden items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1.5 shadow-[0_10px_30px_rgba(15,23,42,0.28)] md:flex">
+          <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-white/80 transition duration-200 hover:bg-white/10" data-lang="es" aria-label="Cambiar a español">
             <span aria-hidden="true" class="inline-flex h-4 w-5 overflow-hidden rounded-[3px] shadow-sm">
               <svg viewBox="0 0 18 12" class="h-full w-full" xmlns="http://www.w3.org/2000/svg">
                 <rect width="18" height="12" fill="#AA151B"/>
@@ -90,7 +93,7 @@
             </span>
             ES
           </button>
-          <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-hoja transition duration-200 hover:bg-white/80" data-lang="en" aria-label="Switch to English">
+          <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-white/80 transition duration-200 hover:bg-white/10" data-lang="en" aria-label="Switch to English">
             <span aria-hidden="true" class="inline-flex h-4 w-5 overflow-hidden rounded-[3px] shadow-sm">
               <svg viewBox="0 0 18 12" class="h-full w-full" xmlns="http://www.w3.org/2000/svg">
                 <rect width="18" height="12" fill="#B22234"/>
@@ -109,7 +112,7 @@
     </div>
   </header>
 
-  <main class="mx-auto max-w-7xl px-6 py-16">
+  <main class="mx-auto max-w-7xl flex-1 px-6 py-16">
     <section class="rounded-[1.75rem] bg-slate-950 px-6 py-5 text-white shadow-suave">
       <h1 class="text-2xl font-black md:text-3xl" data-i18n="hero.title">Inventario central</h1>
     </section>
@@ -125,9 +128,9 @@
           <div class="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-sm">
             <p class="text-base font-black text-slate-900" data-i18n="sidebar.quickActions">Acciones rápidas</p>
             <div class="mt-4 flex flex-wrap gap-3">
-              <button id="open-add-modal" class="rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white" data-i18n="actions.add">Agregar</button>
-              <button id="open-edit-modal" class="rounded-full border border-hoja px-4 py-2 text-sm font-semibold text-hoja" data-i18n="actions.edit">Editar</button>
-              <button id="delete-product-button" class="rounded-full border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-600" data-i18n="actions.delete">Eliminar</button>
+              <button id="open-add-modal" class="inline-flex items-center gap-2 rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white" data-i18n="actions.add"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>Agregar</button>
+              <button id="open-edit-modal" class="inline-flex items-center gap-2 rounded-full border border-hoja px-4 py-2 text-sm font-semibold text-hoja" data-i18n="actions.edit"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m16.9 3.5 3.6 3.6-10 10L6 18l.9-4.5 10-10ZM15.5 5 8.4 12.1l-.4 2 2-.4L17 6.6 15.5 5Z"/></svg>Editar</button>
+              <button id="delete-product-button" class="inline-flex items-center gap-2 rounded-full border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-600" data-i18n="actions.delete"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm1 6h2v8h-2V9Zm4 0h2v8h-2V9ZM7 9h2v8H7V9Zm1 11h8a2 2 0 0 0 2-2V8H6v10a2 2 0 0 0 2 2Z"/></svg>Eliminar</button>
             </div>
           </div>
           <div class="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 shadow-sm">
@@ -161,10 +164,10 @@
 
       <section class="space-y-6">
         <div class="flex flex-wrap items-center gap-3">
-          <button class="category-btn rounded-full bg-hoja px-5 py-3 text-sm font-semibold text-white" data-target="insumos" data-i18n="categories.inputs">Insumos</button>
-          <button class="category-btn rounded-full border border-hoja px-5 py-3 text-sm font-semibold text-hoja" data-target="abonos" data-i18n="categories.fertilizers">Abonos</button>
-          <button class="category-btn rounded-full border border-hoja px-5 py-3 text-sm font-semibold text-hoja" data-target="herramientas" data-i18n="categories.tools">Herramientas y Maquinaria</button>
-          <button id="toggle-filter" class="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:border-hoja hover:text-hoja" data-i18n="filters.toggle">Filtrar productos</button>
+          <button class="category-btn inline-flex items-center gap-2 rounded-full bg-hoja px-5 py-3 text-sm font-semibold text-white" data-target="insumos" data-i18n="categories.inputs"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M4 6h16v4H4V6Zm2 6h12v6H6v-6Zm2-4h2v1H8V8Zm0 6h2v2H8v-2Zm6 0h2v2h-2v-2Z"/></svg>Insumos</button>
+          <button class="category-btn inline-flex items-center gap-2 rounded-full border border-hoja px-5 py-3 text-sm font-semibold text-hoja" data-target="abonos" data-i18n="categories.fertilizers"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M12 3c4.4 3.4 6.5 6.4 6.5 9.2A6.5 6.5 0 1 1 5.5 12.2C5.5 9.4 7.6 6.4 12 3Zm0 3.1c-2.8 2.4-4.5 4.5-4.5 6.1a4.5 4.5 0 0 0 9 0c0-1.6-1.7-3.7-4.5-6.1Z"/></svg>Abonos</button>
+          <button class="category-btn inline-flex items-center gap-2 rounded-full border border-hoja px-5 py-3 text-sm font-semibold text-hoja" data-target="herramientas" data-i18n="categories.tools"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m21 7.5-4.6 4.6-1.5-1.5L19.5 6A5 5 0 0 0 12.6 12.8l-7.9 7.9a2.1 2.1 0 1 1-3-3l7.9-7.9A5 5 0 0 0 16.5 3a5 5 0 0 0 4.5 4.5Z"/></svg>Herramientas y Maquinaria</button>
+          <button id="toggle-filter" class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:border-hoja hover:text-hoja" data-i18n="filters.toggle"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M4 6h16v2l-6 6v5l-4-2v-3L4 8V6Z"/></svg>Filtrar productos</button>
         </div>
 
         <div id="filter-panel" class="hidden rounded-[2rem] bg-white p-6 shadow-suave">
@@ -185,8 +188,8 @@
               </select>
             </label>
             <div class="flex gap-3">
-              <button id="apply-filter" class="rounded-full bg-hoja px-5 py-3 text-sm font-semibold text-white">Aplicar filtro</button>
-              <button id="clear-filter" class="rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700">Limpiar</button>
+              <button id="apply-filter" class="inline-flex items-center gap-2 rounded-full bg-hoja px-5 py-3 text-sm font-semibold text-white"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m9.6 16.6-4.2-4.2L4 13.8l5.6 5.6L20 9l-1.4-1.4-9 9Z"/></svg>Aplicar filtro</button>
+              <button id="clear-filter" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 12.6 12.6-1.4 1.4L5 6.4 6.4 5Zm12.6 1.4L7.8 17.6H4v-3.8L15.2 2.6 19 6.4Z"/></svg>Limpiar</button>
             </div>
           </div>
         </div>
@@ -367,9 +370,10 @@
     </section>
   </main>
 
-  <footer class="bg-slate-950 text-white">
-    <div class="mx-auto flex max-w-7xl flex-col items-center gap-5 px-6 py-8 text-center">
-      <p class="text-sm text-white/70">AgroControl. Inventario organizado para decisiones más rápidas.</p>
+  <footer class="mt-auto bg-slate-950 text-white">
+    <div class="mx-auto flex max-w-7xl flex-col items-center gap-4 px-6 py-5 text-center">
+      <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-7 w-auto opacity-90">
+      <p class="max-w-2xl text-sm leading-6 text-white/70">AgroControl. Inventario organizado para decisiones más rápidas.</p>
       <div class="flex flex-wrap items-center justify-center gap-3">
         <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
           <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4H16V5.5c-.2 0-.9-.1-1.8-.1-1.8 0-3.1 1.1-3.1 3.2v1.8H9v2.8h2.3v7h2.2Z"/></svg>
@@ -395,7 +399,7 @@
           <h2 id="form-modal-title" class="mt-1 text-xl font-black text-slate-900 md:text-2xl">Agregar registro al inventario</h2>
           <p id="form-modal-subtitle" class="mt-1 text-sm text-slate-600">Completa los datos clave y guarda el registro en la categoría seleccionada.</p>
         </div>
-        <button id="close-add-modal" type="button" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700">Cerrar</button>
+        <button id="close-add-modal" type="button" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6-5.6 5.6L5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>Cerrar</button>
       </div>
 
       <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-slate-500">
@@ -454,8 +458,8 @@
           <input id="product-notes" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Observaciones, estado o responsable">
         </label>
         <div class="md:col-span-2 xl:col-span-3 flex flex-wrap items-center justify-end gap-3 border-t border-slate-100 pt-3">
-          <button id="cancel-add-modal" type="button" class="rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700">Cancelar</button>
-          <button id="submit-product-form" type="submit" class="rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white">Guardar producto</button>
+          <button id="cancel-add-modal" type="button" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6-5.6 5.6L5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>Cancelar</button>
+          <button id="submit-product-form" type="submit" class="inline-flex items-center gap-2 rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M17 3H5a2 2 0 0 0-2 2v14l4-2 4 2 4-2 4 2V5a2 2 0 0 0-2-2Zm0 12.8-2-.8-4 2-4-2-2 .8V5h12v10.8ZM8 7h6v2H8V7Z"/></svg>Guardar producto</button>
         </div>
       </form>
     </div>
@@ -476,7 +480,7 @@
           <h2 id="detail-title" class="mt-1 text-xl font-black text-slate-900 md:text-2xl">Información del producto</h2>
           <p id="detail-subtitle" class="mt-1 text-sm text-slate-600">Consulta de uso y aplicación.</p>
         </div>
-        <button id="close-detail-modal" type="button" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700">Cerrar</button>
+        <button id="close-detail-modal" type="button" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6-5.6 5.6L5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>Cerrar</button>
       </div>
 
       <div id="detail-loading" class="py-12 text-center text-sm font-semibold text-slate-500">Consultando información...</div>
@@ -524,7 +528,7 @@
           <h2 id="movement-title" class="mt-1 text-xl font-black text-slate-900 md:text-2xl">Registrar movimiento</h2>
           <p id="movement-subtitle" class="mt-1 text-sm text-slate-600">Actualiza la cantidad del producto seleccionado.</p>
         </div>
-        <button id="close-movement-modal" type="button" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700">Cerrar</button>
+        <button id="close-movement-modal" type="button" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6-5.6 5.6L5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>Cerrar</button>
       </div>
 
       <form id="movement-form" class="mt-5 grid gap-4 md:grid-cols-2">
@@ -553,8 +557,8 @@
           <input id="movement-note" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Compra, entrega a campo, ajuste de inventario...">
         </label>
         <div class="md:col-span-2 flex flex-wrap items-center justify-end gap-3 border-t border-slate-100 pt-3">
-          <button id="cancel-movement-modal" type="button" class="rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700">Cancelar</button>
-          <button id="submit-movement-form" type="submit" class="rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white">Guardar movimiento</button>
+          <button id="cancel-movement-modal" type="button" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6-5.6 5.6L5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>Cancelar</button>
+          <button id="submit-movement-form" type="submit" class="inline-flex items-center gap-2 rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M17 3H5a2 2 0 0 0-2 2v14l4-2 4 2 4-2 4 2V5a2 2 0 0 0-2-2Zm0 12.8-2-.8-4 2-4-2-2 .8V5h12v10.8ZM8 7h6v2H8V7Z"/></svg>Guardar movimiento</button>
         </div>
       </form>
     </div>
@@ -821,16 +825,18 @@
               <div class="flex flex-wrap gap-2">
                 <button
                   type="button"
-                  class="select-button rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:border-hoja hover:text-hoja"
+                  class="select-button inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:border-hoja hover:text-hoja"
                   data-category="${category}"
                   data-id="${row[0]}">
+                  <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 fill-current" aria-hidden="true"><path d="M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm0 4a5 5 0 0 0-4.9 4h9.8A5 5 0 0 0 12 7Zm0 10a5 5 0 0 0 4.6-3H7.4A5 5 0 0 0 12 17Z"/></svg>
                   Seleccionar
                 </button>
                 <button
                   type="button"
-                  class="detail-button rounded-full border border-hoja px-4 py-2 text-xs font-semibold text-hoja hover:bg-hoja hover:text-white"
+                  class="detail-button inline-flex items-center gap-2 rounded-full border border-hoja px-4 py-2 text-xs font-semibold text-hoja hover:bg-hoja hover:text-white"
                   data-category="${category}"
                   data-id="${row[0]}">
+                  <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 fill-current" aria-hidden="true"><path d="M12 5c5.5 0 9.5 5.6 9.7 5.8l.3.4-.3.4C21.5 11.8 17.5 17.4 12 17.4S2.5 11.8 2.3 11.6l-.3-.4.3-.4C2.5 10.6 6.5 5 12 5Zm0 2c-3.6 0-6.6 3.2-7.6 4.2 1 1.1 4 4.2 7.6 4.2s6.6-3.2 7.6-4.2C18.6 10.2 15.6 7 12 7Zm0 1.5a2.7 2.7 0 1 1 0 5.4 2.7 2.7 0 0 1 0-5.4Z"/></svg>
                   Ver info
                 </button>
               </div>
@@ -1072,10 +1078,10 @@
 
       const previousButton = document.createElement("button");
       previousButton.type = "button";
-      previousButton.textContent = "Anterior";
+      previousButton.innerHTML = '<svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m14.7 6.3-1.4-1.4L6.2 12l7.1 7.1 1.4-1.4L8.9 12l5.8-5.7Z"/></svg><span>Anterior</span>';
       previousButton.className = currentPage === 1
-        ? "rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-400"
-        : "rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700";
+        ? "inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-400"
+        : "inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700";
       previousButton.disabled = currentPage === 1;
       previousButton.addEventListener("click", () => {
         if (currentPage > 1) {
@@ -1090,8 +1096,8 @@
         button.type = "button";
         button.textContent = page;
         button.className = page === currentPage
-          ? "rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white"
-          : "rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700";
+          ? "inline-flex items-center justify-center rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white"
+          : "inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700";
 
         button.addEventListener("click", () => {
           currentPage = page;
@@ -1103,10 +1109,10 @@
 
       const nextButton = document.createElement("button");
       nextButton.type = "button";
-      nextButton.textContent = "Siguiente";
+      nextButton.innerHTML = '<span>Siguiente</span><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m9.3 17.7 1.4 1.4 7.1-7.1-7.1-7.1-1.4 1.4 5.8 5.7-5.8 5.7Z"/></svg>';
       nextButton.className = currentPage === totalPages
-        ? "rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-400"
-        : "rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700";
+        ? "inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-400"
+        : "inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700";
       nextButton.disabled = currentPage === totalPages;
       nextButton.addEventListener("click", () => {
         if (currentPage < totalPages) {
@@ -1407,8 +1413,8 @@
     window.inventoryTranslations = {
       es: {
         pageTitle: "AgroControl | Inventario",
-        nav: { home: "Inicio", about: "Nosotros", inventory: "Inventario", movements: "Movimientos", contact: "Contacto" },
-        auth: { login: "Iniciar sesión", logout: "Cerrar sesión" },
+        nav: { home: "🏠 Inicio", about: "🌿 Nosotros", inventory: "📦 Inventario", movements: "🔄 Movimientos", contact: "✉️ Contacto" },
+        auth: { login: "👤 Iniciar sesión", logout: "Cerrar sesión" },
         hero: { title: "Inventario central" },
         preview: { notice: "Estás en modo vista previa. Puedes consultar inventario y movimientos recientes, pero para agregar, editar, eliminar o registrar cambios debes iniciar sesión." },
         sidebar: {
@@ -1424,8 +1430,8 @@
       },
       en: {
         pageTitle: "AgroControl | Inventory",
-        nav: { home: "Home", about: "About us", inventory: "Inventory", movements: "Movements", contact: "Contact" },
-        auth: { login: "Log in", logout: "Log out" },
+        nav: { home: "🏠 Home", about: "🌿 About us", inventory: "📦 Inventory", movements: "🔄 Movements", contact: "✉️ Contact" },
+        auth: { login: "👤 Log in", logout: "Log out" },
         hero: { title: "Central inventory" },
         preview: { notice: "You are in preview mode. You can review inventory and recent movements, but you must log in to add, edit, delete, or register changes." },
         sidebar: {
