@@ -71,40 +71,50 @@
   </header>
 
   <main class="mx-auto max-w-7xl flex-1 px-6 py-16">
-    <section class="grid gap-10 lg:grid-cols-[1fr_0.95fr] lg:items-center">
+    <section class="grid gap-10 lg:grid-cols-[1.03fr_0.97fr] lg:items-center">
       <div>
         <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja" data-i18n="hero.label">Nosotros</p>
-        <h1 class="mt-4 text-4xl font-black text-slate-900 md:text-5xl" data-i18n="hero.title">Una empresa creada para ordenar el abastecimiento agrícola con calidad, trazabilidad y visión corporativa.</h1>
-        <p class="mt-6 text-lg leading-8 text-slate-700" data-i18n="hero.description">Nacimos para responder a una necesidad real del sector: administrar mejor los recursos del campo, reducir pérdidas y trabajar con información confiable. Hoy integramos comercialización, control de inventario y seguimiento técnico en una misma operación.</p>
+        <h1 class="mt-4 text-[2.2rem] font-black text-slate-900 md:text-[3.1rem]" data-i18n="hero.title">Una empresa creada para ordenar el abastecimiento agrícola con calidad, trazabilidad y visión corporativa.</h1>
+        <p class="mt-5 text-[1.02rem] leading-8 text-slate-700 md:text-[1.06rem]" data-i18n="hero.description">Nacimos para responder a una necesidad real del sector: administrar mejor los recursos del campo, reducir pérdidas y trabajar con información confiable. Hoy integramos comercialización, control de inventario y seguimiento técnico en una misma operación.</p>
       </div>
-      <div class="h-[430px] rounded-[2.5rem] bg-[linear-gradient(180deg,_rgba(62,107,72,0.18),_rgba(62,107,72,0.72)),url('https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center shadow-suave"></div>
+      <div class="relative h-[380px] overflow-hidden rounded-[2.5rem] shadow-suave md:h-[400px]">
+        <div class="about-hero-slide absolute inset-0 opacity-100 transition-opacity duration-1000 bg-[linear-gradient(180deg,_rgba(62,107,72,0.18),_rgba(15,23,42,0.54)),url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+        <div class="about-hero-slide absolute inset-0 opacity-0 transition-opacity duration-1000 bg-[linear-gradient(180deg,_rgba(62,107,72,0.16),_rgba(15,23,42,0.56)),url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+        <div class="about-hero-slide absolute inset-0 opacity-0 transition-opacity duration-1000 bg-[linear-gradient(180deg,_rgba(62,107,72,0.14),_rgba(107,79,58,0.52)),url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center"></div>
+        <div class="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center">
+          <div class="flex items-center gap-2 rounded-full bg-white/70 px-3 py-2 backdrop-blur-sm">
+            <span class="about-hero-dot h-2.5 w-2.5 rounded-full bg-hoja"></span>
+            <span class="about-hero-dot h-2.5 w-2.5 rounded-full bg-slate-300"></span>
+            <span class="about-hero-dot h-2.5 w-2.5 rounded-full bg-slate-300"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-16 rounded-[2.5rem] bg-hoja px-7 py-10 text-white shadow-suave md:px-8 md:py-11">
+      <p class="text-sm font-bold uppercase tracking-[0.28em] text-white/75" data-i18n="values.label">Valores corporativos</p>
+      <div class="mt-6 grid gap-4 md:grid-cols-4">
+        <div class="rounded-[1.5rem] bg-white/10 p-4" data-i18n="values.item1">Compromiso con el productor</div>
+        <div class="rounded-[1.5rem] bg-white/10 p-4" data-i18n="values.item2">Calidad en cada suministro</div>
+        <div class="rounded-[1.5rem] bg-white/10 p-4" data-i18n="values.item3">Transparencia operativa</div>
+        <div class="rounded-[1.5rem] bg-white/10 p-4" data-i18n="values.item4">Mejora continua y seguridad</div>
+      </div>
     </section>
 
     <section class="mt-16 grid gap-6 md:grid-cols-3">
-      <article class="rounded-[2rem] bg-white p-8 shadow-suave">
+      <article class="rounded-[2rem] bg-white p-6 shadow-suave md:p-7">
         <h2 class="text-2xl font-black text-slate-900" data-i18n="pillars.historyTitle">Historia</h2>
         <p class="mt-4 text-slate-600" data-i18n="pillars.historyDescription">Comenzamos abasteciendo insumos esenciales para productores de la región y evolucionamos hacia una estructura más completa con control digital, seguimiento por categorías y reportes operativos para decisiones más inteligentes.</p>
       </article>
-      <article class="rounded-[2rem] bg-white p-8 shadow-suave">
+      <article class="rounded-[2rem] bg-white p-6 shadow-suave md:p-7">
         <h2 class="text-2xl font-black text-slate-900" data-i18n="pillars.missionTitle">Misión</h2>
         <p class="mt-4 text-slate-600" data-i18n="pillars.missionDescription">Impulsar la productividad agrícola con recursos confiables, orden logístico y herramientas de gestión que fortalezcan la operación diaria de nuestros clientes.</p>
       </article>
-      <article class="rounded-[2rem] bg-white p-8 shadow-suave">
+      <article class="rounded-[2rem] bg-white p-6 shadow-suave md:p-7">
         <h2 class="text-2xl font-black text-slate-900" data-i18n="pillars.visionTitle">Visión</h2>
         <p class="mt-4 text-slate-600" data-i18n="pillars.visionDescription">Ser una referencia regional en suministro agrícola e inteligencia de inventario, con procesos eficientes, sostenibles y orientados a resultados.</p>
       </article>
     </section>
-
-    <section class="mt-16 rounded-[2.5rem] bg-hoja px-8 py-12 text-white shadow-suave">
-      <p class="text-sm font-bold uppercase tracking-[0.28em] text-white/75" data-i18n="values.label">Valores corporativos</p>
-      <div class="mt-6 grid gap-4 md:grid-cols-4">
-        <div class="rounded-[1.5rem] bg-white/10 p-5" data-i18n="values.item1">Compromiso con el productor</div>
-        <div class="rounded-[1.5rem] bg-white/10 p-5" data-i18n="values.item2">Calidad en cada suministro</div>
-        <div class="rounded-[1.5rem] bg-white/10 p-5" data-i18n="values.item3">Transparencia operativa</div>
-        <div class="rounded-[1.5rem] bg-white/10 p-5" data-i18n="values.item4">Mejora continua y seguridad</div>
-      </div>
-    </section>
-
     <section class="mt-16">
       <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
@@ -173,8 +183,6 @@
 
   <footer class="mt-auto bg-slate-950 text-white">
     <div class="mx-auto flex max-w-7xl flex-col items-center gap-4 px-6 py-5 text-center">
-      <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-7 w-auto opacity-90">
-      <p class="max-w-2xl text-sm leading-6 text-white/70" data-i18n="footer.description">AgroControl. Nuestra historia se construye con orden, calidad y trabajo en campo.</p>
       <div class="flex flex-wrap items-center justify-center gap-3">
         <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="rounded-full bg-white/10 p-2.5 text-white transition hover:bg-white hover:text-hoja">
           <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4H16V5.5c-.2 0-.9-.1-1.8-.1-1.8 0-3.1 1.1-3.1 3.2v1.8H9v2.8h2.3v7h2.2Z"/></svg>
@@ -189,6 +197,8 @@
           <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.5L3 20.8l1.6-4.7a8.5 8.5 0 1 1 15.9-4.3Zm-8.5-6.8a6.8 6.8 0 0 0-5.8 10.4l.4.7-.9 2.5 2.6-.8.6.4A6.8 6.8 0 1 0 12 5Zm3.9 8.7c-.2-.1-1.2-.6-1.4-.7s-.3-.1-.4.1-.5.7-.6.8-.2.1-.4 0a5.5 5.5 0 0 1-1.6-1 6 6 0 0 1-1.1-1.4c-.1-.2 0-.3.1-.4l.3-.4.2-.3v-.3c0-.1-.4-1-.6-1.5s-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3s-.8.8-.8 1.9.8 2.2.9 2.4a10.2 10.2 0 0 0 3.9 3.5c.6.2 1 .4 1.3.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5.2-1 .2-1.1 0-.1-.1-.2-.3-.3Z"/></svg>
         </a>
       </div>
+      <p class="max-w-2xl text-sm leading-6 text-white/70" data-i18n="footer.description">AgroControl. Nuestra historia se construye con orden, calidad y trabajo en campo.</p>
+      <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-7 w-auto opacity-90">
     </div>
   </footer>
   <script>
@@ -340,6 +350,29 @@
       localStorage.removeItem(authStorageKey);
       updateAuthLink(localStorage.getItem("agrocontrol-language") || "es");
     });
+
+    const aboutHeroSlides = Array.from(document.querySelectorAll(".about-hero-slide"));
+    const aboutHeroDots = Array.from(document.querySelectorAll(".about-hero-dot"));
+    let activeAboutHeroSlide = 0;
+
+    function updateAboutHeroSlider(index) {
+      aboutHeroSlides.forEach((slide, slideIndex) => {
+        slide.classList.toggle("opacity-100", slideIndex === index);
+        slide.classList.toggle("opacity-0", slideIndex !== index);
+      });
+
+      aboutHeroDots.forEach((dot, dotIndex) => {
+        dot.classList.toggle("bg-hoja", dotIndex === index);
+        dot.classList.toggle("bg-slate-300", dotIndex !== index);
+      });
+    }
+
+    if (aboutHeroSlides.length > 1) {
+      setInterval(() => {
+        activeAboutHeroSlide = (activeAboutHeroSlide + 1) % aboutHeroSlides.length;
+        updateAboutHeroSlider(activeAboutHeroSlide);
+      }, 4800);
+    }
   </script>
 </body>
 </html>
