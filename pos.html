@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgroControl | Punto de Venta</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%233E6B48'/><path d='M20 39c0-10 7-18 18-20-2 3-3 6-3 10 0 6 3 11 9 15-3 1-5 1-8 1-10 0-16-6-16-6Z' fill='%23D9A441'/><path d='M23 42c4-7 11-12 21-14' stroke='%23F5F0E6' stroke-width='4' stroke-linecap='round'/></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/storage-helper.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            tierra: "#6B4F3A",
+            hoja: "#3E6B48",
+            musgo: "#6D8B4E",
+            crema: "#F5F0E6",
+            sol: "#D9A441"
+          },
+          boxShadow: {
+            suave: "0 20px 45px rgba(62, 107, 72, 0.16)"
+          }
+        }
+      }
+    };
+  </script>
+  <script src="assets/app-config.js"></script>
+  <script src="assets/auth.js"></script>
+</head>
+<body class="min-h-screen bg-[linear-gradient(180deg,_#f5f0e6_0%,_#eef4ec_100%)] text-slate-800">
+  <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-3">
+          <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-10 w-auto sm:h-11">
+        </a>
+        <span class="hidden rounded-full border border-hoja/15 bg-hoja/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-hoja/80 md:inline-flex">Punto de venta</span>
+      </div>
+      <nav class="hidden gap-3 text-sm font-semibold md:flex">
+        <a href="inventario.html" class="inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 transition hover:bg-hoja/8 hover:text-hoja">
+          <span>Inventario</span>
+        </a>
+        <a href="movimientos.html" class="inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 transition hover:bg-hoja/8 hover:text-hoja">
+          <span>Movimientos</span>
+        </a>
+        <a href="pos.html" class="inline-flex items-center gap-2 rounded-full bg-hoja/10 px-3 py-2 text-hoja ring-1 ring-hoja/10">
+          <span>POS</span>
+        </a>
+        <a href="index.html" class="inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 transition hover:bg-hoja/8 hover:text-hoja">
+          <span>Volver al sitio</span>
+        </a>
+      </nav>
+      <div class="flex items-center gap-2">
+        <button id="open-cart-modal" type="button" class="relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-hoja/15 bg-white text-hoja shadow-[0_12px_24px_rgba(62,107,72,0.10)] transition hover:border-hoja/30 hover:bg-hoja/5" aria-label="Abrir carrito">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 stroke-current stroke-[1.9]" fill="none" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 6.5h1.8l1.5 8.2a1.5 1.5 0 0 0 1.48 1.23h7.86a1.5 1.5 0 0 0 1.46-1.14l1.27-5.31a1 1 0 0 0-.98-1.23H7.1"/>
+            <circle cx="10" cy="19" r="1.3"/>
+            <circle cx="17" cy="19" r="1.3"/>
+          </svg>
+          <span id="cart-count-badge" class="absolute -right-1 -top-1 inline-flex min-w-[1.35rem] items-center justify-center rounded-full bg-sol px-1.5 py-0.5 text-[11px] font-black text-slate-950">0</span>
+        </button>
+        <button id="logout-button" class="inline-flex items-center gap-2 rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(62,107,72,0.14)] transition hover:bg-hoja/95">
+          <span>Cerrar sesion</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+    <section class="space-y-6">
+      <div class="space-y-5">
+        <section class="rounded-[2rem] border border-white/60 bg-white/85 p-5 shadow-suave backdrop-blur">
+          <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p class="text-xs font-bold uppercase tracking-[0.24em] text-hoja/70">Venta rapida</p>
+              <h1 class="mt-2 text-3xl font-black text-slate-900">Punto de venta visual</h1>
+              <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Busca productos, agregalos al carrito y confirma la venta. Cada cobro descuenta stock y registra una salida en movimientos.</p>
+            </div>
+            <div class="grid gap-2 sm:grid-cols-3 lg:w-[34rem]">
+              <label class="block sm:col-span-2">
+                <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-slate-500">Buscar</span>
+                <div class="flex items-center gap-2 rounded-[1rem] border border-slate-200 bg-crema px-4 py-3">
+                  <svg viewBox="0 0 24 24" class="h-4 w-4 flex-shrink-0 fill-current text-hoja/80" aria-hidden="true"><path d="M10.5 4a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Zm0 1.8a4.7 4.7 0 1 0 0 9.4 4.7 4.7 0 0 0 0-9.4Zm8.2 11.6L22 20.7 20.7 22l-3.3-3.3 1.3-1.3Z"/></svg>
+                  <input id="product-search" type="text" class="w-full bg-transparent text-sm outline-none placeholder:text-slate-400" placeholder="Codigo o nombre del producto">
+                </div>
+              </label>
+              <label class="block">
+                <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-slate-500">Categoria</span>
+                <select id="category-filter" class="w-full rounded-[1rem] border border-slate-200 bg-crema px-4 py-3 text-sm outline-none">
+                  <option value="all">Todas</option>
+                  <option value="insumos">Insumos</option>
+                  <option value="abonos">Abonos</option>
+                  <option value="herramientas">Herramientas</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="mt-5 flex flex-wrap gap-2" id="category-chips">
+            <button class="category-chip inline-flex items-center gap-2 rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white shadow-sm" data-category="all">Todos</button>
+            <button class="category-chip inline-flex items-center gap-2 rounded-full border border-hoja/20 bg-white px-4 py-2 text-sm font-semibold text-hoja" data-category="insumos">Insumos</button>
+            <button class="category-chip inline-flex items-center gap-2 rounded-full border border-hoja/20 bg-white px-4 py-2 text-sm font-semibold text-hoja" data-category="abonos">Abonos</button>
+            <button class="category-chip inline-flex items-center gap-2 rounded-full border border-hoja/20 bg-white px-4 py-2 text-sm font-semibold text-hoja" data-category="herramientas">Herramientas</button>
+          </div>
+        </section>
+
+        <section class="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6" id="product-grid"></section>
+        <div class="flex flex-col items-center gap-3 rounded-[1.25rem] border border-white/60 bg-white/75 px-4 py-4 shadow-[0_10px_24px_rgba(62,107,72,0.08)]">
+          <p id="product-pagination-summary" class="text-center text-sm text-slate-600">Mostrando 0 productos.</p>
+          <div id="product-pagination" class="flex flex-wrap items-center justify-center gap-2"></div>
+        </div>
+      </div>
+
+      <section class="rounded-[2rem] border border-white/60 bg-white/85 p-5 shadow-suave backdrop-blur">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-hoja/70">Ultimas ventas</p>
+            <h2 class="mt-2 text-xl font-black text-slate-900">Historial reciente</h2>
+          </div>
+          <span id="sales-counter" class="rounded-full bg-crema px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-hoja">0 ventas</span>
+        </div>
+        <div id="recent-sales" class="mt-4 grid gap-3 lg:grid-cols-2 xl:grid-cols-4"></div>
+      </section>
+    </section>
+  </main>
+
+  <div id="cart-modal" class="fixed inset-0 z-40 hidden bg-slate-950/55 px-3 py-3 backdrop-blur-[2px] md:px-4 md:py-4">
+    <div class="mx-auto flex max-h-[calc(100vh-1.5rem)] w-full max-w-[52rem] flex-col overflow-hidden rounded-[2rem] border border-slate-200/20 bg-slate-950 text-white shadow-[0_28px_70px_rgba(15,23,42,0.32)] md:max-h-[calc(100vh-2rem)]">
+      <div class="flex items-start justify-between gap-4 border-b border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.06),_rgba(255,255,255,0.02))] px-4 py-4 md:px-5">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.24em] text-white/45">Carrito</p>
+          <h2 class="mt-2 text-2xl font-black">Venta actual</h2>
+          <p id="cart-status" class="mt-2 text-sm text-white/70">No hay productos agregados.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="clear-cart" type="button" class="rounded-full border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-white/85 transition hover:bg-white/10">Vaciar</button>
+          <button id="close-cart-modal" type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/6 text-white transition hover:bg-white/10" aria-label="Cerrar carrito">
+            <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6-5.6 5.6L5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid flex-1 overflow-hidden md:grid-cols-[1.15fr_0.85fr]">
+        <div class="flex min-h-0 flex-col border-b border-white/10 md:border-b-0 md:border-r md:border-white/10">
+          <div class="flex items-center justify-between px-4 pb-3 pt-4 md:px-5">
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/45">Productos</p>
+            <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold text-white/72">Ajusta cantidades aqui</span>
+          </div>
+          <div class="flex-1 overflow-y-auto px-4 pb-4 md:px-5">
+            <div id="cart-items" class="space-y-3"></div>
+          </div>
+        </div>
+
+        <div class="flex min-h-0 flex-col bg-white/[0.03]">
+          <div class="flex-1 overflow-y-auto px-4 py-4 md:px-5">
+            <div class="rounded-[1.35rem] border border-white/10 bg-white/6 p-4">
+              <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/45">Datos de cobro</p>
+              <div class="mt-4 grid gap-3">
+                <label class="block">
+                  <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-white/55">Cliente</span>
+                  <input id="sale-customer" type="text" class="w-full rounded-[1rem] border border-white/10 bg-white/10 px-4 py-3 text-sm outline-none placeholder:text-white/35" placeholder="Cliente ocasional o nombre">
+                </label>
+                <div class="grid gap-3 sm:grid-cols-2 md:grid-cols-1">
+                  <label class="block">
+                    <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-white/55">Pago</span>
+                    <select id="payment-method" class="w-full rounded-[1rem] border border-white/10 bg-white/10 px-4 py-3 text-sm outline-none">
+                      <option value="Efectivo">Efectivo</option>
+                      <option value="Transferencia">Transferencia</option>
+                      <option value="Tarjeta">Tarjeta</option>
+                    </select>
+                  </label>
+                  <label class="block">
+                    <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-white/55">Descuento</span>
+                    <input id="sale-discount" type="number" min="0" step="0.01" class="w-full rounded-[1rem] border border-white/10 bg-white/10 px-4 py-3 text-sm outline-none placeholder:text-white/35" value="0">
+                  </label>
+                </div>
+                <label class="block">
+                  <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-white/55">Nota</span>
+                  <input id="sale-note" type="text" class="w-full rounded-[1rem] border border-white/10 bg-white/10 px-4 py-3 text-sm outline-none placeholder:text-white/35" placeholder="Observacion de la venta">
+                </label>
+              </div>
+            </div>
+
+            <div class="mt-4 rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.08),_rgba(255,255,255,0.04))] p-4">
+              <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/45">Resumen</p>
+              <div class="mt-4 flex items-center justify-between text-sm text-white/72">
+                <span>Subtotal</span>
+                <span id="subtotal-value">$0.00</span>
+              </div>
+              <div class="mt-2 flex items-center justify-between text-sm text-white/72">
+                <span>Descuento</span>
+                <span id="discount-value">$0.00</span>
+              </div>
+              <div class="mt-3 rounded-[1rem] bg-sol px-4 py-3 text-slate-950">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold">Total a cobrar</span>
+                  <span id="total-value" class="text-xl font-black">$0.00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.04),_rgba(255,255,255,0.02))] px-4 py-4 md:px-5">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p class="text-sm text-white/60">Revisa cantidades y confirma la venta cuando este lista.</p>
+          <button id="confirm-sale" type="button" class="inline-flex items-center justify-center gap-2 rounded-full bg-sol px-6 py-3 text-sm font-bold text-slate-950 transition hover:brightness-105 sm:min-w-[15rem]">
+            <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M7 4h10l1 3h2v2h-1l-1.3 7.2A2 2 0 0 1 15.7 18H8.3a2 2 0 0 1-1.97-1.8L5 7H4V5h2l1-1Zm1.1 5 .7 7h6.4l.7-7H8.1ZM9 20.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/></svg>
+            Confirmar venta
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="product-detail-modal" class="fixed inset-0 z-40 hidden bg-slate-950/50 px-3 py-3 backdrop-blur-[2px] md:px-4 md:py-4">
+    <div class="mx-auto flex max-h-[calc(100vh-1.5rem)] w-full max-w-2xl flex-col overflow-hidden rounded-[1.7rem] border border-white/15 bg-white shadow-[0_24px_55px_rgba(15,23,42,0.20)] md:max-h-[calc(100vh-2rem)]">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-100 px-4 py-4 md:px-5">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.24em] text-hoja/70">Detalle del producto</p>
+          <h2 id="product-detail-title" class="mt-2 text-xl font-black text-slate-900">Producto</h2>
+          <p id="product-detail-subtitle" class="mt-1.5 text-sm text-slate-600">Informacion del producto seleccionado.</p>
+        </div>
+        <button id="close-product-detail" type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:border-hoja hover:text-hoja" aria-label="Cerrar detalle">
+          <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6-5.6 5.6L5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>
+        </button>
+      </div>
+
+      <div class="grid flex-1 gap-4 overflow-y-auto px-4 py-4 md:grid-cols-[0.84fr_1.16fr] md:px-5 md:py-5">
+        <div class="space-y-3">
+          <img id="product-detail-image" src="" alt="Producto" class="h-52 w-full rounded-[1.2rem] object-cover">
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div class="rounded-[1rem] border border-slate-200 bg-crema px-4 py-3">
+              <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-hoja/70">Codigo</p>
+              <p id="product-detail-id" class="mt-1 text-sm font-semibold text-slate-900"></p>
+            </div>
+            <div class="rounded-[1rem] border border-slate-200 bg-crema px-4 py-3">
+              <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-hoja/70">Stock</p>
+              <p id="product-detail-stock" class="mt-1 text-sm font-semibold text-slate-900"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div class="rounded-[1rem] border border-slate-200 bg-slate-50/80 p-3.5">
+            <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-hoja/70">Categoria</p>
+            <p id="product-detail-category" class="mt-1 text-sm font-semibold text-slate-900"></p>
+          </div>
+          <div class="rounded-[1rem] border border-slate-200 bg-slate-50/80 p-3.5">
+            <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-hoja/70">Presentacion</p>
+            <p id="product-detail-presentation" class="mt-1 text-sm font-semibold text-slate-900"></p>
+          </div>
+          <div class="rounded-[1rem] border border-slate-200 bg-slate-50/80 p-3.5">
+            <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-hoja/70">Uso sugerido</p>
+            <p id="product-detail-usage" class="mt-1 text-sm leading-5 text-slate-700"></p>
+          </div>
+          <div class="rounded-[1rem] border border-slate-200 bg-slate-50/80 p-3.5">
+            <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-hoja/70">Precio</p>
+            <p id="product-detail-price" class="mt-1 text-xl font-black text-hoja"></p>
+          </div>
+          <button id="product-detail-add" type="button" class="inline-flex w-full items-center justify-center gap-2 rounded-full bg-hoja px-5 py-3 text-sm font-semibold text-white transition hover:bg-hoja/95">
+            <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>
+            Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/pos-app.js"></script>
+</body>
+</html>

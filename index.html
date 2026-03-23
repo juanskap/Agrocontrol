@@ -67,6 +67,15 @@
           </svg>
           <span data-i18n-text>Movimientos</span>
         </a>
+        <a href="pos.html" class="group inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 transition hover:bg-hoja/8 hover:text-hoja">
+          <svg class="header-icon h-4 w-4 flex-shrink-0 stroke-current stroke-[2] text-hoja transition-colors group-hover:text-sol" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 7.5h14"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 7.5V5.75A1.75 1.75 0 0 1 8.75 4h6.5A1.75 1.75 0 0 1 17 5.75V7.5"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.25 7.5v10A1.5 1.5 0 0 0 7.75 19h8.5a1.5 1.5 0 0 0 1.5-1.5v-10"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.5 12h5M12 9.5v5"/>
+          </svg>
+          <span>POS</span>
+        </a>
         <a href="contacto.html" class="group inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 transition hover:bg-hoja/8 hover:text-hoja" data-i18n="nav.contact">
           <svg class="header-icon h-4 w-4 flex-shrink-0 stroke-current stroke-[2] text-hoja transition-colors group-hover:text-sol" fill="none" viewBox="0 0 24 24" aria-hidden="true">
             <rect x="4" y="6" width="16" height="12" rx="2.5"/>
@@ -397,6 +406,7 @@
     const loginLink = document.querySelector('[data-i18n="nav.login"]');
     const inventoryLink = document.querySelector('[data-i18n="nav.inventory"]');
     const movementsLink = document.querySelector('[data-i18n="nav.movements"]');
+    const posLink = document.querySelector('a[href="pos.html"]');
     const authTranslations = {
       es: { login: "Iniciar sesión", logout: "Cerrar sesión" },
       en: { login: "Log in", logout: "Log out" }
@@ -424,6 +434,7 @@
       loginLink.setAttribute("href", authenticated ? "#" : "login.html?redirect=inventario.html");
       inventoryLink?.setAttribute("href", authenticated ? "inventario.html" : "login.html?redirect=inventario.html");
       movementsLink?.setAttribute("href", authenticated ? "movimientos.html" : "login.html?redirect=movimientos.html");
+      posLink?.setAttribute("href", authenticated ? "pos.html" : "login.html?redirect=pos.html");
     }
     setLanguage(savedLanguage);
     updateAuthLink(savedLanguage);

@@ -25,10 +25,11 @@
       }
     };
   </script>
+  <script src="assets/app-config.js"></script>
   <script src="assets/i18n-helper.js"></script>
   <script>
-    const agroAuthKey = "agrocontrol-auth-v1";
-    let currentMovementsLanguage = safeStorage.getItem("agrocontrol-language") || "es";
+    const agroAuthKey = window.AGRO_APP_KEYS.auth;
+    let currentMovementsLanguage = safeStorage.getItem(window.AGRO_APP_KEYS.language) || "es";
 
     function getMovementsText(key, fallback) {
       if (!window.movementsTranslations) {
@@ -60,7 +61,7 @@
         return true;
       }
 
-      alert(getMovementsText("messages.previewAuth", `${actionLabel} requiere iniciar sesi贸n. Est谩s en modo vista previa.`));
+      alert(getMovementsText("messages.previewAuth", `${actionLabel} requiere iniciar sesi髇. Est醩 en modo vista previa.`));
       redirectToLogin();
       return false;
     }
@@ -72,10 +73,10 @@
 </head>
 <body class="flex min-h-screen flex-col bg-crema text-slate-800">
   <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-      <div class="flex items-center gap-3">
-        <a href="index.html" class="flex items-center gap-3">
-          <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="index.html" class="flex items-center gap-2 sm:gap-3">
+          <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-10 w-auto sm:h-11">
         </a>
         <span class="hidden rounded-full border border-hoja/15 bg-hoja/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-hoja/80 md:inline-flex">Panel privado</span>
       </div>
@@ -90,13 +91,22 @@
           <span data-i18n-text>Inventario</span>
         </a>
         <a href="movimientos.html" class="group inline-flex items-center gap-2 rounded-full bg-hoja/10 px-3 py-2 text-hoja ring-1 ring-hoja/10" data-i18n="nav.movements">
-          <svg class="header-icon h-4 w-4 flex-shrink-0 stroke-current stroke-[2] text-hoja" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+          <svg class="header-icon h-4 w-4 flex-shrink-0 stroke-current stroke-[2]" fill="none" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 8.25h11"/>
             <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 5.75 5 8.25l2.5 2.5"/>
             <path stroke-linecap="round" stroke-linejoin="round" d="M18 15.75H7"/>
             <path stroke-linecap="round" stroke-linejoin="round" d="m16.5 13.25 2.5 2.5-2.5 2.5"/>
           </svg>
           <span data-i18n-text>Movimientos</span>
+        </a>
+        <a href="pos.html" class="group inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 transition hover:bg-hoja/8 hover:text-hoja">
+          <svg class="header-icon h-4 w-4 flex-shrink-0 stroke-current stroke-[2] text-hoja transition-colors group-hover:text-sol" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 7.5h14"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 7.5V5.75A1.75 1.75 0 0 1 8.75 4h6.5A1.75 1.75 0 0 1 17 5.75V7.5"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.25 7.5v10A1.5 1.5 0 0 0 7.75 19h8.5a1.5 1.5 0 0 0 1.5-1.5v-10"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.5 12h5M12 9.5v5"/>
+          </svg>
+          <span>POS</span>
         </a>
         <a href="index.html" class="group inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 transition hover:bg-hoja/8 hover:text-hoja">
           <svg class="header-icon h-4 w-4 flex-shrink-0 stroke-current stroke-[2] text-hoja transition-colors group-hover:text-sol" fill="none" viewBox="0 0 24 24" aria-hidden="true">
@@ -106,13 +116,13 @@
           <span>Volver al sitio</span>
         </a>
       </nav>
-      <div class="flex items-center gap-3">
-        <button id="logout-button" class="group inline-flex items-center gap-2 rounded-full bg-hoja/85 px-5 py-2 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(62,107,72,0.14)] transition hover:bg-hoja/95">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button id="logout-button" class="group inline-flex items-center gap-2 rounded-full bg-hoja/85 px-4 py-2 text-xs font-semibold text-white shadow-[0_12px_24px_rgba(62,107,72,0.14)] transition hover:bg-hoja/95 sm:px-5 sm:text-sm">
           <svg class="header-icon h-4 w-4 flex-shrink-0 stroke-current stroke-[2] text-white transition-colors group-hover:text-crema" fill="none" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="8.25" r="3"/>
             <path stroke-linecap="round" stroke-linejoin="round" d="M5.75 19c1.45-2.95 3.95-4.5 6.25-4.5s4.8 1.55 6.25 4.5"/>
           </svg>
-          <span data-i18n-text>Iniciar sesi贸n</span>
+          <span data-i18n-text>Iniciar sesi髇</span>
         </button>
         <div class="hidden items-center gap-1 rounded-full border border-hoja/15 bg-gradient-to-r from-white via-crema to-white p-1.5 shadow-[0_10px_30px_rgba(62,107,72,0.14)] md:flex">
           <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-hoja transition duration-200 hover:bg-white/80" data-lang="es" aria-label="Cambiar a espa帽ol">
@@ -134,20 +144,20 @@
     </div>
   </header>
 
-  <main class="mx-auto max-w-7xl flex-1 px-6 py-16">
-    <section class="rounded-[2.5rem] bg-slate-950 px-8 py-12 text-white shadow-suave">
+  <main class="mx-auto max-w-7xl flex-1 px-4 py-10 sm:px-6 sm:py-16">
+    <section class="rounded-[2.5rem] bg-slate-950 px-5 py-8 text-white shadow-suave sm:px-8 sm:py-12">
       <p class="text-sm font-bold uppercase tracking-[0.28em] text-sol" data-i18n="hero.label">Movimientos</p>
-      <h1 class="mt-4 text-4xl font-black md:text-5xl" data-i18n="hero.title">Entradas y salidas con trazabilidad operativa.</h1>
-      <p class="mt-5 max-w-3xl text-lg leading-8 text-white/75" data-i18n="hero.description">Registra compras, entregas y ajustes del inventario. Cada movimiento actualiza la cantidad del producto y deja detalle de fecha, responsable y observaci贸n.</p>
+      <h1 class="mt-4 text-3xl font-black sm:text-4xl md:text-5xl" data-i18n="hero.title">Entradas y salidas con trazabilidad operativa.</h1>
+      <p class="mt-5 max-w-3xl text-base leading-7 text-white/75 sm:text-lg sm:leading-8" data-i18n="hero.description">Registra compras, entregas y ajustes del inventario. Cada movimiento actualiza la cantidad del producto y deja detalle de fecha, responsable y observaci髇.</p>
     </section>
 
-    <section id="preview-notice" class="mt-6 rounded-[2rem] border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-900 shadow-sm">
-      <span data-i18n="preview.notice">Est谩s en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesi贸n.</span>
+    <section id="preview-notice" class="hidden mt-6 rounded-[2rem] border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-900 shadow-sm">
+      <span data-i18n="preview.notice">Est醩 en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesi髇.</span>
     </section>
 
     <section class="mt-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
       <div class="space-y-6">
-        <div class="grid gap-4 md:grid-cols-2">
+        <div class="grid gap-4 sm:grid-cols-2">
           <div class="rounded-[1.75rem] bg-white p-5 shadow-suave">
             <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Cantidad entrada</p>
             <p id="report-entry-qty" class="mt-3 text-3xl font-black text-slate-900">0</p>
@@ -180,7 +190,7 @@
 
           <form id="movement-form" class="mt-6 grid gap-4 md:grid-cols-2">
             <label class="block">
-              <span class="mb-1 block text-sm font-semibold text-slate-700">Categor铆a</span>
+              <span class="mb-1 block text-sm font-semibold text-slate-700">categor韆</span>
               <select id="movement-category" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
                 <option value="insumos">Insumos</option>
                 <option value="abonos">Abonos</option>
@@ -263,7 +273,7 @@
               <input id="filter-product" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Buscar por nombre o ID">
             </label>
             <label class="block">
-              <span class="mb-1 block text-sm font-semibold text-slate-700">Categor铆a</span>
+              <span class="mb-1 block text-sm font-semibold text-slate-700">categor韆</span>
               <select id="filter-category" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
                 <option value="">Todas</option>
                 <option value="insumos">Insumos</option>
@@ -294,7 +304,7 @@
                 <tr>
                   <th class="px-3 py-3">Fecha</th>
                   <th class="px-3 py-3">Producto</th>
-                  <th class="px-3 py-3">Categor铆a</th>
+                  <th class="px-3 py-3">categor韆</th>
                   <th class="px-3 py-3">Precio</th>
                   <th class="px-3 py-3">Valor total</th>
                   <th class="px-3 py-3">Stock actual</th>
@@ -324,7 +334,7 @@
                 <thead class="border-b border-slate-200 text-slate-500">
                   <tr>
                     <th class="px-3 py-3">Producto</th>
-                    <th class="px-3 py-3">Categor铆a</th>
+                    <th class="px-3 py-3">categor韆</th>
                     <th class="px-3 py-3">Precio</th>
                     <th class="px-3 py-3">Stock actual</th>
                     <th class="px-3 py-3">Entradas</th>
@@ -367,8 +377,8 @@
   </footer>
 
   <script>
-    const stateStorageKey = "agrocontrol-inventory-state-v2";
-    const movementStorageKey = "agrocontrol-movements-v1";
+    const stateStorageKey = window.AGRO_APP_KEYS.inventoryState;
+    const movementStorageKey = window.AGRO_APP_KEYS.movements;
     const categoryLabels = {
       insumos: "Insumos",
       abonos: "Abonos",
@@ -424,8 +434,8 @@
       if (logoutButton) {
         const logoutText = logoutButton.querySelector("[data-i18n-text]");
         const nextCopy = authenticated
-          ? getMovementsText("auth.logout", "Cerrar sesi贸n")
-          : getMovementsText("auth.login", "Iniciar sesi贸n");
+          ? getMovementsText("auth.logout", "Cerrar sesi髇")
+          : getMovementsText("auth.login", "Iniciar sesi髇");
         if (logoutText) {
           logoutText.textContent = nextCopy;
         } else {
@@ -484,7 +494,7 @@
     function renderProductOptions() {
       const products = getAllProducts();
       movementProduct.innerHTML = products.map((product) =>
-        `<option value="${product.category}|${product.id}">${product.name} (${product.id}) 路 ${categoryLabels[product.category]}</option>`
+        `<option value="${product.category}|${product.id}">${product.name} (${product.id}) - ${categoryLabels[product.category]}</option>`
       ).join("");
     }
 
@@ -509,13 +519,13 @@
       const products = getAllProducts().filter((product) => product.category === selectedCategory);
 
       if (products.length === 0) {
-        movementProduct.innerHTML = `<option value="">No hay productos en esta categor铆a</option>`;
+        movementProduct.innerHTML = `<option value="">No hay productos en esta categor韆</option>`;
         movementProduct.value = "";
         return;
       }
 
       movementProduct.innerHTML = products.map((product) =>
-        `<option value="${product.id}">${product.name} (${product.id}) 路 Stock: ${Number(product.row[product.quantityIndex]) || 0}</option>`
+        `<option value="${product.id}">${product.name} (${product.id}) - Stock: ${Number(product.row[product.quantityIndex]) || 0}</option>`
       ).join("");
 
       if (previousValue && movementProduct.querySelector(`option[value="${previousValue}"]`)) {
@@ -937,19 +947,19 @@
     window.movementsTranslations = {
       es: {
         pageTitle: "AgroControl | Movimientos",
-        nav: { home: "馃彔 Inicio", about: "馃尶 Nosotros", inventory: "馃摝 Inventario", movements: "馃攧 Movimientos", contact: "鉁夛笍 Contacto" },
-        auth: { login: "Iniciar sesi贸n", logout: "Cerrar sesi贸n" },
+        nav: { home: "Inicio", about: "Nosotros", inventory: "Inventario", movements: "Movimientos", contact: "Contacto" },
+        auth: { login: "Iniciar sesi髇", logout: "Cerrar sesi髇" },
         hero: {
           label: "Movimientos",
           title: "Entradas y salidas con trazabilidad operativa.",
-          description: "Registra compras, entregas y ajustes del inventario. Cada movimiento actualiza la cantidad del producto y deja detalle de fecha, responsable y observaci贸n."
+          description: "Registra compras, entregas y ajustes del inventario. Cada movimiento actualiza la cantidad del producto y deja detalle de fecha, responsable y observaci髇."
         },
-        preview: { notice: "Est谩s en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesi贸n." },
-        messages: { previewAuth: "Esta acci贸n requiere iniciar sesi贸n. Est谩s en modo vista previa." }
+        preview: { notice: "Est醩 en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesi髇." },
+        messages: { previewAuth: "Esta acci髇 requiere iniciar sesi髇. Est醩 en modo vista previa." }
       },
       en: {
         pageTitle: "AgroControl | Movements",
-        nav: { home: "馃彔 Home", about: "馃尶 About us", inventory: "馃摝 Inventory", movements: "馃攧 Movements", contact: "鉁夛笍 Contact" },
+        nav: { home: "Home", about: "About us", inventory: "Inventory", movements: "Movements", contact: "Contact" },
         auth: { login: "Log in", logout: "Log out" },
         hero: {
           label: "Movements",
@@ -975,3 +985,6 @@
   </script>
 </body>
 </html>
+
+
+
