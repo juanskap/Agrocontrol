@@ -6,6 +6,7 @@
   <title>AgroControl | Iniciar sesión</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%233E6B48'/><path d='M20 39c0-10 7-18 18-20-2 3-3 6-3 10 0 6 3 11 9 15-3 1-5 1-8 1-10 0-16-6-16-6Z' fill='%23D9A441'/><path d='M23 42c4-7 11-12 21-14' stroke='%23F5F0E6' stroke-width='4' stroke-linecap='round'/></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/storage-helper.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -35,26 +36,17 @@
           <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-12 w-auto">
           <div class="flex items-center gap-1 rounded-full border border-white/15 bg-gradient-to-r from-white/10 via-white/5 to-white/10 p-1.5 shadow-[0_12px_30px_rgba(15,23,42,0.28)]">
             <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-white/80 transition duration-200 hover:bg-white/10" data-language-theme="dark" data-lang="es" aria-label="Cambiar a español">
-              <span aria-hidden="true" class="inline-flex h-4 w-5 overflow-hidden rounded-[3px] shadow-sm">
-                <svg viewBox="0 0 18 12" class="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="18" height="12" fill="#AA151B"/>
-                  <rect y="3" width="18" height="6" fill="#F1BF00"/>
-                </svg>
-              </span>
+              <svg class="h-4 w-4 flex-shrink-0 stroke-current stroke-[1.8]" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="8.25"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5M12 3.75c2.15 2.2 3.35 5.1 3.35 8.25S14.15 18.05 12 20.25c-2.15-2.2-3.35-5.1-3.35-8.25S9.85 5.95 12 3.75Z"/>
+              </svg>
               ES
             </button>
             <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-white/80 transition duration-200 hover:bg-white/10" data-language-theme="dark" data-lang="en" aria-label="Switch to English">
-              <span aria-hidden="true" class="inline-flex h-4 w-5 overflow-hidden rounded-[3px] shadow-sm">
-                <svg viewBox="0 0 18 12" class="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="18" height="12" fill="#B22234"/>
-                  <rect y="1.2" width="18" height="1.2" fill="#FFFFFF"/>
-                  <rect y="3.6" width="18" height="1.2" fill="#FFFFFF"/>
-                  <rect y="6" width="18" height="1.2" fill="#FFFFFF"/>
-                  <rect y="8.4" width="18" height="1.2" fill="#FFFFFF"/>
-                  <rect y="10.8" width="18" height="1.2" fill="#FFFFFF"/>
-                  <rect width="7.6" height="6.6" fill="#3C3B6E"/>
-                </svg>
-              </span>
+              <svg class="h-4 w-4 flex-shrink-0 stroke-current stroke-[1.8]" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="8.25"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5M12 3.75c2.15 2.2 3.35 5.1 3.35 8.25S14.15 18.05 12 20.25c-2.15-2.2-3.35-5.1-3.35-8.25S9.85 5.95 12 3.75Z"/>
+              </svg>
               EN
             </button>
           </div>
@@ -206,7 +198,7 @@
     }
 
     function saveSession() {
-      localStorage.setItem(authStorageKey, JSON.stringify({
+      safeStorage.setItem(authStorageKey, JSON.stringify({
         user: validUser,
         loginAt: new Date().toISOString()
       }));
@@ -214,7 +206,7 @@
 
     function isAuthenticated() {
       try {
-        return Boolean(JSON.parse(localStorage.getItem(authStorageKey) || "null"));
+        return Boolean(JSON.parse(safeStorage.getItem(authStorageKey) || "null"));
       } catch {
         return false;
       }

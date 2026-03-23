@@ -33,7 +33,12 @@ function applyPageLanguage(translations, lang) {
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const value = getNestedTranslation(translations, nextLang, element.dataset.i18n);
     if (typeof value === "string") {
-      element.textContent = value;
+      const textTarget = element.querySelector("[data-i18n-text]");
+      if (textTarget) {
+        textTarget.textContent = value;
+      } else {
+        element.textContent = value;
+      }
     }
   });
 
@@ -58,13 +63,13 @@ function applyPageLanguage(translations, lang) {
     }
   });
 
-  localStorage.setItem(agroLanguageStorageKey, nextLang);
+  safeStorage.setItem(agroLanguageStorageKey, nextLang);
   updateLanguageSelectorUI(nextLang);
   return nextLang;
 }
 
 function initPageI18n(translations, afterChange) {
-  const savedLanguage = localStorage.getItem(agroLanguageStorageKey) || "es";
+  const savedLanguage = safeStorage.getItem(agroLanguageStorageKey) || "es";
   let currentLang = applyPageLanguage(translations, savedLanguage);
 
   if (typeof afterChange === "function") {

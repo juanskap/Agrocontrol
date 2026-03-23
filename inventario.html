@@ -6,6 +6,7 @@
   <title>AgroControl | Inventario</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%233E6B48'/><path d='M20 39c0-10 7-18 18-20-2 3-3 6-3 10 0 6 3 11 9 15-3 1-5 1-8 1-10 0-16-6-16-6Z' fill='%23D9A441'/><path d='M23 42c4-7 11-12 21-14' stroke='%23F5F0E6' stroke-width='4' stroke-linecap='round'/></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/storage-helper.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -27,7 +28,7 @@
   <script src="assets/i18n-helper.js"></script>
   <script>
     const agroAuthKey = "agrocontrol-auth-v1";
-    let currentInventoryLanguage = localStorage.getItem("agrocontrol-language") || "es";
+    let currentInventoryLanguage = safeStorage.getItem("agrocontrol-language") || "es";
 
     function getInventoryText(key, fallback) {
       if (!window.inventoryTranslations) {
@@ -39,7 +40,7 @@
 
     function getAgroSession() {
       try {
-        return JSON.parse(localStorage.getItem(agroAuthKey) || "null");
+        return JSON.parse(safeStorage.getItem(agroAuthKey) || "null");
       } catch {
         return null;
       }
@@ -70,41 +71,62 @@
   </script>
 </head>
 <body class="flex min-h-screen flex-col bg-crema text-slate-800">
-  <header class="sticky top-0 z-30 border-b border-slate-900/10 bg-slate-950/95 text-white backdrop-blur">
+  <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-      <a href="index.html" class="flex items-center gap-3">
-        <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
-        <span class="hidden rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-white/75 md:inline-flex">Panel privado</span>
-      </a>
-      <nav class="hidden gap-6 text-sm font-semibold md:flex">
-        <a href="inventario.html" class="border-b-2 border-sol pb-1 text-sol" data-i18n="nav.inventory">Inventario</a>
-        <a href="movimientos.html" class="border-b-2 border-transparent pb-1 transition hover:border-white/35 hover:text-sol" data-i18n="nav.movements">Movimientos</a>
-        <a href="index.html" class="border-b-2 border-transparent pb-1 transition hover:border-white/35 hover:text-sol">↩️ Volver al sitio</a>
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-3">
+          <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
+        </a>
+        <span class="hidden rounded-full border border-hoja/15 bg-hoja/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-hoja/80 md:inline-flex">Panel privado</span>
+      </div>
+      <nav class="hidden gap-3 text-sm font-semibold md:flex">
+        <a href="inventario.html" class="group inline-flex items-center gap-2 rounded-full bg-hoja/10 px-3 py-2 text-hoja ring-1 ring-hoja/10" data-i18n="nav.inventory">
+          <svg class="header-icon h-4 w-4 flex-shrink-0 stroke-current stroke-[2] text-hoja" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.5 8V19a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V8"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 5.25h8l1 2.75H7l1-2.75Z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 11.5h6M9 15h5"/>
+          </svg>
+          <span data-i18n-text>Inventario</span>
+        </a>
+        <a href="movimientos.html" class="group inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 transition hover:bg-hoja/8 hover:text-hoja" data-i18n="nav.movements">
+          <svg class="header-icon h-4 w-4 flex-shrink-0 stroke-current stroke-[2] text-hoja transition-colors group-hover:text-sol" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 8.25h11"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 5.75 5 8.25l2.5 2.5"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M18 15.75H7"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="m16.5 13.25 2.5 2.5-2.5 2.5"/>
+          </svg>
+          <span data-i18n-text>Movimientos</span>
+        </a>
+        <a href="index.html" class="group inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 transition hover:bg-hoja/8 hover:text-hoja">
+          <svg class="header-icon h-4 w-4 flex-shrink-0 stroke-current stroke-[2] text-hoja transition-colors group-hover:text-sol" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 6 9 12l6 6"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 12h10"/>
+          </svg>
+          <span>Volver al sitio</span>
+        </a>
       </nav>
       <div class="flex items-center gap-3">
-        <button id="logout-button" class="inline-flex items-center gap-2 rounded-full bg-hoja/85 px-5 py-2 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(62,107,72,0.14)] transition hover:bg-hoja/95">👤 Iniciar sesión</button>
-        <div class="hidden items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1.5 shadow-[0_10px_30px_rgba(15,23,42,0.28)] md:flex">
-          <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-white/80 transition duration-200 hover:bg-white/10" data-lang="es" aria-label="Cambiar a español">
-            <span aria-hidden="true" class="inline-flex h-4 w-5 overflow-hidden rounded-[3px] shadow-sm">
-              <svg viewBox="0 0 18 12" class="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-                <rect width="18" height="12" fill="#AA151B"/>
-                <rect y="3" width="18" height="6" fill="#F1BF00"/>
-              </svg>
-            </span>
+        <button id="logout-button" class="group inline-flex items-center gap-2 rounded-full bg-hoja/85 px-5 py-2 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(62,107,72,0.14)] transition hover:bg-hoja/95">
+          <svg class="header-icon h-4 w-4 flex-shrink-0 stroke-current stroke-[2] text-white transition-colors group-hover:text-crema" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="8.25" r="3"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5.75 19c1.45-2.95 3.95-4.5 6.25-4.5s4.8 1.55 6.25 4.5"/>
+          </svg>
+          <span data-i18n-text>Iniciar sesión</span>
+        </button>
+        <div class="hidden items-center gap-1 rounded-full border border-hoja/15 bg-gradient-to-r from-white via-crema to-white p-1.5 shadow-[0_10px_30px_rgba(62,107,72,0.14)] md:flex">
+          <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-hoja transition duration-200 hover:bg-white/80" data-lang="es" aria-label="Cambiar a español">
+            <svg class="h-4 w-4 flex-shrink-0 stroke-current stroke-[1.8]" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="8.25"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5M12 3.75c2.15 2.2 3.35 5.1 3.35 8.25S14.15 18.05 12 20.25c-2.15-2.2-3.35-5.1-3.35-8.25S9.85 5.95 12 3.75Z"/>
+            </svg>
             ES
           </button>
-          <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-white/80 transition duration-200 hover:bg-white/10" data-lang="en" aria-label="Switch to English">
-            <span aria-hidden="true" class="inline-flex h-4 w-5 overflow-hidden rounded-[3px] shadow-sm">
-              <svg viewBox="0 0 18 12" class="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-                <rect width="18" height="12" fill="#B22234"/>
-                <rect y="1.2" width="18" height="1.2" fill="#FFFFFF"/>
-                <rect y="3.6" width="18" height="1.2" fill="#FFFFFF"/>
-                <rect y="6" width="18" height="1.2" fill="#FFFFFF"/>
-                <rect y="8.4" width="18" height="1.2" fill="#FFFFFF"/>
-                <rect y="10.8" width="18" height="1.2" fill="#FFFFFF"/>
-                <rect width="7.6" height="6.6" fill="#3C3B6E"/>
-              </svg>
-            </span>
+          <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-hoja transition duration-200 hover:bg-white/80" data-lang="en" aria-label="Switch to English">
+            <svg class="h-4 w-4 flex-shrink-0 stroke-current stroke-[1.8]" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="8.25"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5M12 3.75c2.15 2.2 3.35 5.1 3.35 8.25S14.15 18.05 12 20.25c-2.15-2.2-3.35-5.1-3.35-8.25S9.85 5.95 12 3.75Z"/>
+            </svg>
             EN
           </button>
         </div>
@@ -113,65 +135,88 @@
   </header>
 
   <main class="mx-auto max-w-7xl flex-1 px-6 py-16">
-    <section class="rounded-[1.75rem] bg-slate-950 px-6 py-5 text-white shadow-suave">
-      <h1 class="text-2xl font-black md:text-3xl" data-i18n="hero.title">Inventario central</h1>
-      <p class="mt-2 max-w-3xl text-sm leading-6 text-white/75">Consulta existencias, revisa alertas clave y entra al detalle solo cuando lo necesites.</p>
-    </section>
-
     <section id="preview-notice" class="hidden mt-6 rounded-[2rem] border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-900 shadow-sm">
       <span data-i18n="preview.notice">Estás en modo vista previa. Puedes consultar inventario y movimientos recientes, pero para agregar, editar, eliminar o registrar cambios debes iniciar sesión.</span>
     </section>
 
     <section class="mt-8 space-y-5">
-      <aside class="rounded-[2rem] bg-white p-5 shadow-suave ring-1 ring-slate-200/80">
-        <p class="hidden text-sm font-black uppercase tracking-[0.28em] text-slate-900" data-i18n="sidebar.label">Panel lateral</p>
-        <div class="flex flex-wrap items-start justify-between gap-4">
-          <div class="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-sm">
-            <p class="text-base font-black text-slate-900" data-i18n="sidebar.quickActions">Acciones rápidas</p>
-            <div class="mt-4 flex flex-wrap gap-3">
-              <button id="open-add-modal" class="inline-flex items-center gap-2 rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white" data-i18n="actions.add"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>➕ Agregar</button>
-              <button id="open-edit-modal" class="inline-flex items-center gap-2 rounded-full border border-hoja px-4 py-2 text-sm font-semibold text-hoja" data-i18n="actions.edit"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m16.9 3.5 3.6 3.6-10 10L6 18l.9-4.5 10-10ZM15.5 5 8.4 12.1l-.4 2 2-.4L17 6.6 15.5 5Z"/></svg>✏️ Editar</button>
-              <button id="delete-product-button" class="inline-flex items-center gap-2 rounded-full border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-600" data-i18n="actions.delete"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm1 6h2v8h-2V9Zm4 0h2v8h-2V9ZM7 9h2v8H7V9Zm1 11h8a2 2 0 0 0 2-2V8H6v10a2 2 0 0 0 2 2Z"/></svg>🗑️ Eliminar</button>
+      <section class="overflow-hidden rounded-[2rem] border border-white/60 bg-[linear-gradient(135deg,_rgba(15,23,42,0.98),_rgba(34,78,53,0.94))] text-white shadow-suave">
+        <div class="grid gap-5 px-5 py-5 xl:grid-cols-[1.2fr_0.8fr] xl:px-6 xl:py-5">
+          <div>
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-white/75">Centro operativo</span>
+              <span id="inventory-live-status" class="inline-flex rounded-full border border-emerald-400/30 bg-emerald-400/15 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-100">Listo para conectar BD/POS</span>
+            </div>
+            <h1 class="mt-3 max-w-3xl text-[1.45rem] font-black leading-tight text-white md:text-[1.85rem]">Inventario ejecutivo para operación y control de stock.</h1>
+            <p class="mt-2 max-w-3xl text-sm leading-6 text-white/75">Preparado para crecer hacia base de datos, punto de venta y trazabilidad por usuario.</p>
+
+            <div class="mt-4 flex flex-col gap-3 lg:flex-row lg:items-center">
+              <label class="flex-1">
+                <span class="sr-only">Buscar producto</span>
+                <div class="flex items-center gap-3 rounded-[1.1rem] border border-white/15 bg-white/10 px-4 py-2.5 backdrop-blur">
+                  <svg viewBox="0 0 24 24" class="h-4 w-4 flex-shrink-0 fill-current text-white/70" aria-hidden="true"><path d="M10.5 4a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Zm0 1.8a4.7 4.7 0 1 0 0 9.4 4.7 4.7 0 0 0 0-9.4Zm8.2 11.6L22 20.7 20.7 22l-3.3-3.3 1.3-1.3Z"/></svg>
+                  <input id="executive-search" type="text" class="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/45" placeholder="Buscar por producto, código o proveedor">
+                </div>
+              </label>
+              <button id="toggle-filter" class="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/15" data-i18n="filters.toggle"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M4 6h16v2l-6 6v5l-4-2v-3L4 8V6Z"/></svg>Filtrar productos</button>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2.5">
+              <button id="open-add-modal" class="inline-flex items-center gap-2 rounded-full bg-sol px-4 py-2.5 text-sm font-semibold text-slate-950 shadow-sm transition hover:brightness-105" data-i18n="actions.add"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>Agregar Producto</button>
+              <button id="open-entry-modal" class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/15"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M11 4h2v9h4l-5 7-5-7h4V4Z"/></svg>Registrar entrada</button>
+              <button id="open-exit-modal" class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/15"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m12 20-5-7h4V4h2v9h4l-5 7Z"/></svg>Registrar salida</button>
+              <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.16em] text-white/65">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 5a1.2 1.2 0 1 0 0 2.4A1.2 1.2 0 0 0 12 7Zm-1.3 5v5h2.6v-5h-2.6Z"/></svg>
+                Selecciona un producto para editarlo, eliminarlo o ver su detalle
+              </span>
             </div>
           </div>
-          <div class="hidden min-w-[260px] flex-1 rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 shadow-sm">
-            <p class="text-base font-black text-slate-900" data-i18n="sidebar.selectedProduct">Producto seleccionado</p>
-            <p id="selected-product-label" class="mt-3 text-sm leading-6 text-slate-700" data-i18n="sidebar.noSelectedProduct">Ningún producto seleccionado.</p>
+
+          <div class="grid gap-2.5 sm:grid-cols-2">
+            <article class="rounded-[1.35rem] border border-white/10 bg-white/10 p-3.5 backdrop-blur">
+              <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/55">Productos activos</p>
+              <p id="metric-total-products" class="mt-2 text-[1.7rem] font-black text-white">0</p>
+              <p class="mt-1.5 text-xs text-white/65">SKUs visibles en el inventario maestro.</p>
+            </article>
+            <article class="rounded-[1.35rem] border border-white/10 bg-white/10 p-3.5 backdrop-blur">
+              <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/55">Alertas operativas</p>
+              <p id="metric-alert-products" class="mt-2 text-[1.7rem] font-black text-sol">0</p>
+              <p class="mt-1.5 text-xs text-white/65">Stock bajo, reposición y mantenimiento.</p>
+            </article>
+            <article class="rounded-[1.35rem] border border-white/10 bg-white/10 p-3.5 backdrop-blur">
+              <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/55">Valor estimado</p>
+              <p id="metric-inventory-value" class="mt-2 text-[1.7rem] font-black text-white">$0</p>
+              <p class="mt-1.5 text-xs text-white/65">Base útil para reportes y POS.</p>
+            </article>
+            <article class="rounded-[1.35rem] border border-white/10 bg-white/10 p-3.5 backdrop-blur">
+              <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/55">Vista activa</p>
+              <p id="metric-active-category" class="mt-2 text-lg font-black text-white">Insumos</p>
+              <p class="mt-1.5 text-xs text-white/65">Categoría operativa abierta ahora.</p>
+            </article>
           </div>
-          <div class="hidden rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 shadow-sm">
-            <p class="text-base font-black text-slate-900">Alertas automáticas</p>
-            <ul class="mt-3 space-y-2 text-sm leading-6 text-slate-700">
-              <li>Stock bajo en semillas híbridas</li>
-              <li>Abonos orgánicos próximos a reabastecer</li>
-              <li>Mantenimiento pendiente de tractor T-90</li>
-            </ul>
-          </div>
-          <div class="hidden rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 shadow-sm">
-            <p class="text-base font-black text-slate-900">Configuración</p>
-            <ul class="mt-3 space-y-2 text-sm leading-6 text-slate-700">
-              <li>Gestión de subcategorías</li>
-              <li>Usuarios y permisos por rol</li>
-              <li>Parámetros de alertas</li>
-            </ul>
-          </div>
-          <div class="hidden rounded-[1.5rem] border border-hoja/20 bg-[linear-gradient(180deg,_rgba(245,240,230,0.88),_rgba(255,255,255,0.98))] p-4 shadow-sm">
-            <p class="text-base font-black text-slate-900">Movimientos recientes</p>
-            <div id="recent-movements" class="mt-3 space-y-3 text-sm text-slate-700">
+        </div>
+
+        <div class="grid gap-3 border-t border-white/10 bg-slate-950/18 px-5 py-4 xl:grid-cols-[1fr] xl:px-6">
+          <div class="rounded-[1.3rem] border border-white/10 bg-white/8 p-3.5 backdrop-blur">
+            <div class="flex items-center justify-between gap-3">
+              <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/55">Actividad reciente</p>
+              <a href="movimientos.html" class="text-xs font-semibold uppercase tracking-[0.16em] text-sol">Ver movimientos</a>
+            </div>
+            <div id="recent-movements" class="mt-2.5 space-y-2.5 text-sm text-white/80">
               <p>No hay movimientos registrados.</p>
             </div>
           </div>
         </div>
-      </aside>
+      </section>
 
       <section class="space-y-5">
         <div class="flex flex-wrap items-center gap-3">
-          <button class="category-btn inline-flex items-center gap-2 rounded-full bg-hoja px-5 py-3 text-sm font-semibold text-white" data-target="insumos" data-i18n="categories.inputs"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M4 6h16v4H4V6Zm2 6h12v6H6v-6Zm2-4h2v1H8V8Zm0 6h2v2H8v-2Zm6 0h2v2h-2v-2Z"/></svg>🌱 Insumos</button>
-          <button class="category-btn inline-flex items-center gap-2 rounded-full border border-hoja px-5 py-3 text-sm font-semibold text-hoja" data-target="abonos" data-i18n="categories.fertilizers"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M12 3c4.4 3.4 6.5 6.4 6.5 9.2A6.5 6.5 0 1 1 5.5 12.2C5.5 9.4 7.6 6.4 12 3Zm0 3.1c-2.8 2.4-4.5 4.5-4.5 6.1a4.5 4.5 0 0 0 9 0c0-1.6-1.7-3.7-4.5-6.1Z"/></svg>🪴 Abonos</button>
-          <button class="category-btn inline-flex items-center gap-2 rounded-full border border-hoja px-5 py-3 text-sm font-semibold text-hoja" data-target="herramientas" data-i18n="categories.tools"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m21 7.5-4.6 4.6-1.5-1.5L19.5 6A5 5 0 0 0 12.6 12.8l-7.9 7.9a2.1 2.1 0 1 1-3-3l7.9-7.9A5 5 0 0 0 16.5 3a5 5 0 0 0 4.5 4.5Z"/></svg>🚜 Herramientas y Maquinaria</button>
-          <button id="toggle-filter" class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:border-hoja hover:text-hoja" data-i18n="filters.toggle"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M4 6h16v2l-6 6v5l-4-2v-3L4 8V6Z"/></svg>🔎 Filtrar productos</button>
+          <button class="category-btn inline-flex items-center gap-2 rounded-full bg-hoja px-5 py-3 text-sm font-semibold text-white shadow-sm" data-target="insumos" data-i18n="categories.inputs"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M4 6h16v4H4V6Zm2 6h12v6H6v-6Zm2-4h2v1H8V8Zm0 6h2v2H8v-2Zm6 0h2v2h-2v-2Z"/></svg>🌱 Insumos</button>
+          <button class="category-btn inline-flex items-center gap-2 rounded-full border border-hoja/30 bg-white px-5 py-3 text-sm font-semibold text-hoja shadow-sm" data-target="abonos" data-i18n="categories.fertilizers"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M12 3c4.4 3.4 6.5 6.4 6.5 9.2A6.5 6.5 0 1 1 5.5 12.2C5.5 9.4 7.6 6.4 12 3Zm0 3.1c-2.8 2.4-4.5 4.5-4.5 6.1a4.5 4.5 0 0 0 9 0c0-1.6-1.7-3.7-4.5-6.1Z"/></svg>🪴 Abonos</button>
+          <button class="category-btn inline-flex items-center gap-2 rounded-full border border-hoja/30 bg-white px-5 py-3 text-sm font-semibold text-hoja shadow-sm" data-target="herramientas" data-i18n="categories.tools"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m21 7.5-4.6 4.6-1.5-1.5L19.5 6A5 5 0 0 0 12.6 12.8l-7.9 7.9a2.1 2.1 0 1 1-3-3l7.9-7.9A5 5 0 0 0 16.5 3a5 5 0 0 0 4.5 4.5Z"/></svg>🚜 Herramientas y Maquinaria</button>
         </div>
 
-        <div id="filter-panel" class="hidden rounded-[2rem] bg-white p-5 shadow-suave">
+        <div id="filter-panel" class="hidden rounded-[2rem] border border-slate-200/80 bg-white p-5 shadow-suave">
           <div class="flex flex-col gap-4 lg:flex-row lg:items-end">
             <label class="block flex-1">
               <span class="mb-2 block text-sm font-semibold text-slate-700">Buscar por nombre o ID</span>
@@ -200,29 +245,36 @@
             <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
                 <h2 class="text-2xl font-black text-slate-900">Listado de insumos</h2>
-                <p class="mt-2 text-slate-600">Control de semillas, pesticidas y materiales de apoyo con disponibilidad y vencimiento. Mostrando hasta 26 productos en pantalla.</p>
+                <p class="mt-2 text-slate-600">Vista compacta de insumos con stock actual, contenido y estado.</p>
               </div>
-              <div class="flex flex-wrap gap-3 text-sm">
+              <div class="hidden flex-wrap gap-3 text-sm">
                 <span class="rounded-full bg-crema px-4 py-2">Filtro: tipo</span>
                 <span class="rounded-full bg-crema px-4 py-2">Filtro: disponibilidad</span>
               </div>
             </div>
-            <div class="mt-5 overflow-x-auto">
-              <table class="min-w-full text-left text-sm">
-                <thead class="border-b border-slate-200 text-slate-500">
+            <div class="mt-5 overflow-hidden rounded-[1.5rem] bg-slate-50/55">
+              <div class="overflow-x-auto">
+              <table class="min-w-full border-separate border-spacing-0 text-left text-sm">
+                <thead class="bg-slate-50 text-slate-500">
                   <tr>
                     <th class="px-3 py-3">Imagen</th>
                     <th class="px-3 py-3">ID</th>
                     <th class="px-3 py-3">Nombre</th>
                     <th class="px-3 py-3">Subcategoría</th>
+                    <th class="px-3 py-3">Proveedor</th>
                     <th class="px-3 py-3">Cantidad</th>
+                    <th class="px-3 py-3">Unidad</th>
                     <th class="px-3 py-3">Vencimiento</th>
-                    <th class="px-3 py-3">Estado</th>
+                    <th class="px-3 py-3">Precio</th>
+                    <th class="px-3 py-3">Uso</th>
+                    <th class="px-3 py-3">Almacenaje</th>
+                    <th class="px-3 py-3">Observaciones</th>
                     <th class="px-3 py-3">Detalle</th>
                   </tr>
                 </thead>
                 <tbody id="insumos-body"></tbody>
               </table>
+              </div>
             </div>
           </div>
 
@@ -261,9 +313,10 @@
                 <span class="rounded-full bg-crema px-4 py-2">Filtro: certificación</span>
               </div>
             </div>
-            <div class="mt-5 overflow-x-auto">
-              <table class="min-w-full text-left text-sm">
-                <thead class="border-b border-slate-200 text-slate-500">
+            <div class="mt-5 overflow-hidden rounded-[1.5rem] bg-slate-50/55">
+              <div class="overflow-x-auto">
+              <table class="min-w-full border-separate border-spacing-0 text-left text-sm">
+                <thead class="bg-slate-50 text-slate-500">
                   <tr>
                     <th class="px-3 py-3">Imagen</th>
                     <th class="px-3 py-3">ID</th>
@@ -282,6 +335,7 @@
                 </thead>
                 <tbody id="abonos-body"></tbody>
               </table>
+              </div>
             </div>
           </div>
 
@@ -320,9 +374,10 @@
                 <span class="rounded-full bg-crema px-4 py-2">Filtro: ubicación</span>
               </div>
             </div>
-            <div class="mt-5 overflow-x-auto">
-              <table class="min-w-full text-left text-sm">
-                <thead class="border-b border-slate-200 text-slate-500">
+            <div class="mt-5 overflow-hidden rounded-[1.5rem] bg-slate-50/55">
+              <div class="overflow-x-auto">
+              <table class="min-w-full border-separate border-spacing-0 text-left text-sm">
+                <thead class="bg-slate-50 text-slate-500">
                   <tr>
                     <th class="px-3 py-3">Imagen</th>
                     <th class="px-3 py-3">ID</th>
@@ -341,6 +396,7 @@
                 </thead>
                 <tbody id="herramientas-body"></tbody>
               </table>
+              </div>
             </div>
           </div>
 
@@ -365,6 +421,45 @@
       </section>
     </section>
   </main>
+
+  <div id="product-panel-backdrop" class="fixed inset-0 z-30 hidden bg-slate-950/45 backdrop-blur-[2px]"></div>
+  <aside id="product-panel" class="fixed left-1/2 top-1/2 z-30 hidden max-h-[calc(100vh-2rem)] w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,_rgba(15,23,42,0.99),_rgba(34,78,53,0.97))] text-white shadow-[0_30px_90px_rgba(15,23,42,0.34)] backdrop-blur-xl">
+    <div class="flex h-full flex-col">
+      <div class="border-b border-white/10 px-5 py-4">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-white/55">Panel de producto</p>
+            <h2 id="product-panel-name" class="mt-2 text-xl font-black text-white">Selecciona un producto</h2>
+            <p id="product-panel-subtitle" class="mt-1 text-sm leading-6 text-white/65">Haz clic en "Seleccionar" dentro de la tabla para ver acciones y detalle ejecutivo.</p>
+            <span class="mt-3 inline-flex rounded-full border border-emerald-400/30 bg-emerald-400/15 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-100">Operación rápida</span>
+          </div>
+          <button id="close-product-panel" type="button" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-2 text-sm font-semibold text-white transition hover:bg-white/12">
+            <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6-5.6 5.6L5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>
+            Cerrar
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto px-5 py-5">
+        <div class="rounded-[1.75rem] border border-white/10 bg-white/8 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.18)] backdrop-blur">
+          <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-white/55">Acciones rápidas del producto</p>
+          <p class="mt-3 text-sm leading-6 text-white/72">Este panel sirve solo para operar sobre el producto seleccionado. Si quieres ver datos completos, usa el botón <span class="font-semibold text-white">Ver detalle completo</span>.</p>
+          <div class="mt-4 rounded-[1.15rem] border border-white/10 bg-[linear-gradient(135deg,_rgba(255,255,255,0.12),_rgba(255,255,255,0.05))] px-4 py-3">
+            <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-white/50">Producto activo</p>
+            <p id="product-panel-context" class="mt-1 text-sm font-semibold text-white">Sin selección activa</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-white/10 bg-[linear-gradient(180deg,_rgba(2,6,23,0.08),_rgba(2,6,23,0.22))] px-5 py-4">
+        <div class="grid gap-2.5 sm:grid-cols-2">
+          <button id="open-edit-modal" class="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/15" data-i18n="actions.edit"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m16.9 3.5 3.6 3.6-10 10L6 18l.9-4.5 10-10ZM15.5 5 8.4 12.1l-.4 2 2-.4L17 6.6 15.5 5Z"/></svg>Editar</button>
+          <button id="delete-product-button" class="inline-flex items-center justify-center gap-2 rounded-full border border-rose-300/35 bg-rose-400/12 px-4 py-3 text-sm font-semibold text-rose-100 transition hover:bg-rose-400/18" data-i18n="actions.delete"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm1 6h2v8h-2V9Zm4 0h2v8h-2V9ZM7 9h2v8H7V9Zm1 11h8a2 2 0 0 0 2-2V8H6v10a2 2 0 0 0 2 2Z"/></svg>Eliminar</button>
+          <button id="product-panel-detail" type="button" class="sm:col-span-2 inline-flex items-center justify-center gap-2 rounded-full bg-sol px-4 py-3 text-sm font-semibold text-slate-950 transition hover:brightness-105"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M12 5c5.5 0 9.5 5.6 9.7 5.8l.3.4-.3.4C21.5 11.8 17.5 17.4 12 17.4S2.5 11.8 2.3 11.6l-.3-.4.3-.4C2.5 10.6 6.5 5 12 5Zm0 2c-3.6 0-6.6 3.2-7.6 4.2 1 1.1 4 4.2 7.6 4.2s6.6-3.2 7.6-4.2C18.6 10.2 15.6 7 12 7Zm0 1.5a2.7 2.7 0 1 1 0 5.4 2.7 2.7 0 0 1 0-5.4Z"/></svg>Ver detalle completo</button>
+        </div>
+      </div>
+    </div>
+  </aside>
 
   <footer class="mt-auto bg-slate-950 text-white">
     <div class="mx-auto flex max-w-7xl flex-col items-center gap-4 px-6 py-5 text-center">
@@ -392,8 +487,8 @@
       <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
         <div>
           <p class="text-xs font-bold uppercase tracking-[0.24em] text-hoja">Nuevo producto</p>
-          <h2 id="form-modal-title" class="mt-1 text-xl font-black text-slate-900 md:text-2xl">Agregar registro al inventario</h2>
-          <p id="form-modal-subtitle" class="mt-1 text-sm text-slate-600">Completa los datos clave y guarda el registro en la categoría seleccionada.</p>
+          <h2 id="form-modal-title" class="mt-1 text-xl font-black text-slate-900 md:text-2xl">Agregar producto</h2>
+          <p id="form-modal-subtitle" class="mt-1 text-sm text-slate-600">Crea la ficha base del producto para incorporarlo al inventario.</p>
         </div>
         <button id="close-add-modal" type="button" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6-5.6 5.6L5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>Cerrar</button>
       </div>
@@ -426,71 +521,79 @@
           <input id="product-subcategory" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Semillas, orgánico, manual...">
         </label>
         <label class="block">
-          <span class="mb-1 block text-sm font-semibold text-slate-700">Marca / proveedor</span>
-          <input id="product-source" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Proveedor o marca">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Unidad de stock</span>
+          <input id="product-unit" type="text" readonly value="und" class="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm text-slate-600 outline-none" placeholder="und">
         </label>
         <label class="block">
-          <span class="mb-1 block text-sm font-semibold text-slate-700">Cantidad</span>
-          <input id="product-quantity" type="number" min="0" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="0">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">PresentaciÃ³n</span>
+          <input id="product-presentation" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Botella, saco, caja, bidon...">
         </label>
         <label class="block">
-          <span class="mb-1 block text-sm font-semibold text-slate-700">Unidad</span>
-          <input id="product-unit" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="kg, lt, und...">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Contenido por unidad</span>
+          <input id="product-content" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="1 litro, 25 kg, 12 unidades...">
         </label>
-        <label class="block">
-          <span class="mb-1 block text-sm font-semibold text-slate-700">Fecha clave</span>
-          <input id="product-date" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="12/2026 o 25/03/2026">
+        <label class="hidden">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Estado base</span>
+          <input id="product-base-status" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Disponible, activo, mantenimiento...">
         </label>
-        <label class="block">
+        <label class="hidden">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Observaciones generales</span>
+          <input id="product-base-notes" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Notas base del producto">
+        </label>
+        <label class="hidden">
           <span class="mb-1 block text-sm font-semibold text-slate-700">Precio / costo</span>
           <input id="product-price" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="$0">
         </label>
         <label class="block">
-          <span class="mb-1 block text-sm font-semibold text-slate-700">Uso / aplicación / ubicación</span>
-          <input id="product-usage" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Uso recomendado o ubicación">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Uso / ubicación base</span>
+          <input id="product-usage" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Uso recomendado o ubicación base">
+        </label>
+        <label class="hidden">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Estado</span>
+          <input id="product-status" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Disponible, stock bajo, mantenimiento...">
         </label>
         <label class="block md:col-span-2 xl:col-span-3">
           <span class="mb-1 block text-sm font-semibold text-slate-700">Observaciones</span>
-          <input id="product-notes" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Observaciones, estado o responsable">
+          <input id="product-notes" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Notas generales del producto">
         </label>
         <div class="md:col-span-2 xl:col-span-3 flex flex-wrap items-center justify-end gap-3 border-t border-slate-100 pt-3">
           <button id="cancel-add-modal" type="button" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6-5.6 5.6L5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>Cancelar</button>
-          <button id="submit-product-form" type="submit" class="inline-flex items-center gap-2 rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M17 3H5a2 2 0 0 0-2 2v14l4-2 4 2 4-2 4 2V5a2 2 0 0 0-2-2Zm0 12.8-2-.8-4 2-4-2-2 .8V5h12v10.8ZM8 7h6v2H8V7Z"/></svg>Guardar producto</button>
+          <button id="submit-product-form" type="submit" class="inline-flex items-center gap-2 rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M17 3H5a2 2 0 0 0-2 2v14l4-2 4 2 4-2 4 2V5a2 2 0 0 0-2-2Zm0 12.8-2-.8-4 2-4-2-2 .8V5h12v10.8ZM8 7h6v2H8V7Z"/></svg>Guardar ficha base</button>
         </div>
       </form>
     </div>
   </div>
 
-  <div id="pagination-container" class="rounded-[2rem] bg-white px-5 py-4 shadow-suave">
+  <div id="pagination-container" class="rounded-[2rem] border border-slate-200/80 bg-white px-5 py-4 shadow-suave">
     <div class="flex flex-col items-center gap-3">
       <p id="pagination-summary" class="text-center text-sm text-slate-600">Mostrando 6 productos por pagina.</p>
       <div id="pagination-controls" class="flex flex-wrap items-center justify-center gap-2"></div>
     </div>
   </div>
 
-  <div id="detail-modal" class="fixed inset-0 z-40 hidden overflow-y-auto bg-slate-950/50 px-4 py-6">
-    <div class="mx-auto my-4 max-w-3xl rounded-[2rem] bg-white p-5 shadow-suave md:p-6">
-      <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
+  <div id="detail-modal" class="fixed inset-0 z-40 hidden overflow-y-auto bg-crema/80 px-4 py-6 backdrop-blur-[1px]">
+    <div class="mx-auto my-4 max-w-3xl rounded-[1.5rem] border border-slate-200/80 bg-white/96 p-5 shadow-[0_12px_30px_rgba(15,23,42,0.08)] md:p-6">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
           <p class="text-xs font-bold uppercase tracking-[0.24em] text-hoja">Detalle del producto</p>
           <h2 id="detail-title" class="mt-1 text-xl font-black text-slate-900 md:text-2xl">Información del producto</h2>
           <p id="detail-subtitle" class="mt-1 text-sm text-slate-600">Consulta de uso y aplicación.</p>
         </div>
-        <button id="close-detail-modal" type="button" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6-5.6 5.6L5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>Cerrar</button>
+        <button id="close-detail-modal" type="button" class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-hoja hover:text-hoja"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6-5.6 5.6L5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>Cerrar</button>
       </div>
 
       <div id="detail-loading" class="py-12 text-center text-sm font-semibold text-slate-500">Consultando información...</div>
 
       <div id="detail-content" class="hidden">
         <div class="mt-5 grid gap-4 md:grid-cols-[0.85fr_1.15fr]">
-          <div class="rounded-[1.5rem] bg-crema p-4">
+          <div class="rounded-[1.25rem] border border-slate-200 bg-crema/65 p-4">
             <img id="detail-image" src="" alt="Imagen del producto" class="h-56 w-full rounded-[1.25rem] object-cover shadow-sm">
             <div class="mt-4 grid gap-3 text-sm text-slate-700">
-              <div class="rounded-xl bg-white px-4 py-3">
+              <div class="rounded-xl border border-slate-200 bg-white px-4 py-3">
                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">ID</p>
                 <p id="detail-id" class="mt-1 font-semibold text-slate-900"></p>
               </div>
-              <div class="rounded-xl bg-white px-4 py-3">
+              <div class="rounded-xl border border-slate-200 bg-white px-4 py-3">
                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Categoría</p>
                 <p id="detail-category" class="mt-1 font-semibold text-slate-900"></p>
               </div>
@@ -498,15 +601,15 @@
           </div>
 
           <div class="space-y-4">
-            <div class="rounded-[1.5rem] bg-white p-4 shadow-sm ring-1 ring-slate-100">
-              <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Uso principal</p>
+            <div class="rounded-[1.25rem] border border-slate-200 bg-slate-50/70 p-4">
+              <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Resumen rapido</p>
               <p id="detail-usage" class="mt-2 text-sm leading-7 text-slate-700"></p>
             </div>
-            <div class="rounded-[1.5rem] bg-white p-4 shadow-sm ring-1 ring-slate-100">
-              <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Se puede utilizar en</p>
+            <div class="rounded-[1.25rem] border border-slate-200 bg-slate-50/70 p-4">
+              <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Datos clave</p>
               <ul id="detail-applications" class="mt-2 space-y-2 text-sm leading-7 text-slate-700"></ul>
             </div>
-            <div class="rounded-[1.5rem] bg-white p-4 shadow-sm ring-1 ring-slate-100">
+            <div class="rounded-[1.25rem] border border-slate-200 bg-slate-50/70 p-4">
               <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Recomendación</p>
               <p id="detail-recommendation" class="mt-2 text-sm leading-7 text-slate-700"></p>
             </div>
@@ -530,25 +633,49 @@
       <form id="movement-form" class="mt-5 grid gap-4 md:grid-cols-2">
         <label class="block md:col-span-2">
           <span class="mb-1 block text-sm font-semibold text-slate-700">Producto</span>
-          <input id="movement-product" type="text" readonly class="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm text-slate-600 outline-none">
+          <select id="movement-product" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja"></select>
         </label>
-        <label class="block">
+        <label id="movement-type-field" class="block">
           <span class="mb-1 block text-sm font-semibold text-slate-700">Tipo</span>
           <input id="movement-type" type="text" readonly class="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm text-slate-600 outline-none">
         </label>
-        <label class="block">
+        <label id="movement-current-qty-field" class="block">
           <span class="mb-1 block text-sm font-semibold text-slate-700">Cantidad actual</span>
           <input id="movement-current-qty" type="text" readonly class="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm text-slate-600 outline-none">
         </label>
-        <label class="block">
+        <label id="movement-product-ref-field" class="hidden md:col-span-2">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Referencia del producto</span>
+          <input id="movement-product-ref" type="text" readonly class="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm text-slate-600 outline-none">
+        </label>
+        <label id="movement-amount-field" class="block">
           <span class="mb-1 block text-sm font-semibold text-slate-700">Cantidad a mover</span>
           <input id="movement-amount" type="number" min="1" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Ej: 10">
         </label>
-        <label class="block">
+        <label id="movement-date-field" class="block">
           <span class="mb-1 block text-sm font-semibold text-slate-700">Fecha</span>
           <input id="movement-date" type="date" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
         </label>
-        <label class="block md:col-span-2">
+        <label id="movement-provider-field" class="hidden">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Proveedor</span>
+          <input id="movement-provider" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Proveedor del ingreso">
+        </label>
+        <label id="movement-cost-unit-field" class="hidden">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Costo unitario</span>
+          <input id="movement-cost-unit" type="number" min="0" step="0.01" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="0.00">
+        </label>
+        <label id="movement-cost-total-field" class="hidden">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Costo total</span>
+          <input id="movement-cost-total" type="number" min="0" step="0.01" class="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm text-slate-600 outline-none" placeholder="0.00" readonly>
+        </label>
+        <label id="movement-lot-field" class="hidden">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Lote</span>
+          <input id="movement-lot" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Codigo o lote del ingreso">
+        </label>
+        <label id="movement-expiry-field" class="hidden">
+          <span class="mb-1 block text-sm font-semibold text-slate-700">Fecha de vencimiento</span>
+          <input id="movement-expiry" type="date" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
+        </label>
+        <label id="movement-note-field" class="block md:col-span-2">
           <span class="mb-1 block text-sm font-semibold text-slate-700">Motivo / nota</span>
           <input id="movement-note" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Compra, entrega a campo, ajuste de inventario...">
         </label>
@@ -561,6 +688,16 @@
   </div>
 
   <script>
+    [
+      { id: "product-subcategory" },
+      { id: "product-presentation" }
+    ].forEach(({ id }) => {
+      const field = document.getElementById(id);
+      if (field?.tagName === "INPUT") {
+        field.outerHTML = `<select id="${id}" class="${field.className}"></select>`;
+      }
+    });
+
     const buttons = document.querySelectorAll(".category-btn");
     const panels = document.querySelectorAll(".category-panel");
     const openAddModalButton = document.getElementById("open-add-modal");
@@ -569,6 +706,13 @@
     const openEntryModalButton = document.getElementById("open-entry-modal");
     const openExitModalButton = document.getElementById("open-exit-modal");
     const logoutButton = document.getElementById("logout-button");
+    const productPanel = document.getElementById("product-panel");
+    const productPanelBackdrop = document.getElementById("product-panel-backdrop");
+    const closeProductPanelButton = document.getElementById("close-product-panel");
+    const productPanelDetailButton = document.getElementById("product-panel-detail");
+    const productPanelName = document.getElementById("product-panel-name");
+    const productPanelSubtitle = document.getElementById("product-panel-subtitle");
+    const productPanelContext = document.getElementById("product-panel-context");
     const closeAddModalButton = document.getElementById("close-add-modal");
     const cancelAddModalButton = document.getElementById("cancel-add-modal");
     const addModal = document.getElementById("add-modal");
@@ -576,17 +720,18 @@
     const formModalTitle = document.getElementById("form-modal-title");
     const formModalSubtitle = document.getElementById("form-modal-subtitle");
     const submitProductFormButton = document.getElementById("submit-product-form");
-    const selectedProductLabel = document.getElementById("selected-product-label");
     const productCategory = document.getElementById("product-category");
     const productId = document.getElementById("product-id");
     const productName = document.getElementById("product-name");
     const productSubcategory = document.getElementById("product-subcategory");
-    const productSource = document.getElementById("product-source");
-    const productQuantity = document.getElementById("product-quantity");
     const productUnit = document.getElementById("product-unit");
-    const productDate = document.getElementById("product-date");
+    const productPresentation = document.getElementById("product-presentation");
+    const productContent = document.getElementById("product-content");
+    const productBaseStatus = document.getElementById("product-base-status");
+    const productBaseNotes = document.getElementById("product-base-notes");
     const productPrice = document.getElementById("product-price");
     const productUsage = document.getElementById("product-usage");
+    const productStatus = document.getElementById("product-status");
     const productNotes = document.getElementById("product-notes");
     const detailModal = document.getElementById("detail-modal");
     const closeDetailModalButton = document.getElementById("close-detail-modal");
@@ -600,8 +745,17 @@
     const detailUsage = document.getElementById("detail-usage");
     const detailApplications = document.getElementById("detail-applications");
     const detailRecommendation = document.getElementById("detail-recommendation");
+    const detailUsageLabel = detailUsage?.previousElementSibling;
+    const detailApplicationsLabel = detailApplications?.previousElementSibling;
+    const detailRecommendationLabel = detailRecommendation?.previousElementSibling;
     const paginationContainer = document.getElementById("pagination-container");
     const recentMovements = document.getElementById("recent-movements");
+    const executiveSearch = document.getElementById("executive-search");
+    const metricTotalProducts = document.getElementById("metric-total-products");
+    const metricAlertProducts = document.getElementById("metric-alert-products");
+    const metricInventoryValue = document.getElementById("metric-inventory-value");
+    const metricActiveCategory = document.getElementById("metric-active-category");
+    const inventoryLiveStatus = document.getElementById("inventory-live-status");
     const movementModal = document.getElementById("movement-modal");
     const closeMovementModalButton = document.getElementById("close-movement-modal");
     const cancelMovementModalButton = document.getElementById("cancel-movement-modal");
@@ -611,8 +765,14 @@
     const movementProduct = document.getElementById("movement-product");
     const movementType = document.getElementById("movement-type");
     const movementCurrentQty = document.getElementById("movement-current-qty");
+    const movementProductRef = document.getElementById("movement-product-ref");
     const movementAmount = document.getElementById("movement-amount");
     const movementDate = document.getElementById("movement-date");
+    const movementProvider = document.getElementById("movement-provider");
+    const movementCostUnit = document.getElementById("movement-cost-unit");
+    const movementCostTotal = document.getElementById("movement-cost-total");
+    const movementLot = document.getElementById("movement-lot");
+    const movementExpiry = document.getElementById("movement-expiry");
     const movementNote = document.getElementById("movement-note");
     const submitMovementFormButton = document.getElementById("submit-movement-form");
     const filterPanel = document.getElementById("filter-panel");
@@ -624,7 +784,9 @@
     const previewNotice = document.getElementById("preview-notice");
     const paginationControls = document.getElementById("pagination-controls");
     const paginationSummary = document.getElementById("pagination-summary");
-    const rowClass = (index) => index === 0 ? "border-b border-slate-100" : "border-t border-slate-100";
+    const rowClass = (index) => index === 0
+      ? "bg-white/92 transition hover:bg-crema/35"
+      : "bg-white/92 transition hover:bg-crema/35";
     const pageSize = 6;
     const fallbackStockImage = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 240'><rect width='320' height='240' rx='28' fill='%23E7E1D3'/><rect x='26' y='28' width='268' height='184' rx='22' fill='%23F5F0E6'/><path d='M82 170h156' stroke='%233E6B48' stroke-width='10' stroke-linecap='round'/><path d='M110 170v-52h38l12 18h28v34' fill='none' stroke='%233E6B48' stroke-width='10' stroke-linejoin='round' stroke-linecap='round'/><circle cx='122' cy='178' r='18' fill='%23D9A441'/><circle cx='214' cy='178' r='18' fill='%23D9A441'/><path d='M86 102h84' stroke='%236B4F3A' stroke-width='10' stroke-linecap='round'/><path d='M208 84l28 16' stroke='%236B4F3A' stroke-width='10' stroke-linecap='round'/></svg>";
     const stockImages = {
@@ -657,94 +819,90 @@
       abonos: "agrocontrol-abonos-extra",
       herramientas: "agrocontrol-herramientas-extra"
     };
-    const stateStorageKey = "agrocontrol-inventory-state-v2";
+    const stateStorageKey = "agrocontrol-inventory-state-v3";
+    const insumosSeedVersionKey = "agrocontrol-insumos-seed-v3";
     const movementStorageKey = "agrocontrol-movements-v1";
 
     const insumos = [
-      ["INS-001", "Semilla de maiz premium", "Semillas", "AgroSeed", "240", "kg", "12/2026", "$85", "Cultivos extensivos", "Bodega seca", "Rotacion alta"],
-      ["INS-002", "Protector foliar", "Pesticidas", "CampoForte", "36", "lt", "08/2026", "$42", "Hortalizas", "Gabinete tecnico", "Reponer pronto"],
-      ["INS-003", "Semilla de arroz selecta", "Semillas", "BioCampo", "180", "kg", "10/2026", "$76", "Arroz tecnificado", "Bodega seca", "Disponible"],
-      ["INS-004", "Herbicida selectivo H12", "Pesticidas", "AgroNova", "54", "lt", "11/2026", "$38", "Control de malezas", "Zona quimica", "Uso frecuente"],
-      ["INS-005", "Bandejas de germinacion", "Accesorios", "Viveros Pro", "96", "und", "N/A", "$6", "Semilleros", "Estanteria 2", "Buen estado"],
-      ["INS-006", "Fungicida preventivo", "Pesticidas", "FitoGuard", "28", "lt", "09/2026", "$47", "Frutales", "Gabinete tecnico", "Stock medio"],
-      ["INS-007", "Semilla de tomate hibrido", "Semillas", "AgroSeed", "75", "kg", "07/2026", "$92", "Invernadero", "Bodega fria", "Alta salida"],
-      ["INS-008", "Insecticida organico", "Pesticidas", "EcoCampo", "48", "lt", "10/2026", "$33", "Hortalizas", "Zona quimica", "Certificado"],
-      ["INS-009", "Malla de sombreo", "Accesorios", "AgroTex", "30", "rollos", "N/A", "$58", "Viveros", "Estanteria 4", "Disponible"],
-      ["INS-010", "Semilla de pimiento", "Semillas", "BioCampo", "62", "kg", "06/2026", "$88", "Cultivo protegido", "Bodega seca", "Rotacion media"],
-      ["INS-011", "Adherente agricola", "Complementos", "CampoForte", "25", "lt", "12/2026", "$19", "Mezclas tecnicas", "Gabinete tecnico", "Disponible"],
-      ["INS-012", "Semilla de cebolla", "Semillas", "AgroSeed", "58", "kg", "05/2026", "$81", "Siembra regional", "Bodega seca", "Alta demanda"],
-      ["INS-013", "Desinfectante de suelo", "Pesticidas", "TerraClean", "22", "lt", "09/2026", "$51", "Preparacion de terreno", "Zona quimica", "Controlado"],
-      ["INS-014", "Trampas adhesivas", "Accesorios", "GreenTrap", "140", "und", "N/A", "$3", "Monitoreo de plagas", "Estanteria 1", "Disponible"],
-      ["INS-015", "Semilla de lechuga", "Semillas", "Viveros Pro", "44", "kg", "08/2026", "$73", "Hidroponia", "Bodega fria", "Salida constante"],
-      ["INS-016", "Bioestimulante radicular", "Complementos", "RootMax", "18", "lt", "11/2026", "$64", "Etapa inicial", "Gabinete tecnico", "Stock bajo"],
-      ["INS-017", "Semilla de frejol", "Semillas", "AgroNova", "132", "kg", "12/2026", "$67", "Campo abierto", "Bodega seca", "Disponible"],
-      ["INS-018", "Cinta de riego", "Accesorios", "RiegoMax", "52", "rollos", "N/A", "$24", "Riego por goteo", "Estanteria 5", "En uso"],
-      ["INS-019", "Nematicida liquido", "Pesticidas", "FitoGuard", "16", "lt", "07/2026", "$57", "Control de suelo", "Zona quimica", "Uso tecnico"],
-      ["INS-020", "Semilla de pepino", "Semillas", "AgroSeed", "41", "kg", "10/2026", "$79", "Invernadero", "Bodega fria", "Disponible"],
-      ["INS-021", "Guantes industriales", "Accesorios", "SafeFarm", "220", "pares", "N/A", "$4", "Proteccion de operarios", "Estanteria 3", "Buen stock"],
-      ["INS-022", "Coadyuvante foliar", "Complementos", "AgroMix", "29", "lt", "12/2026", "$21", "Aplicacion tecnica", "Gabinete tecnico", "Rotacion media"],
-      ["INS-023", "Semilla de sandia", "Semillas", "BioCampo", "36", "kg", "09/2026", "$95", "Siembra extensiva", "Bodega seca", "Alta demanda"],
-      ["INS-024", "Fungicida sistemico", "Pesticidas", "TerraClean", "20", "lt", "08/2026", "$54", "Frutales", "Zona quimica", "Reservado"],
-      ["INS-025", "Bolsas para vivero", "Accesorios", "Viveros Pro", "500", "und", "N/A", "$1", "Plantulas", "Estanteria 2", "Disponible"],
-      ["INS-026", "Semilla de cacao injertado", "Semillas", "AgroSeed", "27", "kg", "11/2026", "$120", "Renovacion de cultivo", "Bodega seca", "Control especial"]
+      ["INS-001", "Semilla maiz dorado", "Semillas", "Saco", "0", "und", "Saco de 25 kg", "$82", "Siembra extensiva", "Ficha base", "Disponible"],
+      ["INS-002", "Semilla arroz cristal", "Semillas", "Saco", "0", "und", "Saco de 20 kg", "$76", "Lotes arroceros", "Ficha base", "Disponible"],
+      ["INS-003", "Semilla tomate saladette", "Semillas", "Sobre", "0", "und", "Sobre de 1000 semillas", "$20", "Cultivo protegido", "Ficha base", "Disponible"],
+      ["INS-004", "Semilla cebolla roja", "Semillas", "Sobre", "0", "und", "Sobre de 500 semillas", "$16", "Siembra regional", "Ficha base", "Disponible"],
+      ["INS-005", "Semilla lechuga romana", "Semillas", "Sobre", "0", "und", "Sobre de 1500 semillas", "$12", "Vivero e hidroponia", "Ficha base", "Disponible"],
+      ["INS-006", "Semilla pepino premium", "Semillas", "Sobre", "0", "und", "Sobre de 800 semillas", "$22", "Invernadero", "Ficha base", "Disponible"],
+      ["INS-007", "Semilla pimiento amarillo", "Semillas", "Sobre", "0", "und", "Sobre de 700 semillas", "$23", "Cultivo protegido", "Ficha base", "Disponible"],
+      ["INS-008", "Semilla sandia dulce", "Semillas", "Sobre", "0", "und", "Sobre de 400 semillas", "$24", "Siembra de verano", "Ficha base", "Disponible"],
+      ["INS-009", "Herbicida selectivo H60", "Pesticidas", "Botella", "0", "und", "Botella de 1 litro", "$19", "Control de malezas", "Ficha base", "Disponible"],
+      ["INS-010", "Herbicida postemergente P12", "Pesticidas", "Botella", "0", "und", "Botella de 1 litro", "$21", "Limpieza de bordes", "Ficha base", "Disponible"],
+      ["INS-011", "Fungicida systemic max", "Pesticidas", "Botella", "0", "und", "Botella de 500 ml", "$18", "Frutales y hortalizas", "Ficha base", "Disponible"],
+      ["INS-012", "Fungicida prevent agro", "Pesticidas", "Botella", "0", "und", "Botella de 1 litro", "$17", "Manejo preventivo", "Ficha base", "Disponible"],
+      ["INS-013", "Insecticida eco plus", "Pesticidas", "Botella", "0", "und", "Botella de 1 litro", "$15", "Hortalizas", "Ficha base", "Disponible"],
+      ["INS-014", "Insecticida contacto C8", "Pesticidas", "Frasco", "0", "und", "Frasco de 250 ml", "$13", "Control puntual", "Ficha base", "Disponible"],
+      ["INS-015", "Nematicida suelo activo", "Pesticidas", "Botella", "0", "und", "Botella de 1 litro", "$25", "Tratamiento de suelo", "Ficha base", "Disponible"],
+      ["INS-016", "Protector foliar reforzado", "Pesticidas", "Botella", "0", "und", "Botella de 1 litro", "$14", "Refuerzo sanitario", "Ficha base", "Disponible"],
+      ["INS-017", "Adherente tecnico AD4", "Complementos", "Frasco", "0", "und", "Frasco de 500 ml", "$10", "Mezclas tecnicas", "Ficha base", "Disponible"],
+      ["INS-018", "Coadyuvante premium", "Complementos", "Botella", "0", "und", "Botella de 1 litro", "$12", "Aplicacion foliar", "Ficha base", "Disponible"],
+      ["INS-019", "Bioestimulante raiz pro", "Complementos", "Botella", "0", "und", "Botella de 1 litro", "$23", "Etapa inicial", "Ficha base", "Disponible"],
+      ["INS-020", "Humectante suelo HS8", "Complementos", "Botella", "0", "und", "Botella de 1 litro", "$15", "Riego y absorcion", "Ficha base", "Disponible"],
+      ["INS-021", "Bandeja germinacion 200", "Accesorios", "Paquete", "0", "und", "Paquete de 10 bandejas", "$26", "Semilleros", "Ficha base", "Disponible"],
+      ["INS-022", "Bolsas vivero 10x20", "Accesorios", "Paquete", "0", "und", "Paquete de 100 unidades", "$8", "Produccion de plantulas", "Ficha base", "Disponible"],
+      ["INS-023", "Malla sombreo 65", "Accesorios", "Rollo", "0", "und", "Rollo de 100 metros", "$62", "Area de vivero", "Ficha base", "Disponible"],
+      ["INS-024", "Cinta riego gota fina", "Accesorios", "Rollo", "0", "und", "Rollo de 1000 metros", "$35", "Riego por goteo", "Ficha base", "Disponible"]
     ];
+    const defaultInsumos = insumos.map((row) => [...row]);
 
     const abonos = [
-      ["ABO-001", "BioFert Plus", "Organico", "NPK + materia organica", "180", "sacos", "01/2026", "$18", "Frutales y hortalizas", "EcoCert", "Alta demanda"],
-      ["ABO-002", "FertiMax 20-20-20", "Quimico", "Nitrogeno, fosforo y potasio", "72", "kg", "02/2026", "$29", "Aplicacion foliar", "ISO proveedor", "Rotacion media"],
-      ["ABO-003", "Compost Premium", "Organico", "Materia organica estabilizada", "220", "sacos", "12/2025", "$12", "Mejora de suelo", "EcoCert", "Alta rotacion"],
-      ["ABO-004", "Cal agricola", "Quimico", "Carbonato de calcio", "95", "kg", "03/2026", "$14", "Correccion de pH", "Control interno", "Aplicacion estacional"],
-      ["ABO-005", "Humus granulado", "Organico", "Acidos humicos y fulvicos", "140", "kg", "01/2026", "$21", "Hortalizas y viveros", "Organico validado", "Disponible"],
-      ["ABO-006", "Fosforo Plus", "Quimico", "Alto contenido de fosforo", "60", "kg", "02/2026", "$31", "Enraizamiento", "Proveedor ISO", "Stock medio"],
-      ["ABO-007", "Urea tecnica", "Quimico", "46% nitrogeno", "125", "kg", "04/2026", "$24", "Crecimiento vegetativo", "Proveedor aprobado", "Alta salida"],
-      ["ABO-008", "Gallinaza compostada", "Organico", "Materia organica enriquecida", "210", "sacos", "11/2025", "$11", "Preparacion de camas", "Eco manejo", "Disponible"],
-      ["ABO-009", "Potasio K-Plus", "Quimico", "Sulfato de potasio", "58", "kg", "03/2026", "$27", "Floracion y fruto", "ISO proveedor", "Rotacion media"],
-      ["ABO-010", "Te de compost liquido", "Organico", "Extractos biologicos", "44", "lt", "01/2026", "$17", "Refuerzo biologico", "EcoCert", "Uso continuo"],
-      ["ABO-011", "Nitrato de calcio", "Quimico", "Calcio y nitrogeno", "86", "kg", "05/2026", "$26", "Fortalecimiento de fruto", "Proveedor tecnico", "Disponible"],
-      ["ABO-012", "Lombricompuesto", "Organico", "Microorganismos beneficos", "150", "sacos", "12/2025", "$13", "Viveros", "Organico validado", "Alta rotacion"],
-      ["ABO-013", "Magnesio foliar", "Quimico", "Magnesio soluble", "34", "lt", "06/2026", "$23", "Correccion nutricional", "Control interno", "Disponible"],
-      ["ABO-014", "Bokashi regional", "Organico", "Fermentado organico", "115", "sacos", "10/2025", "$15", "Recuperacion de suelo", "Eco manejo", "Salida media"],
-      ["ABO-015", "Triple 15", "Quimico", "Balance NPK", "90", "kg", "02/2026", "$28", "Cultivos mixtos", "Proveedor ISO", "Alta demanda"],
-      ["ABO-016", "Biofermento mineral", "Organico", "Minerales quelatados", "39", "lt", "01/2026", "$22", "Aplicacion complementaria", "EcoCert", "Disponible"],
-      ["ABO-017", "Sulfato de amonio", "Quimico", "Nitrogeno y azufre", "74", "kg", "04/2026", "$20", "Cereales", "Proveedor aprobado", "Stock medio"],
-      ["ABO-018", "Compost de cacao", "Organico", "Materia organica de cascara", "96", "sacos", "11/2025", "$14", "Recuperacion de lotes", "Organico validado", "Disponible"],
-      ["ABO-019", "Micorrizas activas", "Organico", "Hongos beneficos", "28", "kg", "03/2026", "$35", "Enraizamiento", "EcoCert", "Uso tecnico"],
-      ["ABO-020", "NPK 12-24-12", "Quimico", "Formula de arranque", "66", "kg", "05/2026", "$30", "Inicio de cultivo", "ISO proveedor", "Rotacion media"],
-      ["ABO-021", "Enmienda calcica", "Quimico", "Calcio estabilizado", "82", "kg", "02/2026", "$18", "Ajuste de suelo", "Control interno", "Disponible"],
-      ["ABO-022", "Abono verde procesado", "Organico", "Residuos vegetales compostados", "134", "sacos", "12/2025", "$10", "Cobertura y suelo", "Eco manejo", "Buen stock"],
-      ["ABO-023", "Silicio foliar", "Quimico", "Silicio soluble", "31", "lt", "06/2026", "$25", "Resistencia estructural", "Proveedor tecnico", "Disponible"],
-      ["ABO-024", "Harina de roca", "Organico", "Minerales naturales", "70", "kg", "01/2026", "$16", "Suelo agotado", "Organico validado", "Salida media"],
-      ["ABO-025", "Fertilizante potasico", "Quimico", "Potasio concentrado", "47", "kg", "03/2026", "$29", "Etapa de fruto", "ISO proveedor", "Reservado"],
-      ["ABO-026", "Compost microbiano", "Organico", "Consorcio biologico", "88", "sacos", "02/2026", "$19", "Mejora integral", "EcoCert", "Controlado"]
+      ["ABO-001", "Compost premium agro", "Organico", "Materia organica estabilizada", "96", "und", "Lote base 2026", "$14", "Mejora de suelo", "EcoCert", "Disponible"],
+      ["ABO-002", "Humus granulado plus", "Organico", "Acidos humicos y fulvicos", "84", "und", "Lote base 2026", "$20", "Viveros y hortalizas", "Organico validado", "Disponible"],
+      ["ABO-003", "Lombricompuesto activo", "Organico", "Microorganismos beneficos", "75", "und", "Lote base 2026", "$16", "Produccion de plantulas", "EcoCert", "Disponible"],
+      ["ABO-004", "Bokashi regional", "Organico", "Fermentado organico", "68", "und", "Lote base 2026", "$18", "Recuperacion de suelo", "Eco manejo", "Disponible"],
+      ["ABO-005", "Gallinaza compostada", "Organico", "Materia organica enriquecida", "72", "und", "Lote base 2026", "$12", "Preparacion de camas", "Eco manejo", "Disponible"],
+      ["ABO-006", "Compost de cacao", "Organico", "Cascara compostada", "64", "und", "Lote base 2026", "$15", "Recuperacion de lotes", "Organico validado", "Disponible"],
+      ["ABO-007", "Abono verde procesado", "Organico", "Residuos vegetales tratados", "80", "und", "Lote base 2026", "$11", "Cobertura y suelo", "Eco manejo", "Disponible"],
+      ["ABO-008", "Compost microbiano", "Organico", "Consorcio biologico", "59", "und", "Lote base 2026", "$19", "Mejora integral", "EcoCert", "Disponible"],
+      ["ABO-009", "Fertimax 20-20-20", "Quimico", "NPK balanceado", "54", "und", "Lote base 2026", "$29", "Aplicacion foliar", "ISO proveedor", "Disponible"],
+      ["ABO-010", "Triple 15", "Quimico", "Balance NPK", "60", "und", "Lote base 2026", "$28", "Cultivos mixtos", "Proveedor ISO", "Disponible"],
+      ["ABO-011", "Urea tecnica", "Quimico", "46 por ciento nitrogeno", "66", "und", "Lote base 2026", "$24", "Crecimiento vegetativo", "Proveedor aprobado", "Disponible"],
+      ["ABO-012", "Sulfato de amonio", "Quimico", "Nitrogeno y azufre", "58", "und", "Lote base 2026", "$21", "Cereales y maiz", "Proveedor aprobado", "Disponible"],
+      ["ABO-013", "Nitrato de calcio", "Quimico", "Calcio y nitrogeno", "62", "und", "Lote base 2026", "$27", "Fortalecimiento de fruto", "Proveedor tecnico", "Disponible"],
+      ["ABO-014", "Potasio k plus", "Quimico", "Sulfato de potasio", "45", "und", "Lote base 2026", "$26", "Floracion y fruto", "ISO proveedor", "Disponible"],
+      ["ABO-015", "NPK 12-24-12", "Quimico", "Formula de arranque", "48", "und", "Lote base 2026", "$30", "Inicio de cultivo", "ISO proveedor", "Disponible"],
+      ["ABO-016", "Enmienda calcica", "Quimico", "Calcio estabilizado", "52", "und", "Lote base 2026", "$18", "Ajuste de suelo", "Control interno", "Disponible"],
+      ["ABO-017", "Te de compost liquido", "Foliar", "Extractos biologicos", "40", "und", "Botella de 1 litro", "$17", "Refuerzo biologico", "EcoCert", "Disponible"],
+      ["ABO-018", "Magnesio foliar", "Foliar", "Magnesio soluble", "36", "und", "Botella de 1 litro", "$22", "Correccion nutricional", "Control interno", "Disponible"],
+      ["ABO-019", "Silicio foliar", "Foliar", "Silicio soluble", "32", "und", "Botella de 1 litro", "$24", "Resistencia estructural", "Proveedor tecnico", "Disponible"],
+      ["ABO-020", "Biofermento mineral", "Foliar", "Minerales quelatados", "30", "und", "Botella de 1 litro", "$23", "Aplicacion complementaria", "EcoCert", "Disponible"],
+      ["ABO-021", "Fosforo plus", "Enmienda", "Alto contenido de fosforo", "44", "und", "Saco de 25 kg", "$31", "Enraizamiento", "Proveedor ISO", "Disponible"],
+      ["ABO-022", "Cal agricola fina", "Enmienda", "Carbonato de calcio", "56", "und", "Saco de 40 kg", "$14", "Correccion de pH", "Control interno", "Disponible"],
+      ["ABO-023", "Harina de roca", "Enmienda", "Minerales naturales", "38", "und", "Saco de 25 kg", "$16", "Suelo agotado", "Organico validado", "Disponible"],
+      ["ABO-024", "Yeso agricola", "Enmienda", "Calcio y azufre", "42", "und", "Saco de 40 kg", "$17", "Estructura de suelo", "Control interno", "Disponible"]
     ];
 
     const herramientas = [
-      ["HER-001", "Tractor T-90", "Maquinaria", "AgroMec", "Mantenimiento", "1", "04/2023", "$28,500", "Campo Norte", "25/03/2026", "Cambio de filtros / Luis M."],
-      ["HER-002", "Juego de palas reforzadas", "Manual", "CampoSur", "Disponible", "18", "07/2025", "$22", "Bodega central", "Sin novedad", "Asignable / Karla P."],
-      ["HER-003", "Motobomba MX-40", "Maquinaria", "RiegoMax", "Disponible", "2", "09/2024", "$1,250", "Campo Sur", "18/04/2026", "Operativa / Joel R."],
-      ["HER-004", "Tijeras de poda Pro", "Manual", "GreenCut", "Disponible", "24", "01/2025", "$14", "Bodega central", "Sin novedad", "Asignable / Marta C."],
-      ["HER-005", "Fumigadora de mochila", "Manual", "AgroJet", "Revision", "6", "05/2024", "$89", "Bodega tecnica", "28/03/2026", "Cambio de sello / Diego T."],
-      ["HER-006", "Cultivadora C-200", "Maquinaria", "TerraMaq", "Disponible", "1", "11/2023", "$8,900", "Campo Este", "10/05/2026", "Operativa / Ana V."],
-      ["HER-007", "Machete profesional", "Manual", "SafeFarm", "Disponible", "40", "03/2025", "$12", "Bodega central", "Sin novedad", "Asignable / Pedro L."],
-      ["HER-008", "Desbrozadora D-55", "Maquinaria", "GreenCut", "Disponible", "3", "08/2024", "$620", "Campo Oeste", "17/04/2026", "Operativa / Rosa T."],
-      ["HER-009", "Carretilla reforzada", "Manual", "TerraMaq", "Disponible", "12", "06/2025", "$58", "Bodega central", "Sin novedad", "Asignable / Ivan C."],
-      ["HER-010", "Arado liviano", "Maquinaria", "AgroMec", "En uso", "2", "04/2024", "$1,980", "Campo Norte", "20/05/2026", "Asignada / Luis M."],
-      ["HER-011", "Pulverizador de mano", "Manual", "AgroJet", "Disponible", "15", "02/2025", "$19", "Bodega tecnica", "Sin novedad", "Asignable / Sara G."],
-      ["HER-012", "Generador portatil", "Maquinaria", "PowerFarm", "Disponible", "2", "10/2023", "$840", "Taller", "15/04/2026", "Revisado / Joel R."],
-      ["HER-013", "Azadon reforzado", "Manual", "CampoSur", "Disponible", "28", "01/2025", "$16", "Bodega central", "Sin novedad", "Asignable / Marta C."],
-      ["HER-014", "Sembradora S-100", "Maquinaria", "TerraMaq", "Mantenimiento", "1", "09/2023", "$6,300", "Campo Este", "29/03/2026", "Ajuste de tolva / Ana V."],
-      ["HER-015", "Podadora electrica", "Manual", "GreenCut", "Disponible", "7", "07/2024", "$95", "Bodega tecnica", "02/05/2026", "Operativa / Diego T."],
-      ["HER-016", "Rastra de discos", "Maquinaria", "AgroMec", "Disponible", "1", "12/2022", "$9,100", "Campo Norte", "21/05/2026", "Operativa / Luis M."],
-      ["HER-017", "Escalera de aluminio", "Manual", "SafeFarm", "Disponible", "5", "03/2025", "$72", "Almacen", "Sin novedad", "Asignable / Pedro L."],
-      ["HER-018", "Bomba de riego BR-20", "Maquinaria", "RiegoMax", "Revision", "1", "05/2024", "$1,480", "Campo Sur", "30/03/2026", "Chequeo de presion / Rosa T."],
-      ["HER-019", "Taladro industrial", "Manual", "PowerFarm", "Disponible", "4", "08/2024", "$110", "Taller", "Sin novedad", "Asignable / Joel R."],
-      ["HER-020", "Remolque RT-4", "Maquinaria", "TerraMaq", "En uso", "1", "11/2023", "$4,200", "Campo Oeste", "12/06/2026", "Asignado / Ivan C."],
-      ["HER-021", "Rastrillo metalico", "Manual", "CampoSur", "Disponible", "22", "02/2025", "$9", "Bodega central", "Sin novedad", "Asignable / Sara G."],
-      ["HER-022", "Motosierra forestal", "Maquinaria", "GreenCut", "Disponible", "2", "09/2024", "$520", "Bodega tecnica", "08/05/2026", "Operativa / Diego T."],
-      ["HER-023", "Llave de impacto", "Manual", "PowerFarm", "Disponible", "3", "10/2024", "$135", "Taller", "Sin novedad", "Asignable / Joel R."],
-      ["HER-024", "Subsolador ST-2", "Maquinaria", "AgroMec", "Disponible", "1", "06/2023", "$5,600", "Campo Norte", "19/06/2026", "Operativa / Luis M."],
-      ["HER-025", "Kit de fumigacion", "Manual", "AgroJet", "Revision", "8", "04/2025", "$46", "Bodega tecnica", "05/04/2026", "Cambio de empaques / Rosa T."],
-      ["HER-026", "Mini tractor MT-35", "Maquinaria", "TerraMaq", "Disponible", "1", "01/2024", "$14,700", "Campo Sur", "22/05/2026", "Operativa / Ana V."]
+      ["HER-001", "Juego de palas reforzadas", "Manual", "Kit", "Disponible", "0", "Kit de 6 piezas", "$58", "Herramienta base", "und", "Lista para asignacion"],
+      ["HER-002", "Tijeras de poda pro", "Manual", "Unidad", "Disponible", "0", "Unidad de corte profesional", "$24", "Herramienta base", "und", "Lista para asignacion"],
+      ["HER-003", "Machete profesional", "Manual", "Unidad", "Disponible", "0", "Hoja de 22 pulgadas", "$19", "Herramienta base", "und", "Lista para asignacion"],
+      ["HER-004", "Carretilla reforzada", "Manual", "Unidad", "Disponible", "0", "Capacidad de 90 litros", "$78", "Herramienta base", "und", "Lista para asignacion"],
+      ["HER-005", "Azadon reforzado", "Manual", "Unidad", "Disponible", "0", "Mango de madera larga", "$17", "Herramienta base", "und", "Lista para asignacion"],
+      ["HER-006", "Escalera de aluminio", "Manual", "Unidad", "Disponible", "0", "Altura de 8 escalones", "$72", "Herramienta base", "und", "Lista para asignacion"],
+      ["HER-007", "Rastrillo metalico", "Manual", "Unidad", "Disponible", "0", "Cabezal de 16 dientes", "$11", "Herramienta base", "und", "Lista para asignacion"],
+      ["HER-008", "Llave de impacto", "Manual", "Unidad", "Disponible", "0", "Modelo industrial", "$136", "Herramienta base", "und", "Lista para asignacion"],
+      ["HER-009", "Taladro industrial", "Manual", "Unidad", "Disponible", "0", "Potencia de 850 W", "$118", "Herramienta base", "und", "Lista para asignacion"],
+      ["HER-010", "Podadora electrica", "Manual", "Unidad", "Disponible", "0", "Espada de 18 pulgadas", "$96", "Herramienta base", "und", "Lista para asignacion"],
+      ["HER-011", "Pulverizador de mano", "Manual", "Unidad", "Disponible", "0", "Deposito de 5 litros", "$21", "Herramienta base", "und", "Lista para asignacion"],
+      ["HER-012", "Kit de fumigacion", "Manual", "Kit", "Disponible", "0", "Kit de boquillas y mangueras", "$49", "Herramienta base", "und", "Lista para asignacion"],
+      ["HER-013", "Tractor T90", "Maquinaria", "Maquina", "Disponible", "0", "Motor diesel 90 HP", "$28500", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-014", "Cultivadora C200", "Maquinaria", "Maquina", "Disponible", "0", "Ancho de trabajo de 2 m", "$8900", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-015", "Desbrozadora D55", "Maquinaria", "Maquina", "Disponible", "0", "Motor de 55 cc", "$620", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-016", "Arado liviano", "Maquinaria", "Equipo", "Disponible", "0", "Ancho de 3 discos", "$1980", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-017", "Sembradora S100", "Maquinaria", "Maquina", "Disponible", "0", "Tolva de 100 kg", "$6300", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-018", "Rastra de discos", "Maquinaria", "Equipo", "Disponible", "0", "Juego de 16 discos", "$9100", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-019", "Bomba de riego BR20", "Riego", "Equipo", "Disponible", "0", "Bomba de 2 pulgadas", "$1480", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-020", "Motobomba MX40", "Riego", "Maquina", "Disponible", "0", "Caudal de 40 m3 por hora", "$1250", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-021", "Fumigadora de mochila", "Riego", "Equipo", "Disponible", "0", "Tanque de 20 litros", "$89", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-022", "Manguera presion alta", "Riego", "Rollo", "Disponible", "0", "Rollo de 30 metros", "$64", "Equipo base", "und", "Lista para asignacion"],
+      ["HER-023", "Casco de seguridad", "Proteccion", "Unidad", "Disponible", "0", "Casco con ajuste interno", "$18", "Proteccion base", "und", "Lista para asignacion"],
+      ["HER-024", "Arnes de trabajo", "Proteccion", "Unidad", "Disponible", "0", "Arnes de seguridad completo", "$46", "Proteccion base", "und", "Lista para asignacion"]
     ];
     let activeCategory = "insumos";
     let currentPage = 1;
@@ -757,18 +915,40 @@
       abonos,
       herramientas
     };
+    const subcategoryOptions = {
+      insumos: ["Semillas", "Pesticidas", "Complementos", "Accesorios"],
+      abonos: ["Organico", "Quimico", "Foliar", "Enmienda"],
+      herramientas: ["Manual", "Maquinaria", "Riego", "Proteccion"]
+    };
+    const presentationOptions = {
+      insumos: ["Sobre", "Botella", "Frasco", "Saco", "Caja", "Paquete", "Rollo", "Bidon"],
+      abonos: ["Saco", "Bolsa", "Botella", "Bidon", "Caja", "Caneca"],
+      herramientas: ["Unidad", "Kit", "Caja", "Equipo", "Maquina", "Rollo"]
+    };
 
     function updateAuthUI() {
       const authenticated = isAuthenticated();
 
       if (logoutButton) {
-        logoutButton.textContent = authenticated
+        const logoutText = logoutButton.querySelector("[data-i18n-text]");
+        const nextCopy = authenticated
           ? getInventoryText("auth.logout", "Cerrar sesión")
           : getInventoryText("auth.login", "Iniciar sesión");
+        if (logoutText) {
+          logoutText.textContent = nextCopy;
+        } else {
+          logoutButton.textContent = nextCopy;
+        }
       }
 
       if (previewNotice) {
         previewNotice.classList.toggle("hidden", authenticated);
+      }
+
+       if (inventoryLiveStatus) {
+        inventoryLiveStatus.textContent = authenticated
+          ? "Modo operativo activo"
+          : "Vista previa lista para BD/POS";
       }
     }
 
@@ -787,11 +967,112 @@
       return stockImages[category][getImageIndex(category, row[0])];
     }
 
+    function formatCurrencyValue(value) {
+      return new Intl.NumberFormat("es-EC", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function parsePriceValue(value) {
+      const cleaned = String(value || "").replace(/[^0-9.,-]/g, "").replace(/,/g, "");
+      const parsed = Number(cleaned);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function isAlertValue(value) {
+      const normalized = String(value || "").toLowerCase();
+      return normalized.includes("stock bajo")
+        || normalized.includes("reponer")
+        || normalized.includes("mantenimiento")
+        || normalized.includes("revision")
+        || normalized.includes("reservado");
+    }
+
+    function getInventoryTotals() {
+      const allRows = [
+        ...insumos.map((row) => ({ category: "insumos", row })),
+        ...abonos.map((row) => ({ category: "abonos", row })),
+        ...herramientas.map((row) => ({ category: "herramientas", row }))
+      ];
+
+      const totalProducts = allRows.length;
+      const alertProducts = allRows.filter(({ row }) => row.some(isAlertValue)).length;
+      const inventoryValue = allRows.reduce((sum, { category, row }) => {
+        const quantity = getCurrentQuantity(category, row);
+        return sum + (parsePriceValue(row[7]) * quantity);
+      }, 0);
+
+      return { totalProducts, alertProducts, inventoryValue };
+    }
+
+    function updateExecutiveSummary() {
+      const { totalProducts, alertProducts, inventoryValue } = getInventoryTotals();
+
+      if (metricTotalProducts) {
+        metricTotalProducts.textContent = String(totalProducts);
+      }
+
+      if (metricAlertProducts) {
+        metricAlertProducts.textContent = String(alertProducts);
+      }
+
+      if (metricInventoryValue) {
+        metricInventoryValue.textContent = formatCurrencyValue(inventoryValue);
+      }
+
+      if (metricActiveCategory) {
+        metricActiveCategory.textContent = categoryLabels[activeCategory];
+      }
+    }
+
+    function renderStatusBadge(value) {
+      const normalized = String(value || "").toLowerCase();
+      let badgeClass = "bg-slate-100 text-slate-700";
+
+      if (normalized.includes("sin stock") || normalized.includes("sin unidades")) {
+        badgeClass = "bg-rose-50 text-rose-700";
+      } else if (normalized.includes("disponible") || normalized.includes("buen")) {
+        badgeClass = "bg-emerald-50 text-emerald-700";
+      } else if (normalized.includes("stock bajo") || normalized.includes("reponer") || normalized.includes("mantenimiento") || normalized.includes("revision")) {
+        badgeClass = "bg-amber-50 text-amber-700";
+      } else if (normalized.includes("reservado")) {
+        badgeClass = "bg-rose-50 text-rose-700";
+      }
+
+      return `<span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}">${value}</span>`;
+    }
+
+    function openProductPanel() {
+      productPanel?.classList.remove("hidden");
+      productPanelBackdrop?.classList.remove("hidden");
+    }
+
+    function closeProductPanel() {
+      productPanel?.classList.add("hidden");
+      productPanelBackdrop?.classList.add("hidden");
+    }
+
+    function updateProductPanel(category, row) {
+      if (productPanelName) {
+        productPanelName.textContent = row[1];
+      }
+
+      if (productPanelSubtitle) {
+        productPanelSubtitle.textContent = `${row[2]} · ${categoryLabels[category]} · Usa este panel solo para acciones rápidas.`;
+      }
+
+      if (productPanelContext) {
+        productPanelContext.textContent = `${row[1]} (${row[0]})`;
+      }
+    }
+
     function setupCompactTableHeaders() {
       const headerMap = {
-        "insumos-body": ["Imagen", "ID", "Nombre", "Subcategoria", "Cantidad", "Vencimiento", "Estado", "Detalle"],
-        "abonos-body": ["Imagen", "ID", "Nombre", "Subcategoria", "Cantidad", "Fabricacion", "Certificaciones", "Estado", "Detalle"],
-        "herramientas-body": ["Imagen", "ID", "Nombre / modelo", "Marca", "Estado", "Cantidad", "Ubicacion", "Mantenimiento", "Detalle"]
+        "insumos-body": ["Imagen", "ID", "Producto", "Stock", "Contenido", "Estado"],
+        "abonos-body": ["Imagen", "ID", "Producto", "Stock", "Contenido", "Estado"],
+        "herramientas-body": ["Imagen", "ID", "Producto", "Estado", "Cantidad", "Presentacion"]
       };
 
       Object.entries(headerMap).forEach(([tbodyId, labels]) => {
@@ -800,43 +1081,44 @@
         if (!headerRow) return;
 
         headerRow.innerHTML = labels
-          .map((label) => `<th class="px-3 py-3">${label}</th>`)
+          .map((label) => `<th class="sticky top-0 z-10 bg-slate-50/85 px-3 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500 backdrop-blur">${label}</th>`)
           .join("");
       });
     }
 
     function getVisibleCells(category, row, isTools = false) {
       if (isTools) {
+        const currentQty = getCurrentQuantity(category, row);
+        const statusText = currentQty <= 0 ? "Sin unidades" : row[4];
         return [
-          { value: row[0], className: "px-3 py-4 text-sm text-slate-500" },
-          { value: row[1], className: "px-3 py-4 font-semibold text-slate-900" },
-          { value: row[3], className: "px-3 py-4" },
-          { value: row[4], className: `px-3 py-4 font-semibold${row[4] === "Disponible" ? " text-emerald-600" : row[4] === "Mantenimiento" || row[4] === "Revision" ? " text-amber-600" : " text-slate-700"}` },
-          { value: row[5], className: "px-3 py-4" },
-          { value: row[8], className: "px-3 py-4" },
-          { value: row[9], className: "px-3 py-4" }
+          { value: `<span class="font-mono text-xs font-semibold text-slate-500">${row[0]}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" },
+          { value: `<div class="min-w-[160px]"><p class="font-semibold text-slate-900">${row[1]}</p><p class="mt-1 text-xs text-slate-500">${row[2]} · ${row[3]}</p></div>`, className: "px-3 py-4 align-top" },
+          { value: renderStatusBadge(statusText), className: "px-3 py-4 align-top whitespace-nowrap" },
+          { value: `<span class="font-semibold tabular-nums text-slate-900">${currentQty}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" },
+          { value: `<span class="text-slate-700">${row[3]}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" }
         ];
       }
 
       if (category === "abonos") {
+        const currentQty = getCurrentQuantity(category, row);
+        const statusText = currentQty <= 0 ? "Sin stock" : row[10];
         return [
-          { value: row[0], className: "px-3 py-4 text-sm text-slate-500" },
-          { value: row[1], className: "px-3 py-4 font-semibold text-slate-900" },
-          { value: row[2], className: "px-3 py-4" },
-          { value: `${row[4]} ${row[5]}`, className: "px-3 py-4" },
-          { value: row[6], className: "px-3 py-4" },
-          { value: row[9], className: "px-3 py-4" },
-          { value: row[10], className: `px-3 py-4 font-semibold${row[10] === "Reponer pronto" || row[10] === "Stock bajo" ? " text-amber-600" : " text-slate-700"}` }
+          { value: `<span class="font-mono text-xs font-semibold text-slate-500">${row[0]}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" },
+          { value: `<div class="min-w-[160px]"><p class="font-semibold text-slate-900">${row[1]}</p><p class="mt-1 text-xs text-slate-500">${row[2]}</p></div>`, className: "px-3 py-4 align-top" },
+          { value: `<span class="font-semibold tabular-nums text-slate-900">${currentQty} ${row[5]}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" },
+          { value: `<span class="text-slate-500">${row[6]}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" },
+          { value: renderStatusBadge(statusText), className: "px-3 py-4 align-top whitespace-nowrap" }
         ];
       }
 
+      const currentQty = getCurrentQuantity(category, row);
+      const statusText = currentQty <= 0 ? "Sin stock" : row[10];
       return [
-        { value: row[0], className: "px-3 py-4 text-sm text-slate-500" },
-        { value: row[1], className: "px-3 py-4 font-semibold text-slate-900" },
-        { value: row[2], className: "px-3 py-4" },
-        { value: `${row[4]} ${row[5]}`, className: "px-3 py-4" },
-        { value: row[6], className: "px-3 py-4" },
-        { value: row[10], className: `px-3 py-4 font-semibold${row[10] === "Reponer pronto" || row[10] === "Stock bajo" ? " text-amber-600" : " text-slate-700"}` }
+        { value: `<span class="font-mono text-xs font-semibold text-slate-500">${row[0]}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" },
+        { value: `<div class="min-w-[160px]"><p class="font-semibold text-slate-900">${row[1]}</p><p class="mt-1 text-xs text-slate-500">${row[2]} · ${row[3]}</p></div>`, className: "px-3 py-4 align-top" },
+        { value: `<span class="font-semibold tabular-nums text-slate-900">${currentQty} ${row[5]}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" },
+        { value: `<span class="text-slate-500">${row[6]}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" },
+        { value: renderStatusBadge(statusText), className: "px-3 py-4 align-top whitespace-nowrap" }
       ];
     }
 
@@ -844,51 +1126,25 @@
       const tbody = document.getElementById(targetId);
       tbody.innerHTML = rows.map((row, index) => {
         return `
-          <tr class="${rowClass(index)}">
-            <td class="px-3 py-4">
+          <tr class="${rowClass(index)} cursor-pointer transition hover:bg-hoja/5" data-category="${category}" data-id="${row[0]}">
+            <td class="px-3 py-4 align-top">
               <img
                 src="${getStockImage(category, row)}"
                 alt="Imagen de ${row[1]}"
-                class="h-14 w-14 rounded-2xl object-cover shadow-sm"
+                class="h-12 w-12 rounded-xl object-cover shadow-sm ring-1 ring-slate-200/70"
                 onerror="this.onerror=null;this.src='${fallbackStockImage}'"
                 loading="lazy">
             </td>
             ${getVisibleCells(category, row, isTools).map((cell) => {
               return `<td class="${cell.className}">${cell.value}</td>`;
             }).join("")}
-            <td class="px-3 py-4">
-              <div class="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  class="select-button inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:border-hoja hover:text-hoja"
-                  data-category="${category}"
-                  data-id="${row[0]}">
-                  <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 fill-current" aria-hidden="true"><path d="M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm0 4a5 5 0 0 0-4.9 4h9.8A5 5 0 0 0 12 7Zm0 10a5 5 0 0 0 4.6-3H7.4A5 5 0 0 0 12 17Z"/></svg>
-                  Seleccionar
-                </button>
-                <button
-                  type="button"
-                  class="detail-button inline-flex items-center gap-2 rounded-full border border-hoja px-4 py-2 text-xs font-semibold text-hoja hover:bg-hoja hover:text-white"
-                  data-category="${category}"
-                  data-id="${row[0]}">
-                  <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 fill-current" aria-hidden="true"><path d="M12 5c5.5 0 9.5 5.6 9.7 5.8l.3.4-.3.4C21.5 11.8 17.5 17.4 12 17.4S2.5 11.8 2.3 11.6l-.3-.4.3-.4C2.5 10.6 6.5 5 12 5Zm0 2c-3.6 0-6.6 3.2-7.6 4.2 1 1.1 4 4.2 7.6 4.2s6.6-3.2 7.6-4.2C18.6 10.2 15.6 7 12 7Zm0 1.5a2.7 2.7 0 1 1 0 5.4 2.7 2.7 0 0 1 0-5.4Z"/></svg>
-                  Ver info
-                </button>
-              </div>
-            </td>
           </tr>
         `;
       }).join("");
 
-      tbody.querySelectorAll(".select-button").forEach((button) => {
-        button.addEventListener("click", () => {
-          setSelectedProduct(button.dataset.category, button.dataset.id);
-        });
-      });
-
-      tbody.querySelectorAll(".detail-button").forEach((button) => {
-        button.addEventListener("click", () => {
-          openDetailModal(button.dataset.category, button.dataset.id);
+      tbody.querySelectorAll("tr[data-category][data-id]").forEach((row) => {
+        row.addEventListener("click", () => {
+          setSelectedProduct(row.dataset.category, row.dataset.id);
         });
       });
     }
@@ -899,7 +1155,7 @@
     renderRows("herramientas", "herramientas-body", herramientas, true);
 
     function loadStoredRows(category) {
-      const raw = localStorage.getItem(storageKeys[category]);
+      const raw = safeStorage.getItem(storageKeys[category]);
       if (!raw) return [];
 
       try {
@@ -911,11 +1167,11 @@
     }
 
     function saveStoredRows(category, rows) {
-      localStorage.setItem(storageKeys[category], JSON.stringify(rows));
+      safeStorage.setItem(storageKeys[category], JSON.stringify(rows));
     }
 
     function loadInventoryState() {
-      const raw = localStorage.getItem(stateStorageKey);
+      const raw = safeStorage.getItem(stateStorageKey);
       if (!raw) return null;
 
       try {
@@ -927,7 +1183,7 @@
     }
 
     function saveInventoryState() {
-      localStorage.setItem(stateStorageKey, JSON.stringify({
+      safeStorage.setItem(stateStorageKey, JSON.stringify({
         insumos,
         abonos,
         herramientas
@@ -935,7 +1191,7 @@
     }
 
     function loadMovementHistory() {
-      const raw = localStorage.getItem(movementStorageKey);
+      const raw = safeStorage.getItem(movementStorageKey);
       if (!raw) return [];
 
       try {
@@ -947,7 +1203,7 @@
     }
 
     function saveMovementHistory() {
-      localStorage.setItem(movementStorageKey, JSON.stringify(movementHistory));
+      safeStorage.setItem(movementStorageKey, JSON.stringify(movementHistory));
     }
 
     function getCategoryRows(category) {
@@ -994,6 +1250,14 @@
         abonos,
         herramientas
       };
+
+      if (safeStorage.getItem(insumosSeedVersionKey) !== "applied") {
+        setCategoryRows("insumos", defaultInsumos.map((row) => [...row]));
+        filteredRowsByCategory.insumos = insumos;
+        saveInventoryState();
+        safeStorage.setItem(insumosSeedVersionKey, "applied");
+      }
+
       movementHistory = loadMovementHistory();
     }
 
@@ -1001,13 +1265,13 @@
       const visible = movementHistory.slice(0, 3);
 
       if (visible.length === 0) {
-        recentMovements.innerHTML = "<p class=\"rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm leading-6 text-slate-700 shadow-sm\">No hay movimientos registrados.</p>";
+        recentMovements.innerHTML = "<p class=\"rounded-xl border border-white/10 bg-white/8 px-3 py-3 text-sm leading-6 text-white/70\">No hay movimientos registrados.</p>";
         return;
       }
 
       recentMovements.innerHTML = visible.map((movement) => `
-        <div class="rounded-xl border border-slate-200 bg-white px-3 py-3 shadow-sm">
-          <p class="font-semibold text-slate-900">${movement.type}: ${movement.name}</p>
+        <div class="rounded-xl border border-white/10 bg-white/8 px-3 py-3">
+          <p class="font-semibold text-white">${movement.type}: ${movement.name}</p>
           <p class="mt-1 text-xs text-slate-500">${movement.date} · ${movement.amount} unidades</p>
           <p class="mt-2 text-sm leading-6 text-slate-700">${movement.note}</p>
         </div>
@@ -1027,37 +1291,125 @@
       if (!row) return;
 
       selectedProduct = { category, id };
-      selectedProductLabel.textContent = `${row[1]} (${row[0]}) seleccionado en ${categoryLabels[category]}.`;
+      updateProductPanel(category, row);
+      openProductPanel();
     }
 
     function clearSelectedProduct() {
       selectedProduct = null;
-      selectedProductLabel.textContent = "Ningún producto seleccionado.";
+      closeProductPanel();
+    }
+
+    function getAllInventoryProducts() {
+      return [
+        ...getCategoryRows("insumos").map((row) => ({ category: "insumos", row })),
+        ...getCategoryRows("abonos").map((row) => ({ category: "abonos", row })),
+        ...getCategoryRows("herramientas").map((row) => ({ category: "herramientas", row }))
+      ];
+    }
+
+    function updateMovementProductSnapshot() {
+      const selectedValue = movementProduct.value;
+      if (!selectedValue) {
+        movementCurrentQty.value = "";
+        movementProductRef.value = "";
+        return null;
+      }
+
+      const [category, id] = selectedValue.split("::");
+      const row = findRowById(category, id);
+
+      if (!row) {
+        movementCurrentQty.value = "";
+        movementProductRef.value = "";
+        return null;
+      }
+
+      movementCurrentQty.value = String(getCurrentQuantity(category, row));
+      movementProductRef.value = `${row[1]} · ${row[3]} · ${row[6]}`;
+      return { category, id, row };
+    }
+
+    function updateMovementTotal() {
+      const amount = Number(movementAmount.value) || 0;
+      const costUnit = Number(movementCostUnit.value) || 0;
+      movementCostTotal.value = amount && costUnit ? String((amount * costUnit).toFixed(2)) : "";
+    }
+
+    function toggleMovementFormLayout(type) {
+      const isEntry = type === "Entrada";
+      document.getElementById("movement-type-field")?.classList.toggle("hidden", isEntry);
+      document.getElementById("movement-product-ref-field")?.classList.toggle("hidden", !isEntry);
+      document.getElementById("movement-provider-field")?.classList.toggle("hidden", !isEntry);
+      document.getElementById("movement-cost-unit-field")?.classList.toggle("hidden", !isEntry);
+      document.getElementById("movement-cost-total-field")?.classList.toggle("hidden", !isEntry);
+      document.getElementById("movement-lot-field")?.classList.toggle("hidden", !isEntry);
+      document.getElementById("movement-expiry-field")?.classList.toggle("hidden", !isEntry);
+
+      const amountLabel = document.querySelector("#movement-amount-field span");
+      const dateLabel = document.querySelector("#movement-date-field span");
+      const noteLabel = document.querySelector("#movement-note-field span");
+      if (amountLabel) amountLabel.textContent = isEntry ? "Cantidad ingresada" : "Cantidad a mover";
+      if (dateLabel) dateLabel.textContent = isEntry ? "Fecha de entrada" : "Fecha";
+      if (noteLabel) noteLabel.textContent = isEntry ? "Observacion" : "Motivo / nota";
+      movementNote.placeholder = isEntry
+        ? "Compra, recepcion de mercaderia, ingreso de lote..."
+        : "Entrega a campo, ajuste de inventario...";
+    }
+
+    function populateMovementProducts(preselected = null, lockSelection = false) {
+      const allProducts = getAllInventoryProducts();
+
+      movementProduct.innerHTML = allProducts.map(({ category, row }) => {
+        const value = `${category}::${row[0]}`;
+        const selected = preselected && preselected.category === category && preselected.id === row[0] ? " selected" : "";
+        return `<option value="${value}"${selected}>${row[1]} (${row[0]}) - ${categoryLabels[category]}</option>`;
+      }).join("");
+
+      if (!allProducts.length) {
+        movementProduct.innerHTML = '<option value="">No hay productos disponibles</option>';
+      }
+
+      movementProduct.disabled = lockSelection;
+      movementProduct.classList.toggle("bg-slate-100", lockSelection);
+      movementProduct.classList.toggle("text-slate-600", lockSelection);
+      movementProduct.classList.toggle("bg-crema", !lockSelection);
+      updateMovementProductSnapshot();
     }
 
     function openMovementModal(type) {
-      if (!selectedProduct) {
+      if (type === "Salida" && !selectedProduct) {
         alert(`Primero selecciona un producto para registrar la ${type.toLowerCase()}.`);
-        return;
-      }
-
-      const row = findRowById(selectedProduct.category, selectedProduct.id);
-      if (!row) {
-        alert("El producto seleccionado ya no está disponible.");
-        clearSelectedProduct();
         return;
       }
 
       currentMovementType = type;
       movementTitle.textContent = `Registrar ${type.toLowerCase()}`;
       movementSubtitle.textContent = type === "Entrada"
-        ? "Suma unidades al stock del producto seleccionado."
+        ? "Selecciona un producto y registra el ingreso con sus datos principales."
         : "Descuenta unidades del stock del producto seleccionado.";
-      movementProduct.value = `${row[1]} (${row[0]})`;
       movementType.value = type;
-      movementCurrentQty.value = String(getCurrentQuantity(selectedProduct.category, row));
+      toggleMovementFormLayout(type);
+
+      if (type === "Entrada") {
+        populateMovementProducts(selectedProduct, false);
+      } else {
+        const row = findRowById(selectedProduct.category, selectedProduct.id);
+        if (!row) {
+          alert("El producto seleccionado ya no está disponible.");
+          clearSelectedProduct();
+          return;
+        }
+        populateMovementProducts(selectedProduct, true);
+      }
+
       movementAmount.value = "";
       movementDate.value = new Date().toISOString().slice(0, 10);
+      movementProvider.value = "";
+      movementCostUnit.value = "";
+      movementCostTotal.value = "";
+      movementLot.value = "";
+      movementExpiry.value = "";
       movementNote.value = "";
       submitMovementFormButton.textContent = `Guardar ${type.toLowerCase()}`;
       movementModal.classList.remove("hidden");
@@ -1066,6 +1418,66 @@
     function closeMovementModal() {
       movementModal.classList.add("hidden");
       movementForm.reset();
+      movementProduct.disabled = false;
+      movementProduct.innerHTML = "";
+      movementProductRef.value = "";
+      movementCostTotal.value = "";
+    }
+
+    function updateDeletePreview() {
+      if (!deleteCategorySelect || !deleteProductSelect || !deleteProductPreview) return;
+
+      const category = deleteCategorySelect.value;
+      const row = findRowById(category, deleteProductSelect.value);
+
+      if (!row) {
+        deleteProductPreview.textContent = "Selecciona un producto para ver lo que vas a eliminar.";
+        return;
+      }
+
+      deleteProductPreview.textContent = `${row[1]} (${row[0]}) de ${categoryLabels[category]}. Esta acción eliminará el registro del inventario.`;
+    }
+
+    function updateDeleteProductOptions() {
+      if (!deleteCategorySelect || !deleteProductSelect) return;
+
+      const category = deleteCategorySelect.value;
+      const rows = getCategoryRows(category);
+
+      if (!rows.length) {
+        deleteProductSelect.innerHTML = '<option value="">No hay productos disponibles</option>';
+        updateDeletePreview();
+        return;
+      }
+
+      deleteProductSelect.innerHTML = rows
+        .map((row) => `<option value="${row[0]}">${row[1]} (${row[0]})</option>`)
+        .join("");
+
+      updateDeletePreview();
+    }
+
+    function openDeleteModal() {
+      if (!requireAuth("Eliminar productos")) {
+        return;
+      }
+
+      if (deleteCategorySelect) {
+        deleteCategorySelect.value = selectedProduct?.category || activeCategory;
+      }
+
+      updateDeleteProductOptions();
+
+      if (selectedProduct && deleteProductSelect) {
+        deleteProductSelect.value = selectedProduct.id;
+        updateDeletePreview();
+      }
+
+      deleteModal?.classList.remove("hidden");
+    }
+
+    function closeDeleteModal() {
+      deleteModal?.classList.add("hidden");
     }
 
     function renderCategory(category, rows) {
@@ -1105,10 +1517,11 @@
       const visibleRows = rows.slice(start, end);
 
       renderCategory(category, visibleRows);
+      updateExecutiveSummary();
 
       const from = rows.length === 0 ? 0 : start + 1;
       const to = Math.min(end, rows.length);
-      paginationSummary.textContent = `Mostrando ${from}-${to} de ${rows.length} productos. Paginas de ${pageSize} registros.`;
+      paginationSummary.textContent = `Mostrando ${from}-${to} de ${rows.length} productos. Páginas de ${pageSize} registros.`;
 
       paginationControls.innerHTML = "";
 
@@ -1116,8 +1529,8 @@
       previousButton.type = "button";
       previousButton.innerHTML = '<svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m14.7 6.3-1.4-1.4L6.2 12l7.1 7.1 1.4-1.4L8.9 12l5.8-5.7Z"/></svg><span>Anterior</span>';
       previousButton.className = currentPage === 1
-        ? "inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-400"
-        : "inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700";
+        ? "inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-400"
+        : "inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-hoja hover:text-hoja";
       previousButton.disabled = currentPage === 1;
       previousButton.addEventListener("click", () => {
         if (currentPage > 1) {
@@ -1132,8 +1545,8 @@
         button.type = "button";
         button.textContent = page;
         button.className = page === currentPage
-          ? "inline-flex items-center justify-center rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white"
-          : "inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700";
+          ? "inline-flex items-center justify-center rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white shadow-sm"
+          : "inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-hoja hover:text-hoja";
 
         button.addEventListener("click", () => {
           currentPage = page;
@@ -1147,8 +1560,8 @@
       nextButton.type = "button";
       nextButton.innerHTML = '<span>Siguiente</span><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m9.3 17.7 1.4 1.4 7.1-7.1-7.1-7.1-1.4 1.4 5.8 5.7-5.8 5.7Z"/></svg>';
       nextButton.className = currentPage === totalPages
-        ? "inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-400"
-        : "inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700";
+        ? "inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-400"
+        : "inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-hoja hover:text-hoja";
       nextButton.disabled = currentPage === totalPages;
       nextButton.addEventListener("click", () => {
         if (currentPage < totalPages) {
@@ -1219,6 +1632,90 @@
       };
     }
 
+    function buildEssentialProductInfo(category, row) {
+      if (category === "abonos") {
+        return {
+          usage: `${row[2]} · ${row[4]} ${row[5]} disponibles · ${row[7]}`,
+          applications: [
+            `Composicion: ${row[3]}`,
+            `Fecha clave: ${row[6]}`,
+            `Aplicacion: ${row[8]}`,
+            `Certificacion: ${row[9]}`
+          ],
+          recommendation: row[11] || "Sin observaciones relevantes."
+        };
+      }
+
+      if (category === "herramientas") {
+        return {
+          usage: `${row[2]} · Estado ${row[4]} · ${row[5]} unidad(es)`,
+          applications: [
+            `Marca: ${row[3]}`,
+            `Costo: ${row[7]}`,
+            `Ubicacion: ${row[8]}`,
+            `Mantenimiento: ${row[9]}`
+          ],
+          recommendation: row[10] || "Sin observaciones relevantes."
+        };
+      }
+
+      return {
+        usage: `${row[2]} · ${row[4]} ${row[5]} disponibles · ${row[7]}`,
+        applications: [
+          `Proveedor: ${row[3]}`,
+          `Fecha clave: ${row[6]}`,
+          `Uso principal: ${row[8]}`,
+          `Almacenaje: ${row[9]}`
+        ],
+        recommendation: row[11] || "Sin observaciones relevantes."
+      };
+    }
+
+    function buildEssentialProductInfo(category, row) {
+      if (category === "abonos") {
+        const currentQty = getCurrentQuantity(category, row);
+        const statusText = currentQty <= 0 ? "Sin stock" : row[10];
+        return {
+          usage: `${row[2]} · ${currentQty} ${row[5]} disponibles · Estado ${statusText}`,
+          applications: [
+            `Presentacion: ${row[3]}`,
+            `Contenido por unidad: ${row[6]}`,
+            `Proveedor principal: ${row[8]}`,
+            `Costo base: ${row[7]}`
+          ],
+          recommendation: row[11] || "Sin observaciones relevantes."
+        };
+      }
+
+      if (category === "herramientas") {
+        const currentQty = getCurrentQuantity(category, row);
+        const statusText = currentQty <= 0 ? "Sin unidades" : row[4];
+        return {
+          usage: `${row[2]} · Estado ${statusText} · ${currentQty} und`,
+          applications: [
+            `Presentacion: ${row[3]}`,
+            `Contenido o capacidad: ${row[6]}`,
+            `Proveedor principal: ${row[8]}`,
+            `Costo base: ${row[7]}`
+          ],
+          recommendation: row[10] || "Sin observaciones relevantes."
+        };
+      }
+
+      const currentQty = getCurrentQuantity(category, row);
+      const statusText = currentQty <= 0 ? "Sin stock" : row[10];
+      return {
+        usage: `${row[2]} · ${currentQty} ${row[5]} disponibles · Estado ${statusText}`,
+        applications: [
+          `Presentacion: ${row[3]}`,
+          `Contenido por unidad: ${row[6]}`,
+          `Proveedor principal: ${row[8]}`,
+          `Costo base: ${row[7]}`
+        ],
+        recommendation: row[11] || "Sin observaciones relevantes."
+      };
+    }
+
     function getProductInfoFromApi(category, id) {
       return new Promise((resolve, reject) => {
         const row = findRowById(category, id);
@@ -1234,7 +1731,7 @@
             name: row[1],
             category: categoryLabels[category],
             image: getStockImage(category, row),
-            ...buildProductInfo(category, row)
+            ...buildEssentialProductInfo(category, row)
           });
         }, 450);
       });
@@ -1245,12 +1742,15 @@
       detailLoading.classList.remove("hidden");
       detailContent.classList.add("hidden");
       detailTitle.textContent = "Información del producto";
-      detailSubtitle.textContent = "Consultando uso y aplicación...";
+      detailSubtitle.textContent = "Consultando datos clave...";
+      if (detailUsageLabel) detailUsageLabel.textContent = "Resumen rapido";
+      if (detailApplicationsLabel) detailApplicationsLabel.textContent = "Datos clave";
+      if (detailRecommendationLabel) detailRecommendationLabel.textContent = "Observaciones";
 
       try {
         const info = await getProductInfoFromApi(category, id);
         detailTitle.textContent = info.name;
-        detailSubtitle.textContent = "Consulta de uso, aplicación y recomendación.";
+        detailSubtitle.textContent = "Resumen con lo mas importante del producto.";
         detailImage.src = info.image;
         detailImage.alt = `Imagen de ${info.name}`;
         detailImage.onerror = () => {
@@ -1287,10 +1787,15 @@
       }
 
       editMode = false;
-      formModalTitle.textContent = "Agregar registro al inventario";
+      formModalTitle.textContent = "Agregar producto";
       formModalSubtitle.textContent = "Completa los datos clave y guarda el registro en la categoría seleccionada.";
-      submitProductFormButton.textContent = "Guardar producto";
+      submitProductFormButton.textContent = "Guardar ficha base";
+      formModalSubtitle.textContent = "Crea la ficha base del producto para incorporarlo al inventario.";
+      productBaseStatus.value = "Disponible";
+      productBaseNotes.value = "";
+      productUnit.value = "und";
       productCategory.value = activeCategory;
+      updateProductSelectors();
       productCategory.removeAttribute("disabled");
       productCategory.classList.remove("bg-slate-100", "text-slate-500");
       productId.removeAttribute("readonly");
@@ -1303,6 +1808,149 @@
       addProductForm.reset();
       productCategory.value = activeCategory;
       editMode = false;
+    }
+
+    function populateSelectOptions(selectElement, options, selectedValue = "") {
+      if (!selectElement) return;
+
+      selectElement.innerHTML = options
+        .map((option) => `<option value="${option}">${option}</option>`)
+        .join("");
+
+      if (selectedValue && options.includes(selectedValue)) {
+        selectElement.value = selectedValue;
+      } else if (options.length > 0) {
+        selectElement.value = options[0];
+      }
+    }
+
+    function updateProductSelectors(selectedSubcategory = "", selectedPresentation = "") {
+      const category = productCategory.value;
+      populateSelectOptions(productSubcategory, subcategoryOptions[category] || [], selectedSubcategory);
+      populateSelectOptions(productPresentation, presentationOptions[category] || [], selectedPresentation);
+    }
+
+    function normalizeInventoryView() {
+      const heroTitle = document.querySelector("main section section h1");
+      const heroSubtitle = heroTitle?.nextElementSibling;
+      if (heroTitle) {
+        heroTitle.textContent = "Inventario central para control de stock y movimientos.";
+      }
+      if (heroSubtitle) {
+        heroSubtitle.textContent = "Vista pensada para trabajar rapido hoy y seguir creciendo hacia BD y punto de venta.";
+      }
+
+      const supportPill = document.querySelector("#open-exit-modal + span");
+      if (supportPill) {
+        supportPill.textContent = "Entrada y salida son globales. Selecciona un producto solo para editarlo o ver su detalle.";
+      }
+
+      document.querySelectorAll(".category-btn").forEach((button) => {
+        if (button.dataset.target === "insumos") button.lastChild.textContent = "Insumos";
+        if (button.dataset.target === "abonos") button.lastChild.textContent = "Abonos";
+        if (button.dataset.target === "herramientas") button.lastChild.textContent = "Herramientas y Maquinaria";
+      });
+
+      const panelCopy = {
+        insumos: "Control de productos base del inventario. La lista muestra resumen, stock actual y acceso rapido al detalle.",
+        abonos: "Control de abonos y fertilizantes con una vista resumida para stock, contenido y estado.",
+        herramientas: "Control de herramientas y maquinaria con foco en estado, cantidad y presentacion."
+      };
+
+      Object.entries(panelCopy).forEach(([panelId, copy]) => {
+        const panel = document.getElementById(panelId);
+        const description = panel?.querySelector("h2 + p");
+        const chips = panel?.querySelector("h2")?.closest("div")?.nextElementSibling;
+        const legacySection = panel?.querySelector(".hidden.grid");
+        if (description) {
+          description.textContent = copy;
+        }
+        if (chips?.classList.contains("flex")) {
+          chips.classList.add("hidden");
+        }
+        legacySection?.remove();
+      });
+
+      const labelMap = {
+        "product-category": "Categoria",
+        "product-subcategory": "Subcategoria",
+        "product-presentation": "Presentacion",
+        "product-usage": "Proveedor principal"
+      };
+
+      Object.entries(labelMap).forEach(([fieldId, label]) => {
+        const field = document.getElementById(fieldId);
+        const span = field?.closest("label")?.querySelector("span");
+        if (span) {
+          span.textContent = label;
+        }
+        if (fieldId === "product-usage" && field) {
+          field.placeholder = "Proveedor principal del producto";
+        }
+      });
+
+      const visibleProductFields = [
+        "product-category",
+        "product-id",
+        "product-name",
+        "product-subcategory",
+        "product-unit",
+        "product-presentation",
+        "product-content",
+        "product-usage"
+      ];
+
+      document.querySelectorAll("#add-product-form label").forEach((label) => {
+        const field = label.querySelector("input, select");
+        if (!field) return;
+        label.classList.toggle("hidden", !visibleProductFields.includes(field.id));
+      });
+    }
+
+    [productBaseStatus, productBaseNotes, productPrice, productUsage, productStatus, productNotes].forEach((field) => {
+      field?.closest("label")?.classList.add("hidden");
+    });
+    updateProductSelectors();
+    normalizeInventoryView();
+
+    function composeDateSummary(createdAt, expiryAt, category) {
+      const created = createdAt || "";
+      const expiry = expiryAt || "";
+
+      if (created && expiry) {
+        return `Creado: ${created} | Vence: ${expiry}`;
+      }
+
+      if (created) {
+        return created;
+      }
+
+      if (expiry) {
+        return category === "herramientas" ? `Referencia: ${expiry}` : expiry;
+      }
+
+      return "Pendiente";
+    }
+
+    function parseDateSummary(summary, category) {
+      const value = String(summary || "").trim();
+
+      if (!value || value === "Pendiente") {
+        return { createdAt: "", expiryAt: "" };
+      }
+
+      if (value.includes("Creado:") || value.includes("Vence:")) {
+        const parts = value.split("|").map((item) => item.trim());
+        const createdAt = parts.find((item) => item.startsWith("Creado:"))?.replace("Creado:", "").trim() || "";
+        const expiryAt = parts.find((item) => item.startsWith("Vence:"))?.replace("Vence:", "").trim() || "";
+        return { createdAt, expiryAt };
+      }
+
+      if (category === "herramientas") {
+        return { createdAt: value, expiryAt: "" };
+      }
+
+      return { createdAt: "", expiryAt: value };
     }
 
     function openEditModal() {
@@ -1326,16 +1974,19 @@
       formModalSubtitle.textContent = "Actualiza la información del producto seleccionado y guarda los cambios.";
       submitProductFormButton.textContent = "Guardar cambios";
       productCategory.value = selectedProduct.category;
+      updateProductSelectors(row[2], row[3]);
       productId.value = row[0];
       productName.value = row[1];
       productSubcategory.value = row[2];
-      productSource.value = row[3];
-      productQuantity.value = row[5] && selectedProduct.category === "herramientas" ? row[5] : row[4];
-      productUnit.value = row[9] && selectedProduct.category === "herramientas" ? row[9] : row[5];
-      productDate.value = row[6];
+      productUnit.value = "uni";
+      productPresentation.value = row[3];
+      productContent.value = row[6] === "Pendiente" ? "" : row[6];
+      productBaseStatus.value = selectedProduct.category === "herramientas" ? row[4] : row[10];
+      productBaseNotes.value = selectedProduct.category === "herramientas" ? row[10] : (row[11] || "");
       productPrice.value = row[7];
       productUsage.value = row[8];
-      productNotes.value = selectedProduct.category === "herramientas" ? row[4] : row[10];
+      productStatus.value = selectedProduct.category === "herramientas" ? row[4] : row[10];
+      productNotes.value = selectedProduct.category === "herramientas" ? row[10] : (row[11] || "");
       productCategory.setAttribute("disabled", "disabled");
       productCategory.classList.add("bg-slate-100", "text-slate-500");
       productId.setAttribute("readonly", "readonly");
@@ -1384,6 +2035,109 @@
       panels.forEach((panel) => {
         panel.classList.toggle("hidden", panel.id !== category);
       });
+      if (executiveSearch) {
+        executiveSearch.value = "";
+      }
+      filterSearch.value = "";
+      filterStatus.value = "";
+      updatePagination(category);
+      clearSelectedProduct();
+    }
+
+    function deleteProductFromPicker() {
+      if (!deleteCategorySelect || !deleteProductSelect) {
+        return;
+      }
+
+      const category = deleteCategorySelect.value;
+      const targetId = deleteProductSelect.value;
+      const row = findRowById(category, targetId);
+
+      if (!row) {
+        alert("El producto elegido ya no está disponible.");
+        updateDeleteProductOptions();
+        return;
+      }
+
+      const confirmed = window.confirm(`¿Deseas eliminar "${row[1]}" (${row[0]}) del inventario?`);
+      if (!confirmed) {
+        return;
+      }
+
+      const updatedRows = getCategoryRows(category).filter((item) => item[0] !== targetId);
+
+      setCategoryRows(category, updatedRows);
+      saveInventoryState();
+      filteredRowsByCategory[category] = updatedRows;
+      activeCategory = category;
+      currentPage = 1;
+      buttons.forEach((item) => {
+        const isActive = item.dataset.target === category;
+        item.classList.toggle("bg-hoja", isActive);
+        item.classList.toggle("text-white", isActive);
+        item.classList.toggle("border", !isActive);
+        item.classList.toggle("border-hoja", !isActive);
+        item.classList.toggle("text-hoja", !isActive);
+      });
+      panels.forEach((panel) => {
+        panel.classList.toggle("hidden", panel.id !== category);
+      });
+      filterSearch.value = "";
+      filterStatus.value = "";
+      updatePagination(category);
+
+      if (selectedProduct?.category === category && selectedProduct?.id === targetId) {
+        clearSelectedProduct();
+      }
+
+      closeDeleteModal();
+      updateDeleteProductOptions();
+    }
+
+    function deleteSelectedProduct() {
+      if (!requireAuth("Eliminar productos")) {
+        return;
+      }
+
+      if (!selectedProduct) {
+        alert("Primero selecciona un producto para eliminar.");
+        return;
+      }
+
+      const row = findRowById(selectedProduct.category, selectedProduct.id);
+      if (!row) {
+        alert("El producto seleccionado ya no está disponible.");
+        clearSelectedProduct();
+        return;
+      }
+
+      const confirmed = window.confirm(`¿Deseas eliminar "${row[1]}" (${row[0]}) del inventario?`);
+      if (!confirmed) {
+        return;
+      }
+
+      const category = selectedProduct.category;
+      const updatedRows = getCategoryRows(category).filter((item) => item[0] !== selectedProduct.id);
+
+      setCategoryRows(category, updatedRows);
+      saveInventoryState();
+      filteredRowsByCategory[category] = updatedRows;
+      activeCategory = category;
+      currentPage = 1;
+      buttons.forEach((item) => {
+        const isActive = item.dataset.target === category;
+        item.classList.toggle("bg-hoja", isActive);
+        item.classList.toggle("text-white", isActive);
+        item.classList.toggle("border", !isActive);
+        item.classList.toggle("border-hoja", !isActive);
+        item.classList.toggle("text-hoja", !isActive);
+      });
+      panels.forEach((panel) => {
+        panel.classList.toggle("hidden", panel.id !== category);
+      });
+      if (executiveSearch) {
+        executiveSearch.value = "";
+      }
       filterSearch.value = "";
       filterStatus.value = "";
       updatePagination(category);
@@ -1394,27 +2148,26 @@
       const id = productId.value.trim();
       const name = productName.value.trim();
       const subcategory = productSubcategory.value.trim();
-      const source = productSource.value.trim();
-      const quantity = productQuantity.value.trim();
       const unit = productUnit.value.trim();
-      const date = productDate.value.trim();
-      const price = productPrice.value.trim();
-      const usage = productUsage.value.trim();
-      const notes = productNotes.value.trim();
+      const presentation = productPresentation.value.trim();
+      const content = productContent.value.trim();
+      const provider = productUsage.value.trim();
+      const status = productBaseStatus.value.trim() || "Disponible";
+      const notes = productBaseNotes.value.trim();
 
       if (category === "herramientas") {
         return [
           id,
           name,
           subcategory,
-          source || "Sin marca",
-          notes || "Disponible",
-          quantity,
-          date || "Pendiente",
-          price || "$0",
-          usage || "Sin ubicacion",
-          unit || "Pendiente",
-          "Registro manual"
+          presentation || "Sin presentacion",
+          status,
+          "0",
+          content || "Sin detalle",
+          "$0",
+          provider || "Sin proveedor principal",
+          unit || "und",
+          notes || "Registro manual"
         ];
       }
 
@@ -1422,13 +2175,14 @@
         id,
         name,
         subcategory,
-        source,
-        quantity,
+        presentation || "Sin presentacion",
+        "0",
         unit,
-        date || "Pendiente",
-        price || "$0",
-        usage || "General",
-        notes || "Sin detalle",
+        content || "Sin detalle",
+        "$0",
+        provider || "Sin proveedor principal",
+        category === "abonos" ? "Ficha base" : "Base general",
+        status,
         notes || "Sin observaciones"
       ];
     }
@@ -1438,9 +2192,10 @@
         productId.value.trim(),
         productName.value.trim(),
         productSubcategory.value.trim(),
-        productSource.value.trim(),
-        productQuantity.value.trim(),
-        productUnit.value.trim()
+        productUnit.value.trim(),
+        productPresentation.value.trim(),
+        productContent.value.trim(),
+        productUsage.value.trim()
       ];
 
       return requiredValues.every(Boolean);
@@ -1450,7 +2205,7 @@
       es: {
         pageTitle: "AgroControl | Inventario",
         nav: { home: "🏠 Inicio", about: "🌿 Nosotros", inventory: "📦 Inventario", movements: "🔄 Movimientos", contact: "✉️ Contacto" },
-        auth: { login: "👤 Iniciar sesión", logout: "Cerrar sesión" },
+        auth: { login: "Iniciar sesión", logout: "Cerrar sesión" },
         hero: { title: "Inventario central" },
         preview: { notice: "Estás en modo vista previa. Puedes consultar inventario y movimientos recientes, pero para agregar, editar, eliminar o registrar cambios debes iniciar sesión." },
         sidebar: {
@@ -1459,7 +2214,7 @@
           selectedProduct: "Producto seleccionado",
           noSelectedProduct: "Ningún producto seleccionado."
         },
-        actions: { add: "➕ Agregar", edit: "✏️ Editar", delete: "🗑️ Eliminar" },
+        actions: { add: "➕ Agregar Producto", edit: "✏️ Editar", delete: "🗑️ Eliminar" },
         categories: { inputs: "🌱 Insumos", fertilizers: "🪴 Abonos", tools: "🚜 Herramientas y Maquinaria" },
         filters: { toggle: "🔎 Filtrar productos" },
         messages: { previewAuth: "Esta acción requiere iniciar sesión. Estás en modo vista previa." }
@@ -1467,7 +2222,7 @@
       en: {
         pageTitle: "AgroControl | Inventory",
         nav: { home: "🏠 Home", about: "🌿 About us", inventory: "📦 Inventory", movements: "🔄 Movements", contact: "✉️ Contact" },
-        auth: { login: "👤 Log in", logout: "Log out" },
+        auth: { login: "Log in", logout: "Log out" },
         hero: { title: "Central inventory" },
         preview: { notice: "You are in preview mode. You can review inventory and recent movements, but you must log in to add, edit, delete, or register changes." },
         sidebar: {
@@ -1476,7 +2231,7 @@
           selectedProduct: "Selected product",
           noSelectedProduct: "No product selected."
         },
-        actions: { add: "➕ Add", edit: "✏️ Edit", delete: "🗑️ Delete" },
+        actions: { add: "➕ Add Product", edit: "✏️ Edit", delete: "🗑️ Delete" },
         categories: { inputs: "🌱 Supplies", fertilizers: "🪴 Fertilizers", tools: "🚜 Tools and Machinery" },
         filters: { toggle: "🔎 Filter products" },
         messages: { previewAuth: "This action requires signing in. You are in preview mode." }
@@ -1490,6 +2245,7 @@
 
     initializeStoredProducts();
     updateAuthUI();
+    updateExecutiveSummary();
     updatePagination(activeCategory);
     renderRecentMovements();
 
@@ -1519,9 +2275,23 @@
       filterPanel.classList.toggle("hidden");
     });
 
+    executiveSearch?.addEventListener("input", () => {
+      filterSearch.value = executiveSearch.value;
+      applyFilters();
+    });
+
+    filterSearch?.addEventListener("input", () => {
+      if (executiveSearch && executiveSearch.value !== filterSearch.value) {
+        executiveSearch.value = filterSearch.value;
+      }
+    });
+
     applyFilterButton.addEventListener("click", applyFilters);
 
     clearFilterButton.addEventListener("click", () => {
+      if (executiveSearch) {
+        executiveSearch.value = "";
+      }
       filterSearch.value = "";
       filterStatus.value = "";
       filteredRowsByCategory[activeCategory] = getCategoryRows(activeCategory);
@@ -1532,6 +2302,12 @@
     openAddModalButton.addEventListener("click", openAddModal);
     openEditModalButton.addEventListener("click", openEditModal);
     deleteProductButton.addEventListener("click", deleteSelectedProduct);
+    closeProductPanelButton?.addEventListener("click", closeProductPanel);
+    productPanelBackdrop?.addEventListener("click", closeProductPanel);
+    productPanelDetailButton?.addEventListener("click", () => {
+      if (!selectedProduct) return;
+      openDetailModal(selectedProduct.category, selectedProduct.id);
+    });
     if (openEntryModalButton) {
       openEntryModalButton.addEventListener("click", () => {
         if (!requireAuth("Registrar entradas")) {
@@ -1556,7 +2332,7 @@
         return;
       }
 
-      localStorage.removeItem(agroAuthKey);
+      safeStorage.removeItem(agroAuthKey);
       updateAuthUI();
       window.location.href = "login.html";
     });
@@ -1577,6 +2353,10 @@
 
     closeMovementModalButton.addEventListener("click", closeMovementModal);
     cancelMovementModalButton.addEventListener("click", closeMovementModal);
+    productCategory.addEventListener("change", () => updateProductSelectors());
+    movementProduct.addEventListener("change", updateMovementProductSnapshot);
+    movementAmount.addEventListener("input", updateMovementTotal);
+    movementCostUnit.addEventListener("input", updateMovementTotal);
     movementModal.addEventListener("click", (event) => {
       if (event.target === movementModal) {
         closeMovementModal();
@@ -1603,12 +2383,14 @@
         const editedRow = buildRowFromForm(category);
         updatedRows = currentRows.map((row) => row[0] === selectedProduct.id ? editedRow : row);
         selectedProduct = { category, id: editedRow[0] };
-        selectedProductLabel.textContent = `${editedRow[1]} (${editedRow[0]}) seleccionado en ${categoryLabels[category]}.`;
+        updateProductPanel(category, editedRow);
+        openProductPanel();
       } else {
         const newRow = buildRowFromForm(category);
         updatedRows = [...getCategoryRows(category), newRow];
         selectedProduct = { category, id: newRow[0] };
-        selectedProductLabel.textContent = `${newRow[1]} (${newRow[0]}) seleccionado en ${categoryLabels[category]}.`;
+        updateProductPanel(category, newRow);
+        openProductPanel();
       }
 
       setCategoryRows(category, updatedRows);
@@ -1630,6 +2412,9 @@
         panel.classList.toggle("hidden", panel.id !== category);
       });
 
+      if (executiveSearch) {
+        executiveSearch.value = "";
+      }
       filterSearch.value = "";
       filterStatus.value = "";
       filteredRowsByCategory[category] = getCategoryRows(category);
@@ -1644,8 +2429,9 @@
         return;
       }
 
-      if (!selectedProduct) {
-        alert("Primero selecciona un producto.");
+      const movementSelection = updateMovementProductSnapshot();
+      if (!movementSelection) {
+        alert("Selecciona un producto para registrar el movimiento.");
         return;
       }
 
@@ -1655,11 +2441,9 @@
         return;
       }
 
-      const category = selectedProduct.category;
-      const row = findRowById(category, selectedProduct.id);
+      const { category, row, id } = movementSelection;
       if (!row) {
         alert("El producto seleccionado ya no está disponible.");
-        clearSelectedProduct();
         closeMovementModal();
         return;
       }
@@ -1674,7 +2458,7 @@
       }
 
       const updatedRows = getCategoryRows(category).map((item) => {
-        if (item[0] !== selectedProduct.id) return item;
+        if (item[0] !== id) return item;
         const next = [...item];
         next[quantityIndex] = String(nextQty);
         return next;
@@ -1690,12 +2474,18 @@
         name: row[1],
         amount,
         date: movementDate.value || new Date().toISOString().slice(0, 10),
-        note: movementNote.value.trim() || "Sin detalle"
+        note: movementNote.value.trim() || "Sin detalle",
+        provider: movementProvider.value.trim(),
+        costUnit: movementCostUnit.value.trim(),
+        costTotal: movementCostTotal.value.trim(),
+        lot: movementLot.value.trim(),
+        expiry: movementExpiry.value.trim(),
+        reference: movementProductRef.value.trim()
       });
       movementHistory = movementHistory.slice(0, 30);
       saveMovementHistory();
       renderRecentMovements();
-      setSelectedProduct(category, selectedProduct.id);
+      setSelectedProduct(category, id);
       updatePagination(category);
       closeMovementModal();
     });
