@@ -3,6 +3,9 @@
   const movementsKey = window.AGRO_APP_KEYS.movements;
   const salesKey = window.AGRO_APP_KEYS.sales;
   const authKey = window.AGRO_APP_KEYS.auth;
+  const languageKey = window.AGRO_APP_KEYS.language || "agrocontrol-language";
+  const translations = window.posTranslations || {};
+
   const logoutButton = document.getElementById("logout-button");
   const openCartModalButton = document.getElementById("open-cart-modal");
   const closeCartModalButton = document.getElementById("close-cart-modal");
@@ -22,6 +25,7 @@
   const paymentMethod = document.getElementById("payment-method");
   const saleNote = document.getElementById("sale-note");
   const confirmSaleButton = document.getElementById("confirm-sale");
+  const saleForm = document.getElementById("sale-form");
   const clearCartButton = document.getElementById("clear-cart");
   const recentSales = document.getElementById("recent-sales");
   const salesCounter = document.getElementById("sales-counter");
@@ -38,12 +42,6 @@
   const productDetailUsage = document.getElementById("product-detail-usage");
   const productDetailPrice = document.getElementById("product-detail-price");
   const productDetailAddButton = document.getElementById("product-detail-add");
-
-  const categoryLabels = {
-    insumos: "Insumos",
-    abonos: "Abonos",
-    herramientas: "Herramientas"
-  };
 
   const categoryImages = {
     insumos: [
@@ -70,6 +68,41 @@
   let cart = [];
   const productsPerPage = 36;
   let detailProduct = null;
+  let currentLanguage = safeStorage.getItem(languageKey) || "es";
+
+  function getNestedValue(source, path) {
+    return path.split(".").reduce((value, segment) => value?.[segment], source);
+  }
+
+  function t(key) {
+    return getNestedValue(translations[currentLanguage] || translations.es || {}, key)
+      || getNestedValue(translations.es || {}, key)
+      || key;
+  }
+
+  function categoryLabel(category) {
+    const keys = {
+      all: "filters.all",
+      insumos: "filters.inputs",
+      abonos: "filters.fertilizers",
+      herramientas: "filters.tools"
+    };
+    return t(keys[category] || "filters.all");
+  }
+
+  function paymentLabel(payment) {
+    const keys = {
+      cash: "checkout.paymentCash",
+      transfer: "checkout.paymentTransfer",
+      card: "checkout.paymentCard",
+      Efectivo: "checkout.paymentCash",
+      Transferencia: "checkout.paymentTransfer",
+      Tarjeta: "checkout.paymentCard",
+      Cash: "checkout.paymentCash",
+      Card: "checkout.paymentCard"
+    };
+    return keys[payment] ? t(keys[payment]) : payment;
+  }
 
   function getSession() {
     try {
@@ -85,9 +118,9 @@
 
   function updateSessionButton() {
     if (!logoutButton) return;
-    const label = logoutButton.querySelector("span");
+    const label = logoutButton.querySelector("[data-i18n-text]") || logoutButton.querySelector("span");
     if (label) {
-      label.textContent = isAuthenticated() ? "Cerrar sesión" : "Iniciar sesión";
+      label.textContent = isAuthenticated() ? t("actions.logout") : t("actions.login");
     }
   }
 
@@ -104,14 +137,14 @@
     if (!product) return;
 
     productDetailTitle.textContent = product.name;
-    productDetailSubtitle.textContent = `${categoryLabels[product.category]} - ${product.subcategory}`;
+    productDetailSubtitle.textContent = `${categoryLabel(product.category)} - ${product.subcategory}`;
     productDetailImage.src = product.image;
     productDetailImage.alt = product.name;
     productDetailId.textContent = product.id;
-    productDetailStock.textContent = `${product.stock} unidades disponibles`;
-    productDetailCategory.textContent = categoryLabels[product.category];
+    productDetailStock.textContent = t("dynamic.unitsAvailable").replace("{count}", String(product.stock));
+    productDetailCategory.textContent = categoryLabel(product.category);
     productDetailPresentation.textContent = product.presentation;
-    productDetailUsage.textContent = product.usage || "Producto listo para venta.";
+    productDetailUsage.textContent = product.usage || t("dynamic.productReady");
     productDetailPrice.textContent = formatCurrency(product.price);
     productDetailAddButton.disabled = product.stock <= 0;
     productDetailAddButton.className = product.stock <= 0
@@ -171,7 +204,7 @@
   }
 
   function formatCurrency(value) {
-    return new Intl.NumberFormat("es-EC", {
+    return new Intl.NumberFormat(currentLanguage === "en" ? "en-US" : "es-EC", {
       style: "currency",
       currency: "USD"
     }).format(Number(value) || 0);
@@ -250,11 +283,11 @@
     if (products.length === 0) {
       productGrid.innerHTML = `
         <div class="rounded-[1.5rem] border border-dashed border-slate-300 bg-white/70 p-8 text-center text-sm text-slate-500 sm:col-span-2 md:col-span-3 xl:col-span-4 2xl:col-span-6">
-          No hay productos que coincidan con la busqueda actual.
+          ${t("dynamic.noMatchingProducts")}
         </div>
       `;
       if (productPaginationSummary) {
-        productPaginationSummary.textContent = "Mostrando 0-0 de 0 productos";
+        productPaginationSummary.textContent = t("dynamic.showingRangeZero");
       }
       if (productPagination) {
         productPagination.innerHTML = "";
@@ -270,8 +303,8 @@
             <div class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[0.8rem] bg-white/65 ring-1 ring-black/5">
               <img src="${product.image}" alt="${product.name}" class="h-full w-full object-cover object-center">
             </div>
-            <span class="absolute left-2.5 top-2.5 rounded-full bg-slate-950/70 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white">${categoryLabels[product.category]}</span>
-            <span class="absolute right-2.5 top-2.5 rounded-full px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${isOut ? "bg-rose-100 text-rose-700" : "bg-emerald-100 text-emerald-700"}">${isOut ? "Sin stock" : `${product.stock} und`}</span>
+            <span class="absolute left-2.5 top-2.5 rounded-full bg-slate-950/70 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white">${categoryLabel(product.category)}</span>
+            <span class="absolute right-2.5 top-2.5 rounded-full px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${isOut ? "bg-rose-100 text-rose-700" : "bg-emerald-100 text-emerald-700"}">${isOut ? t("dynamic.outOfStock") : t("dynamic.unitsShort").replace("{count}", String(product.stock))}</span>
           </div>
           <div class="flex flex-1 flex-col p-2">
             <div class="min-h-[2.9rem]">
@@ -280,12 +313,12 @@
             </div>
             <div class="mt-auto flex items-end justify-between gap-1.5 pt-2">
               <div>
-                <p class="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-400">Precio</p>
+                <p class="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-400">${t("detail.price")}</p>
                 <p class="mt-0.5 text-[0.92rem] font-black leading-none text-hoja">${formatCurrency(product.price)}</p>
               </div>
               <button class="add-to-cart inline-flex items-center gap-1 rounded-full px-2 py-1.5 text-[10px] font-semibold leading-none ${isOut ? "cursor-not-allowed bg-slate-200 text-slate-400" : "bg-hoja text-white transition hover:bg-hoja/95"}" data-category="${product.category}" data-id="${product.id}" ${isOut ? "disabled" : ""}>
                 <svg viewBox="0 0 24 24" class="h-3 w-3 fill-current" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>
-                Agregar
+                ${t("dynamic.add")}
               </button>
             </div>
           </div>
@@ -310,7 +343,10 @@
     });
 
     if (productPaginationSummary) {
-      productPaginationSummary.textContent = `Mostrando ${startIndex + 1}-${Math.min(startIndex + productsPerPage, totalProducts)} de ${totalProducts} productos`;
+      productPaginationSummary.textContent = t("dynamic.showingRange")
+        .replace("{start}", String(startIndex + 1))
+        .replace("{end}", String(Math.min(startIndex + productsPerPage, totalProducts)))
+        .replace("{total}", String(totalProducts));
     }
 
     if (productPagination) {
@@ -335,9 +371,9 @@
       }
 
       productPagination.innerHTML = `
-        ${createButton("Anterior", currentProductPage - 1, currentProductPage === 1)}
+        ${createButton(t("dynamic.previous"), currentProductPage - 1, currentProductPage === 1)}
         ${pageButtons.join("")}
-        ${createButton("Siguiente", currentProductPage + 1, currentProductPage === totalPages)}
+        ${createButton(t("dynamic.next"), currentProductPage + 1, currentProductPage === totalPages)}
       `;
 
       productPagination.querySelectorAll("button[data-page]").forEach((button) => {
@@ -362,7 +398,7 @@
     const existing = cart.find((item) => item.category === category && item.id === id);
     if (existing) {
       if (existing.quantity >= product.stock) {
-        alert("No puedes agregar mas unidades que el stock disponible.");
+        alert(t("alerts.maxStock"));
         return;
       }
       existing.quantity += 1;
@@ -388,7 +424,7 @@
     }
 
     if (nextQuantity > product.stock) {
-      alert("La cantidad supera el stock disponible.");
+      alert(t("alerts.quantityExceedsStock"));
       return;
     }
 
@@ -422,10 +458,10 @@
     if (items.length === 0) {
       cartItems.innerHTML = `
         <div class="rounded-[1.5rem] border border-dashed border-white/12 bg-white/6 px-4 py-8 text-center text-sm text-white/60">
-          Agrega productos desde el catalogo para iniciar una venta.
+          ${t("dynamic.addProductsToStart")}
         </div>
       `;
-      cartStatus.textContent = "No hay productos agregados.";
+      cartStatus.textContent = t("cart.emptyStatus");
     } else {
       cartItems.innerHTML = items.map(({ product, quantity, subtotal }) => `
         <article class="rounded-[1.35rem] border border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.08),_rgba(255,255,255,0.04))] p-3.5">
@@ -435,10 +471,10 @@
               <div class="flex items-start justify-between gap-3">
                 <div>
                   <p class="text-sm font-bold text-white">${product.name}</p>
-                  <p class="mt-1 text-xs text-white/55">${product.id} - ${categoryLabels[product.category]}</p>
+                  <p class="mt-1 text-xs text-white/55">${product.id} - ${categoryLabel(product.category)}</p>
                 </div>
                 <div class="text-right">
-                  <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-white/40">Subtotal</p>
+                  <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-white/40">${t("summary.subtotal")}</p>
                   <p class="mt-1 text-sm font-black text-sol">${formatCurrency(subtotal)}</p>
                 </div>
               </div>
@@ -449,7 +485,7 @@
                   <button class="cart-qty px-3 py-1.5 text-sm font-bold text-white/75 transition hover:bg-white/10" data-action="increase" data-category="${product.category}" data-id="${product.id}">+</button>
                 </div>
                 <div class="rounded-[0.95rem] border border-white/10 bg-white/6 px-3 py-2 text-right">
-                  <p class="text-[11px] uppercase tracking-[0.12em] text-white/40">Unitario</p>
+                  <p class="text-[11px] uppercase tracking-[0.12em] text-white/40">${t("dynamic.unitPrice")}</p>
                   <p class="text-sm font-semibold text-white">${formatCurrency(product.price)}</p>
                 </div>
               </div>
@@ -457,7 +493,9 @@
           </div>
         </article>
       `).join("");
-      cartStatus.textContent = `${items.length} productos - ${totalUnits} unidades en venta`;
+      cartStatus.textContent = t("dynamic.cartStatus")
+        .replace("{products}", String(items.length))
+        .replace("{units}", String(totalUnits));
     }
 
     cartItems.querySelectorAll(".cart-qty").forEach((button) => {
@@ -489,7 +527,7 @@
   function recordSale() {
     const items = getCartDetails();
     if (items.length === 0) {
-      alert("Agrega al menos un producto al carrito.");
+      alert(t("alerts.addProductFirst"));
       return;
     }
 
@@ -502,12 +540,12 @@
     for (const item of items) {
       const row = inventoryState[item.category].find((product) => product[0] === item.id);
       if (!row) {
-        alert(`El producto ${item.product.name} ya no esta disponible.`);
+        alert(t("alerts.productUnavailable").replace("{name}", item.product.name));
         return;
       }
       const currentQty = getCurrentQuantity(item.category, row);
       if (item.quantity > currentQty) {
-        alert(`La cantidad de ${item.product.name} supera el stock disponible.`);
+        alert(t("alerts.productQuantityExceeds").replace("{name}", item.product.name));
         return;
       }
     }
@@ -525,7 +563,7 @@
     saveInventoryState();
 
     const movements = loadMovementHistory();
-    const note = saleNote.value.trim() || `Venta registrada en ${saleNumber}`;
+    const note = saleNote.value.trim() || t("dynamic.saleRecordedNote").replace("{saleNumber}", saleNumber);
     const payment = paymentMethod.value;
     const customer = customerInput.value.trim();
 
@@ -533,7 +571,7 @@
       const row = inventoryState[item.category].find((product) => product[0] === item.id);
       const nextQty = row ? getCurrentQuantity(item.category, row) : 0;
       movements.unshift({
-        type: "Salida",
+        type: currentLanguage === "en" ? "Output" : "Salida",
         category: item.category,
         id: item.id,
         name: item.product.name,
@@ -550,7 +588,7 @@
         costTotal: String(item.subtotal.toFixed(2)),
         lot: "",
         expiry: "",
-        reference: `${saleNumber} - ${payment}${customer ? ` - ${customer}` : ""}`
+        reference: `${saleNumber} - ${paymentLabel(payment)}${customer ? ` - ${customer}` : ""}`
       });
     });
     saveMovementHistory(movements.slice(0, 100));
@@ -558,7 +596,7 @@
     salesHistory.unshift({
       number: saleNumber,
       date: saleDate,
-      customer: customer || "Cliente ocasional",
+      customer: customer || t("dynamic.walkInCustomer"),
       payment,
       note,
       subtotal,
@@ -580,22 +618,22 @@
     discountInput.value = "0";
     customerInput.value = "";
     saleNote.value = "";
-    paymentMethod.value = "Efectivo";
+    paymentMethod.value = "cash";
     inventoryState = loadInventoryState();
     renderProducts();
     renderCart();
     renderRecentSales();
     closeCartModal();
-    alert(`Venta ${saleNumber} registrada correctamente.`);
+    alert(t("alerts.saleRecorded").replace("{saleNumber}", saleNumber));
   }
 
   function renderRecentSales() {
-    salesCounter.textContent = `${salesHistory.length} ventas`;
+    salesCounter.textContent = t("dynamic.salesCount").replace("{count}", String(salesHistory.length));
 
     if (salesHistory.length === 0) {
       recentSales.innerHTML = `
         <div class="rounded-[1.5rem] border border-dashed border-slate-300 bg-crema/70 px-4 py-6 text-sm text-slate-500">
-          Aun no hay ventas registradas desde este punto de venta.
+          ${t("dynamic.noSalesYet")}
         </div>
       `;
       return;
@@ -606,16 +644,40 @@
         <div class="flex items-start justify-between gap-3">
           <div>
             <p class="text-sm font-black text-slate-900">${sale.number}</p>
-            <p class="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-hoja/70">${sale.payment}</p>
+            <p class="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-hoja/70">${paymentLabel(sale.payment)}</p>
           </div>
           <p class="text-sm font-bold text-hoja">${formatCurrency(sale.total)}</p>
         </div>
         <p class="mt-3 text-sm text-slate-700">${sale.customer}</p>
-        <p class="mt-1 text-xs text-slate-500">${sale.date} - ${sale.items.length} productos</p>
+        <p class="mt-1 text-xs text-slate-500">${sale.date} - ${t("dynamic.saleItems").replace("{count}", String(sale.items.length))}</p>
         <p class="mt-3 text-sm text-slate-600">${sale.note}</p>
       </article>
     `).join("");
   }
+
+  function applyDynamicTranslations() {
+    document.querySelectorAll("[data-i18n-alt]").forEach((element) => {
+      const value = t(element.dataset.i18nAlt);
+      if (typeof value === "string") {
+        element.setAttribute("alt", value);
+      }
+    });
+  }
+
+  function applyLanguage(lang) {
+    currentLanguage = translations[lang] ? lang : "es";
+    updateSessionButton();
+    applyDynamicTranslations();
+    syncCategoryUI();
+    renderProducts();
+    renderCart();
+    renderRecentSales();
+    if (detailProduct) {
+      openProductDetail(findProduct(detailProduct.category, detailProduct.id) || detailProduct);
+    }
+  }
+
+  window.refreshPosLanguage = applyLanguage;
 
   categoryChips.forEach((chip) => {
     chip.addEventListener("click", () => {
@@ -652,7 +714,10 @@
     if (!detailProduct) return;
     addToCart(detailProduct.category, detailProduct.id);
   });
-  confirmSaleButton.addEventListener("click", recordSale);
+  saleForm?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    recordSale();
+  });
   logoutButton?.addEventListener("click", () => {
     if (!isAuthenticated()) {
       window.location.href = "login.html?redirect=pos.html";
@@ -664,9 +729,5 @@
     window.location.href = "pos.html";
   });
 
-  updateSessionButton();
-  syncCategoryUI();
-  renderProducts();
-  renderCart();
-  renderRecentSales();
+  applyLanguage(currentLanguage);
 })();
