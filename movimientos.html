@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+Ôªø<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -61,7 +61,7 @@
         return true;
       }
 
-      alert(getMovementsText("messages.previewAuth", `${actionLabel} requiere iniciar sesiÛn. Est·s en modo vista previa.`));
+      alert(getMovementsText("messages.previewAuth", `${actionLabel} requiere iniciar sesi√≥n. Est√°s en modo vista previa.`));
       redirectToLogin();
       return false;
     }
@@ -122,7 +122,7 @@
             <circle cx="12" cy="8.25" r="3"/>
             <path stroke-linecap="round" stroke-linejoin="round" d="M5.75 19c1.45-2.95 3.95-4.5 6.25-4.5s4.8 1.55 6.25 4.5"/>
           </svg>
-          <span data-i18n-text>Iniciar sesiÛn</span>
+          <span data-i18n-text>Iniciar sesi√≥n</span>
         </button>
         <div class="hidden items-center gap-1 rounded-full border border-hoja/15 bg-gradient-to-r from-white via-crema to-white p-1.5 shadow-[0_10px_30px_rgba(62,107,72,0.14)] md:flex">
           <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-hoja transition duration-200 hover:bg-white/80" data-lang="es" aria-label="Cambiar a espa√±ol">
@@ -144,53 +144,38 @@
     </div>
   </header>
 
-  <main class="mx-auto max-w-7xl flex-1 px-4 py-10 sm:px-6 sm:py-16">
-    <section class="rounded-[2.5rem] bg-slate-950 px-5 py-8 text-white shadow-suave sm:px-8 sm:py-12">
-      <p class="text-sm font-bold uppercase tracking-[0.28em] text-sol" data-i18n="hero.label">Movimientos</p>
-      <h1 class="mt-4 text-3xl font-black sm:text-4xl md:text-5xl" data-i18n="hero.title">Entradas y salidas con trazabilidad operativa.</h1>
-      <p class="mt-5 max-w-3xl text-base leading-7 text-white/75 sm:text-lg sm:leading-8" data-i18n="hero.description">Registra compras, entregas y ajustes del inventario. Cada movimiento actualiza la cantidad del producto y deja detalle de fecha, responsable y observaciÛn.</p>
-    </section>
-
+  <main class="mx-auto max-w-7xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
     <section id="preview-notice" class="hidden mt-6 rounded-[2rem] border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-900 shadow-sm">
-      <span data-i18n="preview.notice">Est·s en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesiÛn.</span>
+      <span data-i18n="preview.notice">Est√°s en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesi√≥n.</span>
     </section>
 
-    <section class="mt-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-      <div class="space-y-6">
-        <div class="grid gap-4 sm:grid-cols-2">
-          <div class="rounded-[1.75rem] bg-white p-5 shadow-suave">
-            <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Cantidad entrada</p>
-            <p id="report-entry-qty" class="mt-3 text-3xl font-black text-slate-900">0</p>
+    <section class="mt-4 space-y-6">
+      <div class="rounded-[1.5rem] bg-white px-3.5 py-3 shadow-suave sm:px-4">
+        <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex items-center gap-2">
+            <button id="toggle-movement-form" type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-hoja text-white shadow-[0_10px_22px_rgba(62,107,72,0.15)] transition hover:scale-[1.02] hover:bg-hoja/95" aria-expanded="false" aria-controls="movement-form-panel" aria-label="Mostrar formulario de movimiento">
+              <svg viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current stroke-[2]" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 8.25h11"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 5.75 5 8.25l2.5 2.5"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 15.75H7"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="m16.5 13.25 2.5 2.5-2.5 2.5"/>
+              </svg>
+            </button>
+            <div>
+              <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-hoja">Registrar movimiento</p>
+              <p class="mt-0.5 text-[11px] text-slate-500">Mostrar u ocultar formulario</p>
+            </div>
           </div>
-          <div class="rounded-[1.75rem] bg-white p-5 shadow-suave">
-            <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Cantidad salida</p>
-            <p id="report-exit-qty" class="mt-3 text-3xl font-black text-slate-900">0</p>
-          </div>
-          <div class="rounded-[1.75rem] bg-white p-5 shadow-suave">
-            <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Valor entrada</p>
-            <p id="report-entry-value" class="mt-3 text-3xl font-black text-emerald-700">$0.00</p>
-          </div>
-          <div class="rounded-[1.75rem] bg-white p-5 shadow-suave">
-            <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja">Valor salida</p>
-            <p id="report-exit-value" class="mt-3 text-3xl font-black text-amber-700">$0.00</p>
+          <div class="flex flex-wrap gap-2">
+            <span id="summary-entry" class="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">Entradas: 0</span>
+            <span id="summary-exit" class="rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-700">Salidas: 0</span>
           </div>
         </div>
 
-        <div class="rounded-[2rem] bg-white p-6 shadow-suave">
-          <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p class="text-sm font-bold uppercase tracking-[0.24em] text-hoja">Registrar movimiento</p>
-              <h2 class="mt-2 text-2xl font-black text-slate-900">Formulario de entrada y salida</h2>
-            </div>
-            <div class="flex gap-3">
-              <span id="summary-entry" class="rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">Entradas: 0</span>
-              <span id="summary-exit" class="rounded-full bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700">Salidas: 0</span>
-            </div>
-          </div>
-
-          <form id="movement-form" class="mt-6 grid gap-4 md:grid-cols-2">
+        <div id="movement-form-panel" class="hidden">
+        <form id="movement-form" class="mt-4 grid gap-4 border-t border-slate-100 pt-4 md:grid-cols-2">
             <label class="block">
-              <span class="mb-1 block text-sm font-semibold text-slate-700">categorÌa</span>
+              <span class="mb-1 block text-sm font-semibold text-slate-700">Categor√≠a</span>
               <select id="movement-category" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
                 <option value="insumos">Insumos</option>
                 <option value="abonos">Abonos</option>
@@ -240,13 +225,11 @@
               <button id="clear-form" type="button" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 12.6 12.6-1.4 1.4L5 6.4 6.4 5Zm12.6 1.4L7.8 17.6H4v-3.8L15.2 2.6 19 6.4Z"/></svg>Limpiar</button>
               <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white"><svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M17 3H5a2 2 0 0 0-2 2v14l4-2 4 2 4-2 4 2V5a2 2 0 0 0-2-2Zm0 12.8-2-.8-4 2-4-2-2 .8V5h12v10.8ZM8 7h6v2H8V7Z"/></svg>Guardar movimiento</button>
             </div>
-          </form>
+        </form>
         </div>
-
       </div>
 
-      <div class="space-y-6">
-        <div class="rounded-[2rem] border border-white/50 bg-[linear-gradient(135deg,_rgba(245,240,230,0.98),_rgba(231,225,211,0.85))] p-6 shadow-suave">
+      <div class="rounded-[2rem] border border-white/50 bg-[linear-gradient(135deg,_rgba(245,240,230,0.98),_rgba(231,225,211,0.85))] p-6 shadow-suave">
           <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div>
               <p class="text-sm font-bold uppercase tracking-[0.24em] text-hoja">Centro de reporte</p>
@@ -255,26 +238,21 @@
             </div>
             <div class="flex flex-col gap-3 md:items-end">
               <p id="table-summary" class="rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm">Sin movimientos registrados.</p>
-              <div class="flex flex-wrap gap-3">
-                <button id="view-report" type="button" class="inline-flex items-center gap-2 rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:scale-[1.01]">
-                  <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 18.5v-13Zm2.5-.8a.8.8 0 0 0-.8.8v13c0 .4.4.8.8.8h11c.4 0 .8-.4.8-.8v-13a.8.8 0 0 0-.8-.8h-11ZM8 8h8v1.7H8V8Zm0 3.7h8v1.7H8v-1.7Zm0 3.7h5v1.7H8v-1.7Z"/></svg>
-                  Ver reporte
-                </button>
-                <button id="print-report" type="button" class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-hoja hover:text-hoja">
-                  <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M7 3h10v4H7V3Zm10 6H7a4 4 0 0 0-4 4v3h4v5h10v-5h4v-3a4 4 0 0 0-4-4Zm-2 10H9v-5h6v5Zm2-8.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></svg>
-                  Imprimir
-                </button>
-              </div>
+              <button id="print-report" type="button" class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-hoja hover:text-hoja">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M7 3h10v4H7V3Zm10 6H7a4 4 0 0 0-4 4v3h4v5h10v-5h4v-3a4 4 0 0 0-4-4Zm-2 10H9v-5h6v5Zm2-8.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></svg>
+                Imprimir
+              </button>
             </div>
           </div>
-          <div class="mt-5 grid gap-4 rounded-[1.5rem] bg-white/75 p-4 ring-1 ring-white/70 md:grid-cols-5">
-            <label class="block md:col-span-2">
-              <span class="mb-1 block text-sm font-semibold text-slate-700">Filtrar por producto</span>
-              <input id="filter-product" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Buscar por nombre o ID">
+          <div class="mt-4 rounded-[1.25rem] bg-white/75 p-3 ring-1 ring-white/70">
+            <div class="grid gap-3 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_auto]">
+            <label class="block">
+              <span class="mb-1 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">Producto</span>
+              <input id="filter-product" type="text" class="w-full rounded-lg border border-slate-200 bg-crema px-3 py-2 text-sm outline-none focus:border-hoja" placeholder="Buscar por nombre o ID">
             </label>
             <label class="block">
-              <span class="mb-1 block text-sm font-semibold text-slate-700">categorÌa</span>
-              <select id="filter-category" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
+              <span class="mb-1 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">Categor√≠a</span>
+              <select id="filter-category" class="w-full rounded-lg border border-slate-200 bg-crema px-3 py-2 text-sm outline-none focus:border-hoja">
                 <option value="">Todas</option>
                 <option value="insumos">Insumos</option>
                 <option value="abonos">Abonos</option>
@@ -282,21 +260,34 @@
               </select>
             </label>
             <label class="block">
-              <span class="mb-1 block text-sm font-semibold text-slate-700">Tipo</span>
-              <select id="filter-type" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
+              <span class="mb-1 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">Tipo</span>
+              <select id="filter-type" class="w-full rounded-lg border border-slate-200 bg-crema px-3 py-2 text-sm outline-none focus:border-hoja">
                 <option value="">Todos</option>
                 <option value="Entrada">Entrada</option>
                 <option value="Salida">Salida</option>
               </select>
             </label>
+            <div class="flex items-end">
+              <button id="toggle-advanced-filters" type="button" class="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-700 transition hover:border-hoja hover:text-hoja md:w-auto" aria-expanded="false" aria-controls="advanced-filters-panel">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current stroke-[2]" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 12h10"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 17h4"/>
+                </svg>
+                Filtros avanzados
+              </button>
+            </div>
+            </div>
+            <div id="advanced-filters-panel" class="mt-3 hidden grid gap-3 border-t border-slate-200 pt-3 md:grid-cols-2">
             <label class="block">
-              <span class="mb-1 block text-sm font-semibold text-slate-700">Desde</span>
-              <input id="filter-date-from" type="date" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
+              <span class="mb-1 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">Desde</span>
+              <input id="filter-date-from" type="date" class="w-full rounded-lg border border-slate-200 bg-crema px-3 py-2 text-sm outline-none focus:border-hoja">
             </label>
             <label class="block">
-              <span class="mb-1 block text-sm font-semibold text-slate-700">Hasta</span>
-              <input id="filter-date-to" type="date" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
+              <span class="mb-1 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">Hasta</span>
+              <input id="filter-date-to" type="date" class="w-full rounded-lg border border-slate-200 bg-crema px-3 py-2 text-sm outline-none focus:border-hoja">
             </label>
+            </div>
           </div>
           <div class="mt-6 overflow-x-auto">
             <table class="min-w-full text-left text-sm">
@@ -304,7 +295,7 @@
                 <tr>
                   <th class="px-3 py-3">Fecha</th>
                   <th class="px-3 py-3">Producto</th>
-                  <th class="px-3 py-3">categorÌa</th>
+                  <th class="px-3 py-3">Categor√≠a</th>
                   <th class="px-3 py-3">Precio</th>
                   <th class="px-3 py-3">Valor total</th>
                   <th class="px-3 py-3">Stock actual</th>
@@ -321,44 +312,6 @@
             <p id="movement-pagination-summary" class="text-sm font-semibold text-slate-500">Mostrando 0-0 de 0 movimientos</p>
             <div id="movement-pagination" class="flex flex-wrap items-center justify-center gap-2"></div>
           </div>
-          <div class="mt-8 rounded-[1.5rem] bg-white/75 p-4 ring-1 ring-white/70">
-            <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p class="text-sm font-bold uppercase tracking-[0.24em] text-hoja">Resumen de inventario</p>
-                <p class="mt-1 text-sm text-slate-600">Este bloque tambi√©n se incluir√° al imprimir el reporte.</p>
-              </div>
-              <p id="inventory-report-summary" class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm">0 productos en reporte</p>
-            </div>
-            <div class="mt-4 overflow-x-auto">
-              <table class="min-w-full text-left text-sm">
-                <thead class="border-b border-slate-200 text-slate-500">
-                  <tr>
-                    <th class="px-3 py-3">Producto</th>
-                    <th class="px-3 py-3">categorÌa</th>
-                    <th class="px-3 py-3">Precio</th>
-                    <th class="px-3 py-3">Stock actual</th>
-                    <th class="px-3 py-3">Entradas</th>
-                    <th class="px-3 py-3">Salidas</th>
-                  </tr>
-                </thead>
-                <tbody id="inventory-report-body"></tbody>
-              </table>
-            </div>
-            <div class="mt-5 flex flex-col items-center gap-3 text-center">
-              <p id="inventory-pagination-summary" class="text-sm font-semibold text-slate-500">Mostrando 0-0 de 0 productos</p>
-              <div id="inventory-pagination" class="flex flex-wrap items-center justify-center gap-2"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="rounded-[2rem] bg-white p-6 shadow-suave">
-          <p class="text-sm font-bold uppercase tracking-[0.24em] text-hoja">Ayuda operativa</p>
-          <ul class="mt-4 space-y-3 text-sm text-slate-600">
-            <li>Usa `Entrada` para compras, recepciones o ajustes positivos.</li>
-            <li>Usa `Salida` para entregas, consumo interno o asignaciones.</li>
-            <li>En salidas, el campo `Responsable` identifica qui√©n se llev√≥ el producto.</li>
-          </ul>
-        </div>
       </div>
     </section>
   </main>
@@ -399,12 +352,16 @@
     const filterProduct = document.getElementById("filter-product");
     const filterCategory = document.getElementById("filter-category");
     const filterType = document.getElementById("filter-type");
+    const toggleAdvancedFiltersButton = document.getElementById("toggle-advanced-filters");
+    const advancedFiltersPanel = document.getElementById("advanced-filters-panel");
     const filterDateFrom = document.getElementById("filter-date-from");
     const filterDateTo = document.getElementById("filter-date-to");
     const movementTableBody = document.getElementById("movement-table-body");
     const tableSummary = document.getElementById("table-summary");
     const movementPaginationSummary = document.getElementById("movement-pagination-summary");
     const movementPagination = document.getElementById("movement-pagination");
+    const toggleMovementFormButton = document.getElementById("toggle-movement-form");
+    const movementFormPanel = document.getElementById("movement-form-panel");
     const inventoryReportSummary = document.getElementById("inventory-report-summary");
     const inventoryReportBody = document.getElementById("inventory-report-body");
     const inventoryPaginationSummary = document.getElementById("inventory-pagination-summary");
@@ -425,8 +382,6 @@
     let movementHistory = [];
     let movementPage = 1;
     const movementItemsPerPage = 6;
-    let inventoryPage = 1;
-    const inventoryItemsPerPage = 10;
 
     function updateAuthUI() {
       const authenticated = isAuthenticated();
@@ -434,8 +389,8 @@
       if (logoutButton) {
         const logoutText = logoutButton.querySelector("[data-i18n-text]");
         const nextCopy = authenticated
-          ? getMovementsText("auth.logout", "Cerrar sesiÛn")
-          : getMovementsText("auth.login", "Iniciar sesiÛn");
+          ? getMovementsText("auth.logout", "Cerrar sesi√≥n")
+          : getMovementsText("auth.login", "Iniciar sesi√≥n");
         if (logoutText) {
           logoutText.textContent = nextCopy;
         } else {
@@ -446,6 +401,28 @@
       if (previewNotice) {
         previewNotice.classList.toggle("hidden", authenticated);
       }
+    }
+
+    function setMovementFormVisibility(visible) {
+      if (!movementFormPanel || !toggleMovementFormButton) {
+        return;
+      }
+
+      movementFormPanel.classList.toggle("hidden", !visible);
+      toggleMovementFormButton.setAttribute("aria-expanded", visible ? "true" : "false");
+      toggleMovementFormButton.setAttribute(
+        "aria-label",
+        visible ? "Ocultar formulario de movimiento" : "Mostrar formulario de movimiento"
+      );
+    }
+
+    function setAdvancedFiltersVisibility(visible) {
+      if (!advancedFiltersPanel || !toggleAdvancedFiltersButton) {
+        return;
+      }
+
+      advancedFiltersPanel.classList.toggle("hidden", !visible);
+      toggleAdvancedFiltersButton.setAttribute("aria-expanded", visible ? "true" : "false");
     }
 
     function loadInventoryState() {
@@ -519,7 +496,7 @@
       const products = getAllProducts().filter((product) => product.category === selectedCategory);
 
       if (products.length === 0) {
-        movementProduct.innerHTML = `<option value="">No hay productos en esta categorÌa</option>`;
+        movementProduct.innerHTML = `<option value="">No hay productos en esta categor√≠a</option>`;
         movementProduct.value = "";
         return;
       }
@@ -601,6 +578,10 @@
     }
 
     function renderInventoryReport(filteredMovements) {
+      if (!inventoryReportSummary || !inventoryReportBody || !inventoryPaginationSummary || !inventoryPagination) {
+        return;
+      }
+
       const search = filterProduct.value.trim().toLowerCase();
       const categoryFilter = filterCategory.value.trim();
       const allProducts = getAllProducts().filter((product) => {
@@ -788,10 +769,10 @@
         .filter((movement) => movement.type === "Salida")
         .reduce((sum, movement) => sum + parsePrice(movement.totalValue), 0);
 
-      reportEntryQty.textContent = String(entryQty);
-      reportExitQty.textContent = String(exitQty);
-      reportEntryValue.textContent = formatCurrency(entryValue);
-      reportExitValue.textContent = formatCurrency(exitValue);
+      if (reportEntryQty) reportEntryQty.textContent = String(entryQty);
+      if (reportExitQty) reportExitQty.textContent = String(exitQty);
+      if (reportEntryValue) reportEntryValue.textContent = formatCurrency(entryValue);
+      if (reportExitValue) reportExitValue.textContent = formatCurrency(exitValue);
     }
 
     function clearForm(preserveCategory = false) {
@@ -879,7 +860,6 @@
       saveInventoryState();
       saveMovementHistory();
       movementPage = 1;
-      inventoryPage = 1;
       renderGroupedProductOptions();
       refreshSelectedStock();
       renderMovementTable();
@@ -893,46 +873,52 @@
     movementProduct.addEventListener("change", refreshSelectedStock);
     filterProduct.addEventListener("input", () => {
       movementPage = 1;
-      inventoryPage = 1;
       renderMovementTable();
     });
     filterCategory.addEventListener("change", () => {
       movementPage = 1;
-      inventoryPage = 1;
       renderMovementTable();
     });
     filterType.addEventListener("change", () => {
       movementPage = 1;
-      inventoryPage = 1;
       renderMovementTable();
     });
     filterDateFrom.addEventListener("change", () => {
       movementPage = 1;
-      inventoryPage = 1;
       renderMovementTable();
     });
     filterDateTo.addEventListener("change", () => {
       movementPage = 1;
-      inventoryPage = 1;
       renderMovementTable();
     });
     clearFormButton.addEventListener("click", clearForm);
-    viewReportButton.addEventListener("click", () => {
-      if (!requireAuth("Ver reportes")) {
-        return;
-      }
-
-      movementPage = 1;
-      inventoryPage = 1;
-      renderMovementTable();
+    toggleMovementFormButton?.addEventListener("click", () => {
+      const isHidden = movementFormPanel?.classList.contains("hidden");
+      setMovementFormVisibility(Boolean(isHidden));
     });
-    printReportButton.addEventListener("click", () => {
-      if (!requireAuth("Imprimir reportes")) {
-        return;
-      }
-
-      window.print();
+    toggleAdvancedFiltersButton?.addEventListener("click", () => {
+      const isHidden = advancedFiltersPanel?.classList.contains("hidden");
+      setAdvancedFiltersVisibility(Boolean(isHidden));
     });
+    if (viewReportButton) {
+      viewReportButton.addEventListener("click", () => {
+        if (!requireAuth("Ver reportes")) {
+          return;
+        }
+
+        movementPage = 1;
+        renderMovementTable();
+      });
+    }
+    if (printReportButton) {
+      printReportButton.addEventListener("click", () => {
+        if (!requireAuth("Imprimir reportes")) {
+          return;
+        }
+
+        window.print();
+      });
+    }
     logoutButton?.addEventListener("click", () => {
       if (!isAuthenticated()) {
         redirectToLogin();
@@ -948,14 +934,14 @@
       es: {
         pageTitle: "AgroControl | Movimientos",
         nav: { home: "Inicio", about: "Nosotros", inventory: "Inventario", movements: "Movimientos", contact: "Contacto" },
-        auth: { login: "Iniciar sesiÛn", logout: "Cerrar sesiÛn" },
+        auth: { login: "Iniciar sesi√≥n", logout: "Cerrar sesi√≥n" },
         hero: {
           label: "Movimientos",
           title: "Entradas y salidas con trazabilidad operativa.",
-          description: "Registra compras, entregas y ajustes del inventario. Cada movimiento actualiza la cantidad del producto y deja detalle de fecha, responsable y observaciÛn."
+          description: "Registra compras, entregas y ajustes del inventario. Cada movimiento actualiza la cantidad del producto y deja detalle de fecha, responsable y observaci√≥n."
         },
-        preview: { notice: "Est·s en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesiÛn." },
-        messages: { previewAuth: "Esta acciÛn requiere iniciar sesiÛn. Est·s en modo vista previa." }
+        preview: { notice: "Est√°s en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesi√≥n." },
+        messages: { previewAuth: "Esta acci√≥n requiere iniciar sesi√≥n. Est√°s en modo vista previa." }
       },
       en: {
         pageTitle: "AgroControl | Movements",
@@ -979,12 +965,15 @@
     inventoryState = loadInventoryState() || { insumos: [], abonos: [], herramientas: [] };
     movementHistory = loadMovementHistory();
     updateAuthUI();
+    setMovementFormVisibility(false);
+    setAdvancedFiltersVisibility(false);
     clearForm();
     refreshSelectedStock();
     renderMovementTable();
   </script>
 </body>
 </html>
+
 
 
 

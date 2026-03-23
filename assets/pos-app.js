@@ -2,13 +2,13 @@
   const inventoryStateKey = window.AGRO_APP_KEYS.inventoryState;
   const movementsKey = window.AGRO_APP_KEYS.movements;
   const salesKey = window.AGRO_APP_KEYS.sales;
+  const authKey = window.AGRO_APP_KEYS.auth;
   const logoutButton = document.getElementById("logout-button");
   const openCartModalButton = document.getElementById("open-cart-modal");
   const closeCartModalButton = document.getElementById("close-cart-modal");
   const cartModal = document.getElementById("cart-modal");
   const cartCountBadge = document.getElementById("cart-count-badge");
   const productSearch = document.getElementById("product-search");
-  const categoryFilter = document.getElementById("category-filter");
   const productGrid = document.getElementById("product-grid");
   const productPaginationSummary = document.getElementById("product-pagination-summary");
   const productPagination = document.getElementById("product-pagination");
@@ -70,6 +70,26 @@
   let cart = [];
   const productsPerPage = 36;
   let detailProduct = null;
+
+  function getSession() {
+    try {
+      return JSON.parse(safeStorage.getItem(authKey) || "null");
+    } catch {
+      return null;
+    }
+  }
+
+  function isAuthenticated() {
+    return Boolean(getSession());
+  }
+
+  function updateSessionButton() {
+    if (!logoutButton) return;
+    const label = logoutButton.querySelector("span");
+    if (label) {
+      label.textContent = isAuthenticated() ? "Cerrar sesión" : "Iniciar sesión";
+    }
+  }
 
   function openCartModal() {
     cartModal?.classList.remove("hidden");
@@ -211,12 +231,11 @@
   }
 
   function syncCategoryUI() {
-    categoryFilter.value = activeCategory;
     categoryChips.forEach((chip) => {
       const isActive = chip.dataset.category === activeCategory;
       chip.className = isActive
-        ? "category-chip inline-flex items-center gap-2 rounded-full bg-hoja px-4 py-2 text-sm font-semibold text-white shadow-sm"
-        : "category-chip inline-flex items-center gap-2 rounded-full border border-hoja/20 bg-white px-4 py-2 text-sm font-semibold text-hoja";
+        ? "category-chip inline-flex items-center gap-1.5 rounded-full bg-hoja px-3 py-1.5 text-xs font-semibold text-white shadow-sm"
+        : "category-chip inline-flex items-center gap-1.5 rounded-full border border-hoja/20 bg-white px-3 py-1.5 text-xs font-semibold text-hoja";
     });
   }
 
@@ -607,13 +626,6 @@
     });
   });
 
-  categoryFilter.addEventListener("change", () => {
-    activeCategory = categoryFilter.value;
-    currentProductPage = 1;
-    syncCategoryUI();
-    renderProducts();
-  });
-
   productSearch.addEventListener("input", () => {
     currentProductPage = 1;
     renderProducts();
@@ -642,10 +654,17 @@
   });
   confirmSaleButton.addEventListener("click", recordSale);
   logoutButton?.addEventListener("click", () => {
-    safeStorage.removeItem(window.AGRO_APP_KEYS.auth);
-    window.location.href = "login.html";
+    if (!isAuthenticated()) {
+      window.location.href = "login.html?redirect=pos.html";
+      return;
+    }
+
+    safeStorage.removeItem(authKey);
+    updateSessionButton();
+    window.location.href = "pos.html";
   });
 
+  updateSessionButton();
   syncCategoryUI();
   renderProducts();
   renderCart();
