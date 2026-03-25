@@ -207,7 +207,7 @@
       ["HER-010", "Podadora eléctrica", "Manual", "Unidad", "Disponible", "0", "Espada de 18 pulgadas", "$96", "Herramienta base", "und", "Lista para asignación"],
       ["HER-011", "Pulverizador de mano", "Manual", "Unidad", "Disponible", "0", "Depósito de 5 litros", "$21", "Herramienta base", "und", "Lista para asignación"],
       ["HER-012", "Kit de fumigación", "Manual", "Kit", "Disponible", "0", "Kit de boquillas y mangueras", "$49", "Herramienta base", "und", "Lista para asignación"],
-      ["HER-013", "Tractor T90", "Maquinaria", "Máquina", "Disponible", "0", "Motor diésel 90 HP", "$28500", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-013", "Tractor de arado", "Maquinaria", "Máquina", "Disponible", "0", "Motor diésel 90 HP para labores de arado", "$28500", "Equipo base", "und", "Programar mantenimiento"],
       ["HER-014", "Cultivadora C200", "Maquinaria", "Máquina", "Disponible", "0", "Ancho de trabajo de 2 m", "$8900", "Equipo base", "und", "Programar mantenimiento"],
       ["HER-015", "Desbrozadora D55", "Maquinaria", "Máquina", "Disponible", "0", "Motor de 55 cc", "$620", "Equipo base", "und", "Programar mantenimiento"],
       ["HER-016", "Arado liviano", "Maquinaria", "Equipo", "Disponible", "0", "Ancho de 3 discos", "$1980", "Equipo base", "und", "Programar mantenimiento"],
@@ -555,7 +555,7 @@
 
       try {
         const parsed = JSON.parse(raw);
-        return parsed && typeof parsed === "object" ? parsed : null;
+        return parsed && typeof parsed === "object" ? normalizeInventoryState(parsed) : null;
       } catch {
         return null;
       }
@@ -567,6 +567,29 @@
         abonos,
         herramientas
       }));
+    }
+
+    function normalizeInventoryState(state) {
+      if (!state || typeof state !== "object") return state;
+
+      const nextState = {
+        insumos: Array.isArray(state.insumos) ? state.insumos.map((row) => [...row]) : [],
+        abonos: Array.isArray(state.abonos) ? state.abonos.map((row) => [...row]) : [],
+        herramientas: Array.isArray(state.herramientas) ? state.herramientas.map((row) => [...row]) : []
+      };
+
+      nextState.herramientas = nextState.herramientas.map((row) => {
+        if (row[0] !== "HER-013") return row;
+
+        const updatedRow = [...row];
+        updatedRow[1] = "Tractor de arado";
+        if (updatedRow[6] === "Motor diésel 90 HP" || updatedRow[6] === "Motor di\u00E9sel 90 HP") {
+          updatedRow[6] = "Motor diésel 90 HP para labores de arado";
+        }
+        return updatedRow;
+      });
+
+      return nextState;
     }
 
     function loadMovementHistory() {

@@ -27,8 +27,6 @@
   const confirmSaleButton = document.getElementById("confirm-sale");
   const saleForm = document.getElementById("sale-form");
   const clearCartButton = document.getElementById("clear-cart");
-  const recentSales = document.getElementById("recent-sales");
-  const salesCounter = document.getElementById("sales-counter");
   const categoryChips = Array.from(document.querySelectorAll(".category-chip"));
   const productDetailModal = document.getElementById("product-detail-modal");
   const closeProductDetailButton = document.getElementById("close-product-detail");
@@ -162,7 +160,7 @@
     try {
       const parsed = JSON.parse(safeStorage.getItem(inventoryStateKey) || "null");
       if (parsed?.insumos && parsed?.abonos && parsed?.herramientas) {
-        return parsed;
+        return normalizeInventoryState(parsed);
       }
     } catch {}
 
@@ -175,6 +173,29 @@
 
   function saveInventoryState() {
     safeStorage.setItem(inventoryStateKey, JSON.stringify(inventoryState));
+  }
+
+  function normalizeInventoryState(state) {
+    if (!state || typeof state !== "object") return state;
+
+    const nextState = {
+      insumos: Array.isArray(state.insumos) ? state.insumos.map((row) => [...row]) : [],
+      abonos: Array.isArray(state.abonos) ? state.abonos.map((row) => [...row]) : [],
+      herramientas: Array.isArray(state.herramientas) ? state.herramientas.map((row) => [...row]) : []
+    };
+
+    nextState.herramientas = nextState.herramientas.map((row) => {
+      if (row[0] !== "HER-013") return row;
+
+      const updatedRow = [...row];
+      updatedRow[1] = "Tractor de arado";
+      if (updatedRow[6] === "Motor diésel 90 HP" || updatedRow[6] === "Motor di\u00E9sel 90 HP") {
+        updatedRow[6] = "Motor diésel 90 HP para labores de arado";
+      }
+      return updatedRow;
+    });
+
+    return nextState;
   }
 
   function loadSalesHistory() {
@@ -622,37 +643,8 @@
     inventoryState = loadInventoryState();
     renderProducts();
     renderCart();
-    renderRecentSales();
     closeCartModal();
     alert(t("alerts.saleRecorded").replace("{saleNumber}", saleNumber));
-  }
-
-  function renderRecentSales() {
-    salesCounter.textContent = t("dynamic.salesCount").replace("{count}", String(salesHistory.length));
-
-    if (salesHistory.length === 0) {
-      recentSales.innerHTML = `
-        <div class="rounded-[1.5rem] border border-dashed border-slate-300 bg-crema/70 px-4 py-6 text-sm text-slate-500">
-          ${t("dynamic.noSalesYet")}
-        </div>
-      `;
-      return;
-    }
-
-    recentSales.innerHTML = salesHistory.slice(0, 4).map((sale) => `
-      <article class="rounded-[1.5rem] border border-slate-200 bg-crema/70 p-4">
-        <div class="flex items-start justify-between gap-3">
-          <div>
-            <p class="text-sm font-black text-slate-900">${sale.number}</p>
-            <p class="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-hoja/70">${paymentLabel(sale.payment)}</p>
-          </div>
-          <p class="text-sm font-bold text-hoja">${formatCurrency(sale.total)}</p>
-        </div>
-        <p class="mt-3 text-sm text-slate-700">${sale.customer}</p>
-        <p class="mt-1 text-xs text-slate-500">${sale.date} - ${t("dynamic.saleItems").replace("{count}", String(sale.items.length))}</p>
-        <p class="mt-3 text-sm text-slate-600">${sale.note}</p>
-      </article>
-    `).join("");
   }
 
   function applyDynamicTranslations() {
@@ -671,13 +663,27 @@
     syncCategoryUI();
     renderProducts();
     renderCart();
-    renderRecentSales();
     if (detailProduct) {
       openProductDetail(findProduct(detailProduct.category, detailProduct.id) || detailProduct);
     }
   }
 
   window.refreshPosLanguage = applyLanguage;
+
+  function refreshInventoryFromStorage() {
+    inventoryState = loadInventoryState();
+    renderProducts();
+    renderCart();
+
+    if (detailProduct) {
+      const refreshedProduct = findProduct(detailProduct.category, detailProduct.id);
+      if (refreshedProduct) {
+        openProductDetail(refreshedProduct);
+      } else {
+        closeProductDetail();
+      }
+    }
+  }
 
   categoryChips.forEach((chip) => {
     chip.addEventListener("click", () => {
@@ -727,6 +733,12 @@
     safeStorage.removeItem(authKey);
     updateSessionButton();
     window.location.href = "pos.html";
+  });
+
+  window.addEventListener("storage", (event) => {
+    if (event.key === inventoryStateKey) {
+      refreshInventoryFromStorage();
+    }
   });
 
   applyLanguage(currentLanguage);
