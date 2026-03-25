@@ -1,6 +1,6 @@
 (() => {
   const defaultAuthTranslations = {
-    es: { login: "Iniciar sesión", logout: "Cerrar sesión" },
+    es: { login: "Iniciar sesi\u00f3n", logout: "Cerrar sesi\u00f3n" },
     en: { login: "Log in", logout: "Log out" }
   };
 
@@ -10,6 +10,15 @@
     } catch {
       return null;
     }
+  }
+
+  function savePublicSession(authKey, session) {
+    if (!session) {
+      safeStorage.removeItem(authKey);
+      return;
+    }
+
+    safeStorage.setItem(authKey, JSON.stringify(session));
   }
 
   window.initPublicAuth = function initPublicAuth(options = {}) {
@@ -29,6 +38,7 @@
     };
     const loginRedirect = options.loginRedirect || routes.inventory;
     const languageStorageKey = options.languageStorageKey || "agrocontrol-language";
+    const appBasePath = window.location.pathname.replace(/\/$/, "").replace(/\/(?:index|nosotros|contacto|login|pos|inventario|movimientos)(?:\.html)?$/, "");
 
     const loginLink = document.querySelector(loginSelector);
     const routeElements = {
@@ -37,12 +47,28 @@
       pos: document.querySelector(routeSelectors.pos)
     };
 
+    function apiUrl(path) {
+      return `${window.location.origin}${appBasePath}${path}`;
+    }
+
     function isAuthenticated() {
       return Boolean(getPublicSession(authKey));
     }
 
-    function buildRoute(target, authenticated) {
-      return authenticated ? target : `login.html?redirect=${target}`;
+    function isAdminSession() {
+      return getPublicSession(authKey)?.role === "admin";
+    }
+
+    function buildRoute(target, authenticated, requiresAdmin = false) {
+      if (!authenticated) {
+        return `login.html?redirect=${target}`;
+      }
+
+      if (requiresAdmin && !isAdminSession()) {
+        return "pos.html";
+      }
+
+      return target;
     }
 
     function update(lang = "es") {
@@ -50,6 +76,7 @@
 
       const copy = translations[lang] || translations.es || defaultAuthTranslations.es;
       const authenticated = isAuthenticated();
+      const adminSession = isAdminSession();
       const loginText = loginLink.querySelector("[data-i18n-text]");
 
       if (loginText) {
@@ -62,20 +89,57 @@
 
       Object.entries(routeElements).forEach(([key, element]) => {
         if (!element || !routes[key]) return;
-        element.setAttribute("href", buildRoute(routes[key], authenticated));
+        const requiresAdmin = key === "inventory" || key === "movements";
+        if (requiresAdmin) {
+          const shouldHide = !authenticated || !adminSession;
+          element.classList.toggle("hidden", shouldHide);
+          if (shouldHide) {
+            return;
+          }
+        }
+        element.setAttribute("href", buildRoute(routes[key], authenticated, requiresAdmin));
       });
     }
 
+    async function syncSession(lang = "es") {
+      try {
+        const response = await fetch(apiUrl("/api/session"), {
+          headers: { Accept: "application/json" }
+        });
+        const payload = await response.json();
+        savePublicSession(authKey, payload?.data || null);
+      } catch {
+        // Keep the last known client state if the session check fails.
+      }
+
+      update(lang);
+    }
+
+    async function logout(lang = "es") {
+      try {
+        await fetch(apiUrl("/api/logout"), {
+          method: "POST",
+          headers: { Accept: "application/json" }
+        });
+      } catch {
+        // Clear local state even if the server is temporarily unreachable.
+      }
+
+      savePublicSession(authKey, null);
+      update(lang);
+    }
+
     if (loginLink && !loginLink.dataset.publicAuthBound) {
-      loginLink.addEventListener("click", (event) => {
+      loginLink.addEventListener("click", async (event) => {
         if (!isAuthenticated()) return;
         event.preventDefault();
-        safeStorage.removeItem(authKey);
-        update(safeStorage.getItem(languageStorageKey) || "es");
+        await logout(safeStorage.getItem(languageStorageKey) || "es");
       });
       loginLink.dataset.publicAuthBound = "true";
     }
 
-    return { update, isAuthenticated };
+    syncSession(safeStorage.getItem(languageStorageKey) || "es");
+
+    return { update, isAuthenticated, syncSession, logout };
   };
 })();

@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -88,7 +88,7 @@
       </nav>
       <div class="flex items-center gap-2">
         <div class="hidden items-center gap-1 rounded-full border border-hoja/15 bg-gradient-to-r from-white via-crema to-white p-1.5 shadow-[0_10px_30px_rgba(62,107,72,0.14)] md:flex">
-          <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-hoja transition duration-200 hover:bg-white/80" data-lang="es" aria-label="Cambiar a espaÃ±ol">
+          <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-hoja transition duration-200 hover:bg-white/80" data-lang="es" aria-label="Cambiar a español">
             <svg class="h-4 w-4 flex-shrink-0 stroke-current stroke-[1.8]" fill="none" viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="12" cy="12" r="8.25"/>
               <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5M12 3.75c2.15 2.2 3.35 5.1 3.35 8.25S14.15 18.05 12 20.25c-2.15-2.2-3.35-5.1-3.35-8.25S9.85 5.95 12 3.75Z"/>
@@ -116,7 +116,7 @@
             <circle cx="12" cy="8.25" r="3"/>
             <path stroke-linecap="round" stroke-linejoin="round" d="M5.75 19c1.45-2.95 3.95-4.5 6.25-4.5s4.8 1.55 6.25 4.5"/>
           </svg>
-          <span data-i18n="actions.logout"><span data-i18n-text>Cerrar sesiÃ³n</span></span>
+          <span data-i18n="actions.logout"><span data-i18n-text>Cerrar sesión</span></span>
         </button>
       </div>
     </div>
@@ -210,16 +210,26 @@
               <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/45" data-i18n="checkout.label">Datos de cobro</p>
               <div class="mt-4 grid gap-3">
                 <label class="block">
-                  <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-white/55" data-i18n="checkout.customer">Cliente</span>
-                  <input id="sale-customer" type="text" class="w-full rounded-[1rem] border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none transition focus:border-sol/45 focus:bg-white/14 placeholder:text-white/35" placeholder="Cliente ocasional o nombre" data-i18n-placeholder="checkout.customerPlaceholder" autocomplete="name">
+                  <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-white/55" data-i18n="checkout.customer">Cuenta cliente</span>
+                  <select id="customer-account-select" class="w-full appearance-none rounded-[1rem] border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none transition focus:border-sol/45 focus:bg-white/14">
+                    <option value="" class="bg-slate-900 text-white">Selecciona una cuenta cliente</option>
+                  </select>
                 </label>
+                <div class="flex flex-col gap-2 rounded-[1rem] border border-dashed border-white/10 bg-white/5 p-3">
+                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <p class="text-xs text-white/65" data-i18n="checkout.accountHint">Debes crear o elegir una cuenta cliente para habilitar la compra.</p>
+                    <button id="open-customer-account-modal" type="button" class="inline-flex items-center justify-center gap-2 rounded-full border border-sol/40 bg-sol/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-sol transition hover:bg-sol hover:text-slate-950" data-i18n="checkout.createAccount">Crear cuenta</button>
+                  </div>
+                  <p id="selected-customer-summary" class="text-xs text-white/55" data-i18n="checkout.noAccountSelected">Aun no has seleccionado una cuenta.</p>
+                </div>
                 <div class="grid gap-3 sm:grid-cols-2 md:grid-cols-1">
                   <label class="block">
                     <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-white/55" data-i18n="checkout.payment">Pago</span>
                     <select id="payment-method" class="w-full appearance-none rounded-[1rem] border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none transition focus:border-sol/45 focus:bg-white/14">
                       <option value="cash" class="bg-slate-900 text-white" data-i18n="checkout.paymentCash">Efectivo</option>
+                      <option value="cards" class="bg-slate-900 text-white" data-i18n="checkout.paymentCards">Tarjetas</option>
+                      <option value="paypal" class="bg-slate-900 text-white" data-i18n="checkout.paymentPayPal">PayPal</option>
                       <option value="transfer" class="bg-slate-900 text-white" data-i18n="checkout.paymentTransfer">Transferencia</option>
-                      <option value="card" class="bg-slate-900 text-white" data-i18n="checkout.paymentCard">Tarjeta</option>
                     </select>
                   </label>
                   <label class="block">
@@ -268,6 +278,47 @@
     </div>
   </div>
 
+  <div id="customer-account-modal" class="fixed inset-0 z-40 hidden bg-slate-950/55 px-3 py-3 backdrop-blur-[2px] md:px-4 md:py-4">
+    <div class="mx-auto flex max-h-[calc(100vh-1.5rem)] w-full max-w-lg flex-col overflow-hidden rounded-[1.7rem] border border-white/15 bg-white shadow-[0_24px_55px_rgba(15,23,42,0.20)] md:max-h-[calc(100vh-2rem)]">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-100 px-4 py-4 md:px-5">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.24em] text-hoja/70" data-i18n="accountModal.label">Cuenta cliente</p>
+          <h2 class="mt-2 text-xl font-black text-slate-900" data-i18n="accountModal.title">Crear cuenta para comprar</h2>
+          <p class="mt-1.5 text-sm text-slate-600" data-i18n="accountModal.description">Registra una cuenta basica y usala en el checkout del POS.</p>
+        </div>
+        <button id="close-customer-account-modal" type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:border-hoja hover:text-hoja" aria-label="Cerrar formulario de cuenta">
+          <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6-5.6 5.6L5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>
+        </button>
+      </div>
+      <form id="customer-account-form" class="flex flex-1 flex-col gap-4 px-4 py-4 md:px-5 md:py-5">
+        <label class="block">
+          <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-slate-500" data-i18n="accountModal.name">Nombre completo</span>
+          <input id="customer-account-name" type="text" class="w-full rounded-[1rem] border border-slate-200 bg-crema px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-hoja focus:bg-white" placeholder="Ej: Maria Lopez" data-i18n-placeholder="accountModal.namePlaceholder" autocomplete="name">
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-slate-500" data-i18n="accountModal.email">Correo</span>
+          <input id="customer-account-email" type="email" class="w-full rounded-[1rem] border border-slate-200 bg-crema px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-hoja focus:bg-white" placeholder="cliente@correo.com" data-i18n-placeholder="accountModal.emailPlaceholder" autocomplete="email">
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-slate-500" data-i18n="accountModal.phone">Telefono</span>
+          <input id="customer-account-phone" type="text" class="w-full rounded-[1rem] border border-slate-200 bg-crema px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-hoja focus:bg-white" placeholder="0999999999" data-i18n-placeholder="accountModal.phonePlaceholder" autocomplete="tel">
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-slate-500" data-i18n="accountModal.password">Contrasena</span>
+          <input id="customer-account-password" type="password" class="w-full rounded-[1rem] border border-slate-200 bg-crema px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-hoja focus:bg-white" placeholder="Minimo 6 caracteres" data-i18n-placeholder="accountModal.passwordPlaceholder" autocomplete="new-password">
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-slate-500" data-i18n="accountModal.passwordConfirm">Confirmar contrasena</span>
+          <input id="customer-account-password-confirm" type="password" class="w-full rounded-[1rem] border border-slate-200 bg-crema px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-hoja focus:bg-white" placeholder="Repite tu contrasena" data-i18n-placeholder="accountModal.passwordConfirmPlaceholder" autocomplete="new-password">
+        </label>
+        <p class="rounded-[1rem] bg-crema px-4 py-3 text-xs leading-6 text-slate-600" data-i18n="accountModal.helper">Al crear la cuenta tambien se iniciara sesion para continuar tu compra.</p>
+        <div class="mt-auto flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <button id="cancel-customer-account-modal" type="button" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700" data-i18n="accountModal.cancel">Cancelar</button>
+          <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-full bg-hoja px-5 py-3 text-sm font-semibold text-white shadow-suave" data-i18n="accountModal.submit">Guardar cuenta</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <div id="product-detail-modal" class="fixed inset-0 z-40 hidden bg-slate-950/50 px-3 py-3 backdrop-blur-[2px] md:px-4 md:py-4">
     <div class="mx-auto flex max-h-[calc(100vh-1.5rem)] w-full max-w-2xl flex-col overflow-hidden rounded-[1.7rem] border border-white/15 bg-white shadow-[0_24px_55px_rgba(15,23,42,0.20)] md:max-h-[calc(100vh-2rem)]">
       <div class="flex items-start justify-between gap-4 border-b border-slate-100 px-4 py-4 md:px-5">
@@ -338,7 +389,7 @@
           <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.5L3 20.8l1.6-4.7a8.5 8.5 0 1 1 15.9-4.3Zm-8.5-6.8a6.8 6.8 0 0 0-5.8 10.4l.4.7-.9 2.5 2.6-.8.6.4A6.8 6.8 0 1 0 12 5Zm3.9 8.7c-.2-.1-1.2-.6-1.4-.7s-.3-.1-.4.1-.5.7-.6.8-.2.1-.4 0a5.5 5.5 0 0 1-1.6-1 6 6 0 0 1-1.1-1.4c-.1-.2 0-.3.1-.4l.3-.4.2-.3v-.3c0-.1-.4-1-.6-1.5s-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3s-.8.8-.8 1.9.8 2.2.9 2.4a10.2 10.2 0 0 0 3.9 3.5c.6.2 1 .4 1.3.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5 .2-1 .2-1.1 0-.1-.1-.2-.3-.3Z"/></svg>
         </a>
       </div>
-      <p class="max-w-2xl text-sm leading-6 text-white/70" data-i18n="footer.description">AgroControl. GestiÃ³n corporativa e inventario para productos agrÃ­colas.</p>
+      <p class="max-w-2xl text-sm leading-6 text-white/70" data-i18n="footer.description">AgroControl. Gestión corporativa e inventario para productos agrícolas.</p>
       <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-7 w-auto opacity-90">
     </div>
   </footer>
@@ -348,18 +399,19 @@
       es: {
         pageTitle: "AgroControl | Punto de Venta",
         nav: { home: "Inicio", about: "Nosotros", inventory: "Inventario", movements: "Movimientos", pos: "POS", contact: "Contacto" },
-        actions: { openCart: "Abrir carrito", closeCart: "Cerrar carrito", closeDetail: "Cerrar detalle", logout: "Cerrar sesiÃ³n", login: "Iniciar sesiÃ³n" },
+        actions: { openCart: "Abrir carrito", closeCart: "Cerrar carrito", closeDetail: "Cerrar detalle", logout: "Cerrar sesión", login: "Iniciar sesión" },
         search: { placeholder: "Codigo o nombre del producto" },
         filters: { all: "Todos", inputs: "Insumos", fertilizers: "Abonos", tools: "Herramientas" },
         products: { summaryEmpty: "Mostrando 0 productos." },
         sales: { label: "Ultimas ventas", title: "Historial reciente" },
         cart: { label: "Carrito", title: "Venta actual", emptyStatus: "No hay productos agregados.", clear: "Vaciar", products: "Productos", adjustHint: "Ajusta cantidades aqui" },
-        checkout: { label: "Datos de cobro", customer: "Cliente", customerPlaceholder: "Cliente ocasional o nombre", payment: "Pago", paymentCash: "Efectivo", paymentTransfer: "Transferencia", paymentCard: "Tarjeta", discount: "Descuento", note: "Nota", notePlaceholder: "Observacion de la venta", footerHint: "Revisa cantidades y confirma la venta cuando este lista.", confirm: "Confirmar venta" },
+        checkout: { label: "Datos de cobro", customer: "Cuenta cliente", customerSelect: "Selecciona una cuenta cliente", accountHint: "Debes crear o elegir una cuenta cliente para habilitar la compra.", createAccount: "Crear cuenta", noAccountSelected: "Aun no has seleccionado una cuenta.", payment: "Pago", paymentCash: "Efectivo", paymentCards: "Tarjetas", paymentPayPal: "PayPal", paymentTransfer: "Transferencia", discount: "Descuento", note: "Nota", notePlaceholder: "Observacion de la venta", footerHint: "Revisa cantidades y confirma la venta cuando este lista.", confirm: "Confirmar compra" },
         summary: { label: "Resumen", subtotal: "Subtotal", discount: "Descuento", total: "Total a cobrar" },
         detail: { label: "Detalle del producto", subtitle: "Informacion del producto seleccionado.", productAlt: "Producto", code: "Codigo", stock: "Stock", category: "Categoria", presentation: "Presentacion", usage: "Uso sugerido", price: "Precio", addToCart: "Agregar al carrito" },
-        dynamic: { unitsAvailable: "{count} unidades disponibles", productReady: "Producto listo para venta.", noMatchingProducts: "No hay productos que coincidan con la busqueda actual.", showingRangeZero: "Mostrando 0-0 de 0 productos", showingRange: "Mostrando {start}-{end} de {total} productos", outOfStock: "Sin stock", unitsShort: "{count} und", add: "Agregar", previous: "Anterior", next: "Siguiente", addProductsToStart: "Agrega productos desde el catalogo para iniciar una venta.", unitPrice: "Unitario", cartStatus: "{products} productos - {units} unidades en venta", saleRecordedNote: "Venta registrada en {saleNumber}", walkInCustomer: "Cliente ocasional", salesCount: "{count} ventas", noSalesYet: "Aun no hay ventas registradas desde este punto de venta.", saleItems: "{count} productos" },
-        alerts: { maxStock: "No puedes agregar mas unidades que el stock disponible.", quantityExceedsStock: "La cantidad supera el stock disponible.", addProductFirst: "Agrega al menos un producto al carrito.", productUnavailable: "El producto {name} ya no esta disponible.", productQuantityExceeds: "La cantidad de {name} supera el stock disponible.", saleRecorded: "Venta {saleNumber} registrada correctamente." },
-        footer: { description: "AgroControl. GestiÃ³n corporativa e inventario para productos agrÃ­colas." }
+        dynamic: { unitsAvailable: "{count} unidades disponibles", productReady: "Producto listo para venta.", noMatchingProducts: "No hay productos que coincidan con la busqueda actual.", showingRangeZero: "Mostrando 0-0 de 0 productos", showingRange: "Mostrando {start}-{end} de {total} productos", outOfStock: "Sin stock", unitsShort: "{count} und", add: "Agregar", previous: "Anterior", next: "Siguiente", addProductsToStart: "Agrega productos desde el catalogo para iniciar una venta.", unitPrice: "Unitario", cartStatus: "{products} productos - {units} unidades en venta", saleRecordedNote: "Venta registrada en {saleNumber}", salesCount: "{count} ventas", noSalesYet: "Aun no hay ventas registradas desde este punto de venta.", saleItems: "{count} productos", selectedAccount: "Cuenta activa: {name}", accountCode: "Codigo {code}" },
+        alerts: { maxStock: "No puedes agregar mas unidades que el stock disponible.", quantityExceedsStock: "La cantidad supera el stock disponible.", addProductFirst: "Agrega al menos un producto al carrito.", productUnavailable: "El producto {name} ya no esta disponible.", productQuantityExceeds: "La cantidad de {name} supera el stock disponible.", selectCustomerAccount: "Debes crear o seleccionar una cuenta cliente antes de confirmar la venta.", accountNameRequired: "Ingresa el nombre completo del cliente para crear la cuenta.", accountEmailRequired: "Ingresa un correo electronico valido para la cuenta cliente.", accountPasswordRequired: "La contrasena debe tener al menos 6 caracteres.", accountPasswordMismatch: "Las contrasenas no coinciden.", accountCreated: "Cuenta {name} creada correctamente.", saleRecorded: "Venta {saleNumber} registrada correctamente." },
+        accountModal: { label: "Cuenta cliente", title: "Crear cuenta para comprar", description: "Registra una cuenta basica y usala en el checkout del POS.", name: "Nombre completo", namePlaceholder: "Ej: Maria Lopez", email: "Correo", emailPlaceholder: "cliente@correo.com", phone: "Telefono", phonePlaceholder: "0999999999", password: "Contrasena", passwordPlaceholder: "Minimo 6 caracteres", passwordConfirm: "Confirmar contrasena", passwordConfirmPlaceholder: "Repite tu contrasena", helper: "Al crear la cuenta quedara disponible para tus compras en linea.", cancel: "Cancelar", submit: "Crear cuenta" },
+        footer: { description: "AgroControl. Gestión corporativa e inventario para productos agrícolas." }
       },
       en: {
         pageTitle: "AgroControl | Point of Sale",
@@ -370,12 +422,12 @@
         products: { summaryEmpty: "Showing 0 products." },
         sales: { label: "Latest sales", title: "Recent history" },
         cart: { label: "Cart", title: "Current sale", emptyStatus: "No products added.", clear: "Clear", products: "Products", adjustHint: "Adjust quantities here" },
-        checkout: { label: "Checkout details", customer: "Customer", customerPlaceholder: "Walk-in customer or name", payment: "Payment", paymentCash: "Cash", paymentTransfer: "Transfer", paymentCard: "Card", discount: "Discount", note: "Note", notePlaceholder: "Sale note", footerHint: "Review quantities and confirm the sale when ready.", confirm: "Confirm sale" },
+        checkout: { label: "Checkout details", customer: "Customer account", customerSelect: "Select a customer account", accountHint: "Create or choose a customer account to enable checkout.", createAccount: "Create account", noAccountSelected: "No account has been selected yet.", payment: "Payment", paymentCash: "Cash", paymentCards: "Cards", paymentPayPal: "PayPal", paymentTransfer: "Transfer", discount: "Discount", note: "Note", notePlaceholder: "Sale note", footerHint: "Review quantities and confirm the sale when ready.", confirm: "Confirm purchase" },
         summary: { label: "Summary", subtotal: "Subtotal", discount: "Discount", total: "Total to charge" },
         detail: { label: "Product detail", subtitle: "Selected product information.", productAlt: "Product", code: "Code", stock: "Stock", category: "Category", presentation: "Presentation", usage: "Suggested use", price: "Price", addToCart: "Add to cart" },
-        dynamic: { unitsAvailable: "{count} units available", productReady: "Product ready for sale.", noMatchingProducts: "No products match the current search.", showingRangeZero: "Showing 0-0 of 0 products", showingRange: "Showing {start}-{end} of {total} products", outOfStock: "Out of stock", unitsShort: "{count} pcs", add: "Add", previous: "Previous", next: "Next", addProductsToStart: "Add products from the catalog to start a sale.", unitPrice: "Unit price", cartStatus: "{products} products - {units} units in sale", saleRecordedNote: "Sale recorded in {saleNumber}", walkInCustomer: "Walk-in customer", salesCount: "{count} sales", noSalesYet: "No sales have been recorded from this point of sale yet.", saleItems: "{count} products" },
-        alerts: { maxStock: "You cannot add more units than available stock.", quantityExceedsStock: "The quantity exceeds available stock.", addProductFirst: "Add at least one product to the cart.", productUnavailable: "Product {name} is no longer available.", productQuantityExceeds: "The quantity for {name} exceeds available stock.", saleRecorded: "Sale {saleNumber} recorded successfully." },
-        footer: { description: "AgroControl. Corporate management and inventory for agricultural products." }
+        dynamic: { unitsAvailable: "{count} units available", productReady: "Product ready for sale.", noMatchingProducts: "No products match the current search.", showingRangeZero: "Showing 0-0 of 0 products", showingRange: "Showing {start}-{end} of {total} products", outOfStock: "Out of stock", unitsShort: "{count} pcs", add: "Add", previous: "Previous", next: "Next", addProductsToStart: "Add products from the catalog to start a sale.", unitPrice: "Unit price", cartStatus: "{products} products - {units} units in sale", saleRecordedNote: "Sale recorded in {saleNumber}", salesCount: "{count} sales", noSalesYet: "No sales have been recorded from this point of sale yet.", saleItems: "{count} products", selectedAccount: "Active account: {name}", accountCode: "Code {code}" },
+        alerts: { maxStock: "You cannot add more units than available stock.", quantityExceedsStock: "The quantity exceeds available stock.", addProductFirst: "Add at least one product to the cart.", productUnavailable: "Product {name} is no longer available.", productQuantityExceeds: "The quantity for {name} exceeds available stock.", selectCustomerAccount: "Create or select a customer account before confirming the sale.", accountNameRequired: "Enter the customer full name to create the account.", accountEmailRequired: "Enter a valid email for the customer account.", accountPasswordRequired: "The password must have at least 6 characters.", accountPasswordMismatch: "Passwords do not match.", accountCreated: "Account {name} created successfully.", saleRecorded: "Sale {saleNumber} recorded successfully." },
+        accountModal: { label: "Customer account", title: "Create account to buy", description: "Register a basic account and use it in the POS checkout.", name: "Full name", namePlaceholder: "Ex: Maria Lopez", email: "Email", emailPlaceholder: "customer@mail.com", phone: "Phone", phonePlaceholder: "0999999999", password: "Password", passwordPlaceholder: "At least 6 characters", passwordConfirm: "Confirm password", passwordConfirmPlaceholder: "Repeat your password", helper: "When the account is created, it will be available for your online purchases.", cancel: "Cancel", submit: "Create account" }, footer: { description: "AgroControl. Corporate management and inventory for agricultural products." }
       }
     };
   </script>
@@ -389,4 +441,8 @@
   </script>
 </body>
 </html>
+
+
+
+
 

@@ -1,4 +1,4 @@
-Ôªø<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -29,7 +29,12 @@
   <script src="assets/i18n-helper.js"></script>
   <script>
     const agroAuthKey = window.AGRO_APP_KEYS.auth;
+    const appBasePath = window.location.pathname.replace(/\/$/, "").replace(/\/(?:movimientos(?:\.html)?)$/, "");
     let currentMovementsLanguage = safeStorage.getItem(window.AGRO_APP_KEYS.language) || "es";
+
+    function apiUrl(path) {
+      return `${window.location.origin}${appBasePath}${path}`;
+    }
 
     function getMovementsText(key, fallback) {
       if (!window.movementsTranslations) {
@@ -47,8 +52,63 @@
       }
     }
 
+    function saveAgroSession(session) {
+      if (!session) {
+        safeStorage.removeItem(agroAuthKey);
+        return;
+      }
+
+      safeStorage.setItem(agroAuthKey, JSON.stringify(session));
+    }
+
     function isAuthenticated() {
       return Boolean(getAgroSession());
+    }
+
+    function isAdminSession() {
+      return getAgroSession()?.role === "admin";
+    }
+
+    async function fetchJson(path, options = {}) {
+      let response;
+      try {
+        response = await fetch(apiUrl(path), {
+          headers: {
+            "Content-Type": "application/json",
+            ...(options.headers || {})
+          },
+          ...options
+        });
+      } catch {
+        throw new Error("No se pudo conectar con el servidor.");
+      }
+
+      const rawText = await response.text();
+      let payload;
+      try {
+        payload = JSON.parse(rawText);
+      } catch {
+        payload = { status: "error", message: rawText || "No se pudo completar la solicitud." };
+      }
+
+      if (!response.ok || payload.status === "error") {
+        throw new Error(payload.message || "No se pudo completar la solicitud.");
+      }
+
+      return payload.data;
+    }
+    async function syncAgroSession() {
+      try {
+        const response = await fetch(apiUrl("/api/session"), {
+          headers: { Accept: "application/json" }
+        });
+        const payload = await response.json();
+        saveAgroSession(payload?.data || null);
+      } catch {
+        // Keep the last client state if the sync fails.
+      }
+
+      return getAgroSession();
     }
 
     function redirectToLogin() {
@@ -56,19 +116,41 @@
       window.location.href = `login.html?redirect=${nextPage}`;
     }
 
+    function redirectToPublicArea() {
+      window.location.href = "pos.html";
+    }
+
     function requireAuth(actionLabel) {
       if (isAuthenticated()) {
         return true;
       }
 
-      alert(getMovementsText("messages.previewAuth", `${actionLabel} requiere iniciar sesi√≥n. Est√°s en modo vista previa.`));
+      alert(getMovementsText("messages.previewAuth", `${actionLabel} requiere iniciar sesiÛn. Est·s en modo vista previa.`));
       redirectToLogin();
       return false;
     }
 
-    if (!isAuthenticated()) {
-      redirectToLogin();
+    function requireAdminAccess() {
+      if (!isAuthenticated()) {
+        redirectToLogin();
+        return false;
+      }
+
+      if (isAdminSession()) {
+        return true;
+      }
+
+      alert(getMovementsText("messages.adminOnly", "Solo los administradores pueden acceder a este panel."));
+      redirectToPublicArea();
+      return false;
     }
+
+    (async () => {
+      await syncAgroSession();
+      if (!requireAdminAccess()) {
+        document.documentElement.innerHTML = "";
+      }
+    })();
   </script>
 </head>
 <body class="flex min-h-screen flex-col bg-crema text-slate-800">
@@ -122,10 +204,10 @@
             <circle cx="12" cy="8.25" r="3"/>
             <path stroke-linecap="round" stroke-linejoin="round" d="M5.75 19c1.45-2.95 3.95-4.5 6.25-4.5s4.8 1.55 6.25 4.5"/>
           </svg>
-          <span data-i18n-text>Iniciar sesi√≥n</span>
+          <span data-i18n-text>Iniciar sesiÛn</span>
         </button>
         <div class="hidden items-center gap-1 rounded-full border border-hoja/15 bg-gradient-to-r from-white via-crema to-white p-1.5 shadow-[0_10px_30px_rgba(62,107,72,0.14)] md:flex">
-          <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-hoja transition duration-200 hover:bg-white/80" data-lang="es" aria-label="Cambiar a espa√±ol">
+          <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-hoja transition duration-200 hover:bg-white/80" data-lang="es" aria-label="Cambiar a espaÒol">
             <svg class="h-4 w-4 flex-shrink-0 stroke-current stroke-[1.8]" fill="none" viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="12" cy="12" r="8.25"/>
               <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5M12 3.75c2.15 2.2 3.35 5.1 3.35 8.25S14.15 18.05 12 20.25c-2.15-2.2-3.35-5.1-3.35-8.25S9.85 5.95 12 3.75Z"/>
@@ -146,7 +228,7 @@
 
   <main class="mx-auto max-w-7xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
     <section id="preview-notice" class="hidden mt-6 rounded-[2rem] border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-900 shadow-sm">
-      <span data-i18n="preview.notice">Est√°s en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesi√≥n.</span>
+      <span data-i18n="preview.notice">Est·s en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesiÛn.</span>
     </section>
 
     <section class="mt-4 space-y-6">
@@ -175,7 +257,7 @@
         <div id="movement-form-panel" class="hidden">
         <form id="movement-form" class="mt-4 grid gap-4 border-t border-slate-100 pt-4 md:grid-cols-2">
             <label class="block">
-              <span class="mb-1 block text-sm font-semibold text-slate-700">Categor√≠a</span>
+              <span class="mb-1 block text-sm font-semibold text-slate-700">CategorÌa</span>
               <select id="movement-category" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja">
                 <option value="insumos">Insumos</option>
                 <option value="abonos">Abonos</option>
@@ -211,7 +293,7 @@
             </label>
             <label class="block">
               <span class="mb-1 block text-sm font-semibold text-slate-700">Responsable</span>
-              <input id="movement-responsible" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="Qui√©n recibi√≥ o qui√©n se lo llev√≥">
+              <input id="movement-responsible" type="text" class="w-full rounded-xl border border-slate-200 bg-crema px-3 py-2.5 text-sm outline-none focus:border-hoja" placeholder="QuiÈn recibiÛ o quiÈn se lo llevÛ">
             </label>
             <label class="block">
               <span class="mb-1 block text-sm font-semibold text-slate-700">Proveedor</span>
@@ -251,7 +333,7 @@
               <input id="filter-product" type="text" class="w-full rounded-lg border border-slate-200 bg-crema px-3 py-2 text-sm outline-none focus:border-hoja" placeholder="Buscar por nombre o ID">
             </label>
             <label class="block">
-              <span class="mb-1 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">Categor√≠a</span>
+              <span class="mb-1 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">CategorÌa</span>
               <select id="filter-category" class="w-full rounded-lg border border-slate-200 bg-crema px-3 py-2 text-sm outline-none focus:border-hoja">
                 <option value="">Todas</option>
                 <option value="insumos">Insumos</option>
@@ -295,7 +377,7 @@
                 <tr>
                   <th class="px-3 py-3">Fecha</th>
                   <th class="px-3 py-3">Producto</th>
-                  <th class="px-3 py-3">Categor√≠a</th>
+                  <th class="px-3 py-3">CategorÌa</th>
                   <th class="px-3 py-3">Precio</th>
                   <th class="px-3 py-3">Valor total</th>
                   <th class="px-3 py-3">Stock actual</th>
@@ -389,8 +471,8 @@
       if (logoutButton) {
         const logoutText = logoutButton.querySelector("[data-i18n-text]");
         const nextCopy = authenticated
-          ? getMovementsText("auth.logout", "Cerrar sesi√≥n")
-          : getMovementsText("auth.login", "Iniciar sesi√≥n");
+          ? getMovementsText("auth.logout", "Cerrar sesiÛn")
+          : getMovementsText("auth.login", "Iniciar sesiÛn");
         if (logoutText) {
           logoutText.textContent = nextCopy;
         } else {
@@ -425,6 +507,21 @@
       toggleAdvancedFiltersButton.setAttribute("aria-expanded", visible ? "true" : "false");
     }
 
+    async function syncMovementPageData() {
+      const [state, rows] = await Promise.all([
+        fetchJson("/api/inventory-state", { headers: { Accept: "application/json" } }),
+        fetchJson("/api/movements?limit=100", { headers: { Accept: "application/json" } })
+      ]);
+
+      inventoryState = state || { insumos: [], abonos: [], herramientas: [] };
+      movementHistory = Array.isArray(rows) ? rows : [];
+    }
+
+    function refreshMovementPage() {
+      renderGroupedProductOptions();
+      refreshSelectedStock();
+      renderMovementTable();
+    }
     function loadInventoryState() {
       const raw = safeStorage.getItem(stateStorageKey);
       if (!raw) return null;
@@ -496,7 +593,7 @@
       const products = getAllProducts().filter((product) => product.category === selectedCategory);
 
       if (products.length === 0) {
-        movementProduct.innerHTML = `<option value="">No hay productos en esta categor√≠a</option>`;
+        movementProduct.innerHTML = `<option value="">No hay productos en esta categorÌa</option>`;
         movementProduct.value = "";
         return;
       }
@@ -797,7 +894,7 @@
       }).format(value);
     }
 
-    movementForm.addEventListener("submit", (event) => {
+    movementForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
       if (!requireAuth("Guardar movimientos")) {
@@ -806,18 +903,18 @@
 
       const selected = getSelectedProduct();
       if (!selected) {
-        alert("Selecciona un producto v√°lido.");
+        alert("Selecciona un producto v·lido.");
         return;
       }
 
       const amount = Number(movementAmount.value);
       if (!amount || amount <= 0) {
-        alert("Ingresa una cantidad v√°lida.");
+        alert("Ingresa una cantidad v·lida.");
         return;
       }
 
       if (movementType.value === "Salida" && !movementResponsible.value.trim()) {
-        alert("Indica qui√©n se llev√≥ el producto en una salida.");
+        alert("Indica quiÈn se llevÛ el producto en una salida.");
         return;
       }
 
@@ -828,44 +925,37 @@
 
       const currentQty = Number(selected.row[selected.quantityIndex]) || 0;
       const nextQty = movementType.value === "Entrada" ? currentQty + amount : currentQty - amount;
-
       if (nextQty < 0) {
         alert("La salida no puede dejar el stock en negativo.");
         return;
       }
 
-      inventoryState[selected.category] = inventoryState[selected.category].map((item) => {
-        if (item[0] !== selected.id) return item;
-        const next = [...item];
-        next[selected.quantityIndex] = String(nextQty);
-        return next;
-      });
+      try {
+        await fetchJson("/api/movements", {
+          method: "POST",
+          body: JSON.stringify({
+            sku: selected.id,
+            type: movementType.value === "Entrada" ? "entrada" : "salida",
+            quantity: amount,
+            date: movementDate.value || new Date().toISOString().slice(0, 10),
+            note: movementNote.value.trim(),
+            provider: movementSupplier.value.trim(),
+            responsible: movementResponsible.value.trim(),
+            cost_unit: movementType.value === "Entrada" ? movementPrice.value : selected.row[7],
+            cost_total: movementType.value === "Entrada" ? "" : "",
+            reference: movementResponsible.value.trim()
+          })
+        });
 
-      movementHistory.unshift({
-        type: movementType.value,
-        category: selected.category,
-        id: selected.id,
-        name: selected.row[1],
-        amount,
-        date: movementDate.value || new Date().toISOString().slice(0, 10),
-        responsible: movementResponsible.value.trim(),
-        supplier: movementSupplier.value.trim(),
-        note: movementNote.value.trim() || "Sin detalle",
-        price: selected.row[7] || "Sin precio",
-        totalValue: formatCurrency(parsePrice(selected.row[7]) * amount),
-        stockAfter: nextQty
-      });
-
-      movementHistory = movementHistory.slice(0, 100);
-      saveInventoryState();
-      saveMovementHistory();
-      movementPage = 1;
-      renderGroupedProductOptions();
-      refreshSelectedStock();
-      renderMovementTable();
-      clearForm(true);
+        await syncMovementPageData();
+        movementPage = 1;
+        inventoryPage = 1;
+        refreshMovementPage();
+        clearForm(true);
+      } catch (error) {
+        alert(error instanceof Error ? error.message : "No se pudo guardar el movimiento.");
+      }
     });
-
     movementCategory.addEventListener("change", () => {
       renderGroupedProductOptions();
       refreshSelectedStock();
@@ -934,14 +1024,14 @@
       es: {
         pageTitle: "AgroControl | Movimientos",
         nav: { home: "Inicio", about: "Nosotros", inventory: "Inventario", movements: "Movimientos", contact: "Contacto" },
-        auth: { login: "Iniciar sesi√≥n", logout: "Cerrar sesi√≥n" },
+        auth: { login: "Iniciar sesiÛn", logout: "Cerrar sesiÛn" },
         hero: {
           label: "Movimientos",
           title: "Entradas y salidas con trazabilidad operativa.",
-          description: "Registra compras, entregas y ajustes del inventario. Cada movimiento actualiza la cantidad del producto y deja detalle de fecha, responsable y observaci√≥n."
+          description: "Registra compras, entregas y ajustes del inventario. Cada movimiento actualiza la cantidad del producto y deja detalle de fecha, responsable y observaciÛn."
         },
-        preview: { notice: "Est√°s en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesi√≥n." },
-        messages: { previewAuth: "Esta acci√≥n requiere iniciar sesi√≥n. Est√°s en modo vista previa." }
+        preview: { notice: "Est·s en modo vista previa. Puedes consultar movimientos y filtrar resultados, pero para guardar cambios o generar reportes debes iniciar sesiÛn." },
+        messages: { previewAuth: "Esta acciÛn requiere iniciar sesiÛn. Est·s en modo vista previa." }
       },
       en: {
         pageTitle: "AgroControl | Movements",
@@ -970,9 +1060,26 @@
     clearForm();
     refreshSelectedStock();
     renderMovementTable();
+
+    (async () => {
+      try {
+        await syncMovementPageData();
+        updateAuthUI();
+        refreshMovementPage();
+      } catch {
+        refreshMovementPage();
+      }
+    })();
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
 
 
 

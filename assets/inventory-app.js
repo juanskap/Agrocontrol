@@ -1,4 +1,4 @@
-ï»¿    [
+    [
       { id: "product-subcategory" },
       { id: "product-presentation" }
     ].forEach(({ id }) => {
@@ -144,7 +144,7 @@
       ["INS-002", "Semilla arroz cristal", "Semillas", "Saco", "0", "und", "Saco de 20 kg", "$76", "Lotes arroceros", "Ficha base", "Disponible"],
       ["INS-003", "Semilla tomate saladette", "Semillas", "Sobre", "0", "und", "Sobre de 1000 semillas", "$20", "Cultivo protegido", "Ficha base", "Disponible"],
       ["INS-004", "Semilla cebolla roja", "Semillas", "Sobre", "0", "und", "Sobre de 500 semillas", "$16", "Siembra regional", "Ficha base", "Disponible"],
-      ["INS-005", "Semilla lechuga romana", "Semillas", "Sobre", "0", "und", "Sobre de 1500 semillas", "$12", "Vivero e hidroponÃ­a", "Ficha base", "Disponible"],
+      ["INS-005", "Semilla lechuga romana", "Semillas", "Sobre", "0", "und", "Sobre de 1500 semillas", "$12", "Vivero e hidroponía", "Ficha base", "Disponible"],
       ["INS-006", "Semilla pepino premium", "Semillas", "Sobre", "0", "und", "Sobre de 800 semillas", "$22", "Invernadero", "Ficha base", "Disponible"],
       ["INS-007", "Semilla pimiento amarillo", "Semillas", "Sobre", "0", "und", "Sobre de 700 semillas", "$23", "Cultivo protegido", "Ficha base", "Disponible"],
       ["INS-008", "Semilla sandia dulce", "Semillas", "Sobre", "0", "und", "Sobre de 400 semillas", "$24", "Siembra de verano", "Ficha base", "Disponible"],
@@ -156,69 +156,69 @@
       ["INS-014", "Insecticida contacto C8", "Pesticidas", "Frasco", "0", "und", "Frasco de 250 ml", "$13", "Control puntual", "Ficha base", "Disponible"],
       ["INS-015", "Nematicida suelo activo", "Pesticidas", "Botella", "0", "und", "Botella de 1 litro", "$25", "Tratamiento de suelo", "Ficha base", "Disponible"],
       ["INS-016", "Protector foliar reforzado", "Pesticidas", "Botella", "0", "und", "Botella de 1 litro", "$14", "Refuerzo sanitario", "Ficha base", "Disponible"],
-      ["INS-017", "Adherente tÃ©cnico AD4", "Complementos", "Frasco", "0", "und", "Frasco de 500 ml", "$10", "Mezclas tÃ©cnicas", "Ficha base", "Disponible"],
-      ["INS-018", "Coadyuvante premium", "Complementos", "Botella", "0", "und", "Botella de 1 litro", "$12", "AplicaciÃ³n foliar", "Ficha base", "Disponible"],
+      ["INS-017", "Adherente técnico AD4", "Complementos", "Frasco", "0", "und", "Frasco de 500 ml", "$10", "Mezclas técnicas", "Ficha base", "Disponible"],
+      ["INS-018", "Coadyuvante premium", "Complementos", "Botella", "0", "und", "Botella de 1 litro", "$12", "Aplicación foliar", "Ficha base", "Disponible"],
       ["INS-019", "Bioestimulante raiz pro", "Complementos", "Botella", "0", "und", "Botella de 1 litro", "$23", "Etapa inicial", "Ficha base", "Disponible"],
-      ["INS-020", "Humectante suelo HS8", "Complementos", "Botella", "0", "und", "Botella de 1 litro", "$15", "Riego y absorciÃ³n", "Ficha base", "Disponible"],
-      ["INS-021", "Bandeja germinaciÃ³n 200", "Accesorios", "Paquete", "0", "und", "Paquete de 10 bandejas", "$26", "Semilleros", "Ficha base", "Disponible"],
-      ["INS-022", "Bolsas vivero 10x20", "Accesorios", "Paquete", "0", "und", "Paquete de 100 unidades", "$8", "ProducciÃ³n de plÃ¡ntulas", "Ficha base", "Disponible"],
-      ["INS-023", "Malla sombreo 65", "Accesorios", "Rollo", "0", "und", "Rollo de 100 metros", "$62", "Ãrea de vivero", "Ficha base", "Disponible"],
+      ["INS-020", "Humectante suelo HS8", "Complementos", "Botella", "0", "und", "Botella de 1 litro", "$15", "Riego y absorción", "Ficha base", "Disponible"],
+      ["INS-021", "Bandeja germinación 200", "Accesorios", "Paquete", "0", "und", "Paquete de 10 bandejas", "$26", "Semilleros", "Ficha base", "Disponible"],
+      ["INS-022", "Bolsas vivero 10x20", "Accesorios", "Paquete", "0", "und", "Paquete de 100 unidades", "$8", "Producción de plántulas", "Ficha base", "Disponible"],
+      ["INS-023", "Malla sombreo 65", "Accesorios", "Rollo", "0", "und", "Rollo de 100 metros", "$62", "Área de vivero", "Ficha base", "Disponible"],
       ["INS-024", "Cinta riego gota fina", "Accesorios", "Rollo", "0", "und", "Rollo de 1000 metros", "$35", "Riego por goteo", "Ficha base", "Disponible"]
     ];
     const defaultInsumos = insumos.map((row) => [...row]);
 
     const abonos = [
-      ["ABO-001", "Compost premium agro", "OrgÃ¡nico", "Materia orgÃ¡nica estabilizada", "96", "und", "Lote base 2026", "$14", "Mejora de suelo", "EcoCert", "Disponible"],
-      ["ABO-002", "Humus granulado plus", "OrgÃ¡nico", "Ãcidos hÃºmicos y fÃºlvicos", "84", "und", "Lote base 2026", "$20", "Viveros y hortalizas", "OrgÃ¡nico validado", "Disponible"],
-      ["ABO-003", "Lombricompuesto activo", "OrgÃ¡nico", "Microorganismos benÃ©ficos", "75", "und", "Lote base 2026", "$16", "ProducciÃ³n de plÃ¡ntulas", "EcoCert", "Disponible"],
-      ["ABO-004", "Bokashi regional", "OrgÃ¡nico", "Fermentado orgÃ¡nico", "68", "und", "Lote base 2026", "$18", "RecuperaciÃ³n de suelo", "Eco manejo", "Disponible"],
-      ["ABO-005", "Gallinaza compostada", "OrgÃ¡nico", "Materia orgÃ¡nica enriquecida", "72", "und", "Lote base 2026", "$12", "PreparaciÃ³n de camas", "Eco manejo", "Disponible"],
-      ["ABO-006", "Compost de cacao", "OrgÃ¡nico", "CÃ¡scara compostada", "64", "und", "Lote base 2026", "$15", "RecuperaciÃ³n de lotes", "OrgÃ¡nico validado", "Disponible"],
-      ["ABO-007", "Abono verde procesado", "OrgÃ¡nico", "Residuos vegetales tratados", "80", "und", "Lote base 2026", "$11", "Cobertura y suelo", "Eco manejo", "Disponible"],
-      ["ABO-008", "Compost microbiano", "OrgÃ¡nico", "Consorcio biolÃ³gico", "59", "und", "Lote base 2026", "$19", "Mejora integral", "EcoCert", "Disponible"],
-      ["ABO-009", "Fertimax 20-20-20", "QuÃ­mico", "NPK balanceado", "54", "und", "Lote base 2026", "$29", "AplicaciÃ³n foliar", "ISO proveedor", "Disponible"],
-      ["ABO-010", "Triple 15", "QuÃ­mico", "Balance NPK", "60", "und", "Lote base 2026", "$28", "Cultivos mixtos", "Proveedor ISO", "Disponible"],
-      ["ABO-011", "Urea tÃ©cnica", "QuÃ­mico", "46 por ciento nitrÃ³geno", "66", "und", "Lote base 2026", "$24", "Crecimiento vegetativo", "Proveedor aprobado", "Disponible"],
-      ["ABO-012", "Sulfato de amonio", "QuÃ­mico", "NitrÃ³geno y azufre", "58", "und", "Lote base 2026", "$21", "Cereales y maÃ­z", "Proveedor aprobado", "Disponible"],
-      ["ABO-013", "Nitrato de calcio", "QuÃ­mico", "Calcio y nitrÃ³geno", "62", "und", "Lote base 2026", "$27", "Fortalecimiento de fruto", "Proveedor tÃ©cnico", "Disponible"],
-      ["ABO-014", "Potasio k plus", "QuÃ­mico", "Sulfato de potasio", "45", "und", "Lote base 2026", "$26", "FloraciÃ³n y fruto", "ISO proveedor", "Disponible"],
-      ["ABO-015", "NPK 12-24-12", "QuÃ­mico", "FÃ³rmula de arranque", "48", "und", "Lote base 2026", "$30", "Inicio de cultivo", "ISO proveedor", "Disponible"],
-      ["ABO-016", "Enmienda cÃ¡lcica", "QuÃ­mico", "Calcio estabilizado", "52", "und", "Lote base 2026", "$18", "Ajuste de suelo", "Control interno", "Disponible"],
-      ["ABO-017", "TÃ© de compost lÃ­quido", "Foliar", "Extractos biolÃ³gicos", "40", "und", "Botella de 1 litro", "$17", "Refuerzo biolÃ³gico", "EcoCert", "Disponible"],
-      ["ABO-018", "Magnesio foliar", "Foliar", "Magnesio soluble", "36", "und", "Botella de 1 litro", "$22", "CorrecciÃ³n nutricional", "Control interno", "Disponible"],
-      ["ABO-019", "Silicio foliar", "Foliar", "Silicio soluble", "32", "und", "Botella de 1 litro", "$24", "Resistencia estructural", "Proveedor tÃ©cnico", "Disponible"],
-      ["ABO-020", "Biofermento mineral", "Foliar", "Minerales quelatados", "30", "und", "Botella de 1 litro", "$23", "AplicaciÃ³n complementaria", "EcoCert", "Disponible"],
-      ["ABO-021", "FÃ³sforo plus", "Enmienda", "Alto contenido de fÃ³sforo", "44", "und", "Saco de 25 kg", "$31", "Enraizamiento", "Proveedor ISO", "Disponible"],
-      ["ABO-022", "Cal agrÃ­cola fina", "Enmienda", "Carbonato de calcio", "56", "und", "Saco de 40 kg", "$14", "CorrecciÃ³n de pH", "Control interno", "Disponible"],
-      ["ABO-023", "Harina de roca", "Enmienda", "Minerales naturales", "38", "und", "Saco de 25 kg", "$16", "Suelo agotado", "OrgÃ¡nico validado", "Disponible"],
-      ["ABO-024", "Yeso agrÃ­cola", "Enmienda", "Calcio y azufre", "42", "und", "Saco de 40 kg", "$17", "Estructura de suelo", "Control interno", "Disponible"]
+      ["ABO-001", "Compost premium agro", "Orgánico", "Materia orgánica estabilizada", "96", "und", "Lote base 2026", "$14", "Mejora de suelo", "EcoCert", "Disponible"],
+      ["ABO-002", "Humus granulado plus", "Orgánico", "Ácidos húmicos y fúlvicos", "84", "und", "Lote base 2026", "$20", "Viveros y hortalizas", "Orgánico validado", "Disponible"],
+      ["ABO-003", "Lombricompuesto activo", "Orgánico", "Microorganismos benéficos", "75", "und", "Lote base 2026", "$16", "Producción de plántulas", "EcoCert", "Disponible"],
+      ["ABO-004", "Bokashi regional", "Orgánico", "Fermentado orgánico", "68", "und", "Lote base 2026", "$18", "Recuperación de suelo", "Eco manejo", "Disponible"],
+      ["ABO-005", "Gallinaza compostada", "Orgánico", "Materia orgánica enriquecida", "72", "und", "Lote base 2026", "$12", "Preparación de camas", "Eco manejo", "Disponible"],
+      ["ABO-006", "Compost de cacao", "Orgánico", "Cáscara compostada", "64", "und", "Lote base 2026", "$15", "Recuperación de lotes", "Orgánico validado", "Disponible"],
+      ["ABO-007", "Abono verde procesado", "Orgánico", "Residuos vegetales tratados", "80", "und", "Lote base 2026", "$11", "Cobertura y suelo", "Eco manejo", "Disponible"],
+      ["ABO-008", "Compost microbiano", "Orgánico", "Consorcio biológico", "59", "und", "Lote base 2026", "$19", "Mejora integral", "EcoCert", "Disponible"],
+      ["ABO-009", "Fertimax 20-20-20", "Químico", "NPK balanceado", "54", "und", "Lote base 2026", "$29", "Aplicación foliar", "ISO proveedor", "Disponible"],
+      ["ABO-010", "Triple 15", "Químico", "Balance NPK", "60", "und", "Lote base 2026", "$28", "Cultivos mixtos", "Proveedor ISO", "Disponible"],
+      ["ABO-011", "Urea técnica", "Químico", "46 por ciento nitrógeno", "66", "und", "Lote base 2026", "$24", "Crecimiento vegetativo", "Proveedor aprobado", "Disponible"],
+      ["ABO-012", "Sulfato de amonio", "Químico", "Nitrógeno y azufre", "58", "und", "Lote base 2026", "$21", "Cereales y maíz", "Proveedor aprobado", "Disponible"],
+      ["ABO-013", "Nitrato de calcio", "Químico", "Calcio y nitrógeno", "62", "und", "Lote base 2026", "$27", "Fortalecimiento de fruto", "Proveedor técnico", "Disponible"],
+      ["ABO-014", "Potasio k plus", "Químico", "Sulfato de potasio", "45", "und", "Lote base 2026", "$26", "Floración y fruto", "ISO proveedor", "Disponible"],
+      ["ABO-015", "NPK 12-24-12", "Químico", "Fórmula de arranque", "48", "und", "Lote base 2026", "$30", "Inicio de cultivo", "ISO proveedor", "Disponible"],
+      ["ABO-016", "Enmienda cálcica", "Químico", "Calcio estabilizado", "52", "und", "Lote base 2026", "$18", "Ajuste de suelo", "Control interno", "Disponible"],
+      ["ABO-017", "Té de compost líquido", "Foliar", "Extractos biológicos", "40", "und", "Botella de 1 litro", "$17", "Refuerzo biológico", "EcoCert", "Disponible"],
+      ["ABO-018", "Magnesio foliar", "Foliar", "Magnesio soluble", "36", "und", "Botella de 1 litro", "$22", "Corrección nutricional", "Control interno", "Disponible"],
+      ["ABO-019", "Silicio foliar", "Foliar", "Silicio soluble", "32", "und", "Botella de 1 litro", "$24", "Resistencia estructural", "Proveedor técnico", "Disponible"],
+      ["ABO-020", "Biofermento mineral", "Foliar", "Minerales quelatados", "30", "und", "Botella de 1 litro", "$23", "Aplicación complementaria", "EcoCert", "Disponible"],
+      ["ABO-021", "Fósforo plus", "Enmienda", "Alto contenido de fósforo", "44", "und", "Saco de 25 kg", "$31", "Enraizamiento", "Proveedor ISO", "Disponible"],
+      ["ABO-022", "Cal agrícola fina", "Enmienda", "Carbonato de calcio", "56", "und", "Saco de 40 kg", "$14", "Corrección de pH", "Control interno", "Disponible"],
+      ["ABO-023", "Harina de roca", "Enmienda", "Minerales naturales", "38", "und", "Saco de 25 kg", "$16", "Suelo agotado", "Orgánico validado", "Disponible"],
+      ["ABO-024", "Yeso agrícola", "Enmienda", "Calcio y azufre", "42", "und", "Saco de 40 kg", "$17", "Estructura de suelo", "Control interno", "Disponible"]
     ];
 
     const herramientas = [
-      ["HER-001", "Juego de palas reforzadas", "Manual", "Kit", "Disponible", "0", "Kit de 6 piezas", "$58", "Herramienta base", "und", "Lista para asignaciÃ³n"],
-      ["HER-002", "Tijeras de poda pro", "Manual", "Unidad", "Disponible", "0", "Unidad de corte profesional", "$24", "Herramienta base", "und", "Lista para asignaciÃ³n"],
-      ["HER-003", "Machete profesional", "Manual", "Unidad", "Disponible", "0", "Hoja de 22 pulgadas", "$19", "Herramienta base", "und", "Lista para asignaciÃ³n"],
-      ["HER-004", "Carretilla reforzada", "Manual", "Unidad", "Disponible", "0", "Capacidad de 90 litros", "$78", "Herramienta base", "und", "Lista para asignaciÃ³n"],
-      ["HER-005", "AzadÃ³n reforzado", "Manual", "Unidad", "Disponible", "0", "Mango de madera larga", "$17", "Herramienta base", "und", "Lista para asignaciÃ³n"],
-      ["HER-006", "Escalera de aluminio", "Manual", "Unidad", "Disponible", "0", "Altura de 8 escalones", "$72", "Herramienta base", "und", "Lista para asignaciÃ³n"],
-      ["HER-007", "Rastrillo metÃ¡lico", "Manual", "Unidad", "Disponible", "0", "Cabezal de 16 dientes", "$11", "Herramienta base", "und", "Lista para asignaciÃ³n"],
-      ["HER-008", "Llave de impacto", "Manual", "Unidad", "Disponible", "0", "Modelo industrial", "$136", "Herramienta base", "und", "Lista para asignaciÃ³n"],
-      ["HER-009", "Taladro industrial", "Manual", "Unidad", "Disponible", "0", "Potencia de 850 W", "$118", "Herramienta base", "und", "Lista para asignaciÃ³n"],
-      ["HER-010", "Podadora elÃ©ctrica", "Manual", "Unidad", "Disponible", "0", "Espada de 18 pulgadas", "$96", "Herramienta base", "und", "Lista para asignaciÃ³n"],
-      ["HER-011", "Pulverizador de mano", "Manual", "Unidad", "Disponible", "0", "DepÃ³sito de 5 litros", "$21", "Herramienta base", "und", "Lista para asignaciÃ³n"],
-      ["HER-012", "Kit de fumigaciÃ³n", "Manual", "Kit", "Disponible", "0", "Kit de boquillas y mangueras", "$49", "Herramienta base", "und", "Lista para asignaciÃ³n"],
-      ["HER-013", "Tractor de arado", "Maquinaria", "MÃ¡quina", "Disponible", "0", "Motor diÃ©sel 90 HP para labores de arado", "$28500", "Equipo base", "und", "Programar mantenimiento"],
-      ["HER-014", "Cultivadora C200", "Maquinaria", "MÃ¡quina", "Disponible", "0", "Ancho de trabajo de 2 m", "$8900", "Equipo base", "und", "Programar mantenimiento"],
-      ["HER-015", "Desbrozadora D55", "Maquinaria", "MÃ¡quina", "Disponible", "0", "Motor de 55 cc", "$620", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-001", "Juego de palas reforzadas", "Manual", "Kit", "Disponible", "0", "Kit de 6 piezas", "$58", "Herramienta base", "und", "Lista para asignación"],
+      ["HER-002", "Tijeras de poda pro", "Manual", "Unidad", "Disponible", "0", "Unidad de corte profesional", "$24", "Herramienta base", "und", "Lista para asignación"],
+      ["HER-003", "Machete profesional", "Manual", "Unidad", "Disponible", "0", "Hoja de 22 pulgadas", "$19", "Herramienta base", "und", "Lista para asignación"],
+      ["HER-004", "Carretilla reforzada", "Manual", "Unidad", "Disponible", "0", "Capacidad de 90 litros", "$78", "Herramienta base", "und", "Lista para asignación"],
+      ["HER-005", "Azadón reforzado", "Manual", "Unidad", "Disponible", "0", "Mango de madera larga", "$17", "Herramienta base", "und", "Lista para asignación"],
+      ["HER-006", "Escalera de aluminio", "Manual", "Unidad", "Disponible", "0", "Altura de 8 escalones", "$72", "Herramienta base", "und", "Lista para asignación"],
+      ["HER-007", "Rastrillo metálico", "Manual", "Unidad", "Disponible", "0", "Cabezal de 16 dientes", "$11", "Herramienta base", "und", "Lista para asignación"],
+      ["HER-008", "Llave de impacto", "Manual", "Unidad", "Disponible", "0", "Modelo industrial", "$136", "Herramienta base", "und", "Lista para asignación"],
+      ["HER-009", "Taladro industrial", "Manual", "Unidad", "Disponible", "0", "Potencia de 850 W", "$118", "Herramienta base", "und", "Lista para asignación"],
+      ["HER-010", "Podadora eléctrica", "Manual", "Unidad", "Disponible", "0", "Espada de 18 pulgadas", "$96", "Herramienta base", "und", "Lista para asignación"],
+      ["HER-011", "Pulverizador de mano", "Manual", "Unidad", "Disponible", "0", "Depósito de 5 litros", "$21", "Herramienta base", "und", "Lista para asignación"],
+      ["HER-012", "Kit de fumigación", "Manual", "Kit", "Disponible", "0", "Kit de boquillas y mangueras", "$49", "Herramienta base", "und", "Lista para asignación"],
+      ["HER-013", "Tractor de arado", "Maquinaria", "Máquina", "Disponible", "0", "Motor diésel 90 HP para labores de arado", "$28500", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-014", "Cultivadora C200", "Maquinaria", "Máquina", "Disponible", "0", "Ancho de trabajo de 2 m", "$8900", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-015", "Desbrozadora D55", "Maquinaria", "Máquina", "Disponible", "0", "Motor de 55 cc", "$620", "Equipo base", "und", "Programar mantenimiento"],
       ["HER-016", "Arado liviano", "Maquinaria", "Equipo", "Disponible", "0", "Ancho de 3 discos", "$1980", "Equipo base", "und", "Programar mantenimiento"],
-      ["HER-017", "Sembradora S100", "Maquinaria", "MÃ¡quina", "Disponible", "0", "Tolva de 100 kg", "$6300", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-017", "Sembradora S100", "Maquinaria", "Máquina", "Disponible", "0", "Tolva de 100 kg", "$6300", "Equipo base", "und", "Programar mantenimiento"],
       ["HER-018", "Rastra de discos", "Maquinaria", "Equipo", "Disponible", "0", "Juego de 16 discos", "$9100", "Equipo base", "und", "Programar mantenimiento"],
       ["HER-019", "Bomba de riego BR20", "Riego", "Equipo", "Disponible", "0", "Bomba de 2 pulgadas", "$1480", "Equipo base", "und", "Programar mantenimiento"],
-      ["HER-020", "Motobomba MX40", "Riego", "MÃ¡quina", "Disponible", "0", "Caudal de 40 m3 por hora", "$1250", "Equipo base", "und", "Programar mantenimiento"],
+      ["HER-020", "Motobomba MX40", "Riego", "Máquina", "Disponible", "0", "Caudal de 40 m3 por hora", "$1250", "Equipo base", "und", "Programar mantenimiento"],
       ["HER-021", "Fumigadora de mochila", "Riego", "Equipo", "Disponible", "0", "Tanque de 20 litros", "$89", "Equipo base", "und", "Programar mantenimiento"],
-      ["HER-022", "Manguera presiÃ³n alta", "Riego", "Rollo", "Disponible", "0", "Rollo de 30 metros", "$64", "Equipo base", "und", "Lista para asignaciÃ³n"],
-      ["HER-023", "Casco de seguridad", "ProtecciÃ³n", "Unidad", "Disponible", "0", "Casco con ajuste interno", "$18", "ProtecciÃ³n base", "und", "Lista para asignaciÃ³n"],
-      ["HER-024", "ArnÃ©s de trabajo", "ProtecciÃ³n", "Unidad", "Disponible", "0", "ArnÃ©s de seguridad completo", "$46", "ProtecciÃ³n base", "und", "Lista para asignaciÃ³n"]
+      ["HER-022", "Manguera presión alta", "Riego", "Rollo", "Disponible", "0", "Rollo de 30 metros", "$64", "Equipo base", "und", "Lista para asignación"],
+      ["HER-023", "Casco de seguridad", "Protección", "Unidad", "Disponible", "0", "Casco con ajuste interno", "$18", "Protección base", "und", "Lista para asignación"],
+      ["HER-024", "Arnés de trabajo", "Protección", "Unidad", "Disponible", "0", "Arnés de seguridad completo", "$46", "Protección base", "und", "Lista para asignación"]
     ];
     let activeCategory = "insumos";
     let currentPage = 1;
@@ -233,13 +233,13 @@
     };
     const subcategoryOptions = {
       insumos: ["Semillas", "Pesticidas", "Complementos", "Accesorios"],
-      abonos: ["OrgÃ¡nico", "QuÃ­mico", "Foliar", "Enmienda"],
-      herramientas: ["Manual", "Maquinaria", "Riego", "ProtecciÃ³n"]
+      abonos: ["Orgánico", "Químico", "Foliar", "Enmienda"],
+      herramientas: ["Manual", "Maquinaria", "Riego", "Protección"]
     };
     const presentationOptions = {
-      insumos: ["Sobre", "Botella", "Frasco", "Saco", "Caja", "Paquete", "Rollo", "BidÃ³n"],
-      abonos: ["Saco", "Bolsa", "Botella", "BidÃ³n", "Caja", "Caneca"],
-      herramientas: ["Unidad", "Kit", "Caja", "Equipo", "MÃ¡quina", "Rollo"]
+      insumos: ["Sobre", "Botella", "Frasco", "Saco", "Caja", "Paquete", "Rollo", "Bidón"],
+      abonos: ["Saco", "Bolsa", "Botella", "Bidón", "Caja", "Caneca"],
+      herramientas: ["Unidad", "Kit", "Caja", "Equipo", "Máquina", "Rollo"]
     };
 
     function updateAuthUI() {
@@ -248,8 +248,8 @@
       if (logoutButton) {
         const logoutText = logoutButton.querySelector("[data-i18n-text]");
         const nextCopy = authenticated
-          ? getInventoryText("auth.logout", "Cerrar sesiÃ³n")
-          : getInventoryText("auth.login", "Iniciar sesiÃ³n");
+          ? getInventoryText("auth.logout", "Cerrar sesión")
+          : getInventoryText("auth.login", "Iniciar sesión");
         if (logoutText) {
           logoutText.textContent = nextCopy;
         } else {
@@ -439,7 +439,7 @@
       }
 
       if (productPanelSubtitle) {
-        productPanelSubtitle.textContent = `${row[2]} Â· ${categoryLabels[category]} Â· Usa este panel solo para acciones rÃ¡pidas.`;
+        productPanelSubtitle.textContent = `${row[2]} · ${categoryLabels[category]} · Usa este panel solo para acciones rápidas.`;
       }
 
       if (productPanelContext) {
@@ -451,7 +451,7 @@
       const headerMap = {
         "insumos-body": ["Imagen", "ID", "Producto", "Stock", "Contenido", "Estado"],
         "abonos-body": ["Imagen", "ID", "Producto", "Stock", "Contenido", "Estado"],
-        "herramientas-body": ["Imagen", "ID", "Producto", "Estado", "Cantidad", "PresentaciÃ³n"]
+        "herramientas-body": ["Imagen", "ID", "Producto", "Estado", "Cantidad", "Presentación"]
       };
 
       Object.entries(headerMap).forEach(([tbodyId, labels]) => {
@@ -471,7 +471,7 @@
         const statusText = currentQty <= 0 ? "Sin unidades" : row[4];
         return [
           { value: `<span class="font-mono text-xs font-semibold text-slate-500">${row[0]}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" },
-          { value: `<div class="min-w-[160px]"><p class="font-semibold text-slate-900">${row[1]}</p><p class="mt-1 text-xs text-slate-500">${row[2]} Â· ${row[3]}</p></div>`, className: "px-3 py-4 align-top" },
+          { value: `<div class="min-w-[160px]"><p class="font-semibold text-slate-900">${row[1]}</p><p class="mt-1 text-xs text-slate-500">${row[2]} · ${row[3]}</p></div>`, className: "px-3 py-4 align-top" },
           { value: renderStatusBadge(statusText), className: "px-3 py-4 align-top whitespace-nowrap" },
           { value: `<span class="font-semibold tabular-nums text-slate-900">${currentQty}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" },
           { value: `<span class="text-slate-700">${row[3]}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" }
@@ -494,7 +494,7 @@
       const statusText = currentQty <= 0 ? "Sin stock" : row[10];
       return [
         { value: `<span class="font-mono text-xs font-semibold text-slate-500">${row[0]}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" },
-        { value: `<div class="min-w-[160px]"><p class="font-semibold text-slate-900">${row[1]}</p><p class="mt-1 text-xs text-slate-500">${row[2]} Â· ${row[3]}</p></div>`, className: "px-3 py-4 align-top" },
+        { value: `<div class="min-w-[160px]"><p class="font-semibold text-slate-900">${row[1]}</p><p class="mt-1 text-xs text-slate-500">${row[2]} · ${row[3]}</p></div>`, className: "px-3 py-4 align-top" },
         { value: `<span class="font-semibold tabular-nums text-slate-900">${currentQty} ${row[5]}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" },
         { value: `<span class="text-slate-500">${row[6]}</span>`, className: "px-3 py-4 align-top whitespace-nowrap" },
         { value: renderStatusBadge(statusText), className: "px-3 py-4 align-top whitespace-nowrap" }
@@ -533,6 +533,112 @@
     renderRows("abonos", "abonos-body", abonos);
     renderRows("herramientas", "herramientas-body", herramientas, true);
 
+    const inventoryAppBasePath = window.location.pathname
+      .replace(/\/$/, "")
+      .replace(/\/(?:inventario(?:\.html)?)$/, "");
+
+    function inventoryApiUrl(path) {
+      return `${window.location.origin}${inventoryAppBasePath}${path}`;
+    }
+
+    function buildInventoryNetworkError() {
+      const expectedBase = `${window.location.origin}${inventoryAppBasePath || ""}`;
+      if (window.location.protocol === "file:") {
+        return "No se pudo conectar con el servidor. Abre el sistema desde http://localhost o desde XAMPP.";
+      }
+      return `No se pudo conectar con el servidor. Verifica que abras el sistema desde ${expectedBase || window.location.origin}.`;
+    }
+
+    async function inventoryFetchJson(path, options = {}) {
+      let response;
+      try {
+        response = await fetch(inventoryApiUrl(path), {
+          headers: {
+            "Content-Type": "application/json",
+            ...(options.headers || {})
+          },
+          ...options
+        });
+      } catch {
+        throw new Error(buildInventoryNetworkError());
+      }
+
+      const rawText = await response.text();
+      let payload;
+      try {
+        payload = JSON.parse(rawText);
+      } catch {
+        payload = {
+          status: "error",
+          message: rawText || "No se pudo completar la solicitud."
+        };
+      }
+
+      if (!response.ok || payload.status === "error") {
+        throw new Error(payload.message || "No se pudo completar la solicitud.");
+      }
+
+      return payload.data;
+    }
+
+    function refreshInventoryUi() {
+      filteredRowsByCategory = {
+        insumos,
+        abonos,
+        herramientas
+      };
+      updateExecutiveSummary();
+      populateCategoryProductOptions();
+      applyFilters();
+      renderRecentMovements();
+
+      if (selectedProduct) {
+        const existingRow = findRowById(selectedProduct.category, selectedProduct.id);
+        if (existingRow) {
+          updateProductPanel(selectedProduct.category, existingRow);
+        } else {
+          clearSelectedProduct();
+        }
+      }
+    }
+
+    async function syncInventoryStateFromApi() {
+      const state = await inventoryFetchJson("/api/inventory-state", {
+        headers: { Accept: "application/json" }
+      });
+      setCategoryRows("insumos", Array.isArray(state?.insumos) ? state.insumos : []);
+      setCategoryRows("abonos", Array.isArray(state?.abonos) ? state.abonos : []);
+      setCategoryRows("herramientas", Array.isArray(state?.herramientas) ? state.herramientas : []);
+    }
+
+    async function syncRecentMovementsFromApi() {
+      const rows = await inventoryFetchJson("/api/movements?limit=30", {
+        headers: { Accept: "application/json" }
+      });
+      movementHistory = Array.isArray(rows) ? rows : [];
+    }
+
+    async function syncInventoryModule() {
+      await syncInventoryStateFromApi();
+      await syncRecentMovementsFromApi();
+      refreshInventoryUi();
+    }
+
+    function buildProductPayloadFromForm(category) {
+      return {
+        sku: productId.value.trim(),
+        name: productName.value.trim(),
+        category,
+        subcategory: productSubcategory.value.trim(),
+        unit: productUnit.value.trim(),
+        presentation: productPresentation.value.trim(),
+        content: productContent.value.trim(),
+        usage: productUsage.value.trim(),
+        notes: productBaseNotes.value.trim() || productNotes.value.trim(),
+        status: productBaseStatus.value.trim() || productStatus.value.trim() || "Disponible",
+        price: productPrice.value.trim() || 0
+      };
+    }
     function loadStoredRows(category) {
       const raw = safeStorage.getItem(storageKeys[category]);
       if (!raw) return [];
@@ -583,8 +689,8 @@
 
         const updatedRow = [...row];
         updatedRow[1] = "Tractor de arado";
-        if (updatedRow[6] === "Motor diÃ©sel 90 HP" || updatedRow[6] === "Motor di\u00E9sel 90 HP") {
-          updatedRow[6] = "Motor diÃ©sel 90 HP para labores de arado";
+        if (updatedRow[6] === "Motor diésel 90 HP" || updatedRow[6] === "Motor di\u00E9sel 90 HP") {
+          updatedRow[6] = "Motor diésel 90 HP para labores de arado";
         }
         return updatedRow;
       });
@@ -733,7 +839,7 @@
       recentMovements.innerHTML = visible.map((movement) => `
         <div class="rounded-xl border border-white/10 bg-white/8 px-3 py-3">
           <p class="font-semibold text-white">${movement.type}: ${movement.name}</p>
-          <p class="mt-1 text-xs text-slate-500">${movement.date} Â· ${movement.amount} unidades</p>
+          <p class="mt-1 text-xs text-slate-500">${movement.date} · ${movement.amount} unidades</p>
           <p class="mt-2 text-sm leading-6 text-slate-700">${movement.note}</p>
         </div>
       `).join("");
@@ -787,7 +893,7 @@
       }
 
       movementCurrentQty.value = String(getCurrentQuantity(category, row));
-      movementProductRef.value = `${row[1]} Â· ${row[3]} Â· ${row[6]}`;
+      movementProductRef.value = `${row[1]} · ${row[3]} · ${row[6]}`;
       return { category, id, row };
     }
 
@@ -812,9 +918,9 @@
       const noteLabel = document.querySelector("#movement-note-field span");
       if (amountLabel) amountLabel.textContent = isEntry ? "Cantidad ingresada" : "Cantidad a mover";
       if (dateLabel) dateLabel.textContent = isEntry ? "Fecha de entrada" : "Fecha";
-      if (noteLabel) noteLabel.textContent = isEntry ? "ObservaciÃ³n" : "Motivo / nota";
+      if (noteLabel) noteLabel.textContent = isEntry ? "Observación" : "Motivo / nota";
       movementNote.placeholder = isEntry
-        ? "Compra, recepciÃ³n de mercaderÃ­a, ingreso de lote..."
+        ? "Compra, recepción de mercadería, ingreso de lote..."
         : "Entrega a campo, ajuste de inventario...";
     }
 
@@ -853,7 +959,7 @@
         if (selectedProduct) {
           const row = findRowById(selectedProduct.category, selectedProduct.id);
           if (!row) {
-            alert("El producto seleccionado ya no estÃ¡ disponible.");
+            alert("El producto seleccionado ya no está disponible.");
             clearSelectedProduct();
             populateMovementProducts(null, false);
           } else {
@@ -896,7 +1002,7 @@
         return;
       }
 
-      deleteProductPreview.textContent = `${row[1]} (${row[0]}) de ${categoryLabels[category]}. Esta acciÃ³n eliminarÃ¡ el registro del inventario.`;
+      deleteProductPreview.textContent = `${row[1]} (${row[0]}) de ${categoryLabels[category]}. Esta acción eliminará el registro del inventario.`;
     }
 
     function updateDeleteProductOptions() {
@@ -982,7 +1088,7 @@
 
       const from = rows.length === 0 ? 0 : start + 1;
       const to = Math.min(end, rows.length);
-      paginationSummary.textContent = `Mostrando ${from}-${to} de ${rows.length} productos. PÃ¡ginas de ${pageSize} registros.`;
+      paginationSummary.textContent = `Mostrando ${from}-${to} de ${rows.length} productos. Páginas de ${pageSize} registros.`;
 
       paginationControls.innerHTML = "";
 
@@ -1062,34 +1168,34 @@
     function buildProductInfo(category, row) {
       if (category === "abonos") {
         return {
-          usage: `${row[1]} se utiliza como apoyo nutricional para mejorar el desarrollo del cultivo, reforzar etapas productivas y mantener un manejo mÃ¡s estable del suelo y la planta.`,
+          usage: `${row[1]} se utiliza como apoyo nutricional para mejorar el desarrollo del cultivo, reforzar etapas productivas y mantener un manejo más estable del suelo y la planta.`,
           applications: [
-            `AplicaciÃ³n en ${row[8].toLowerCase()}.`,
-            `Programas de fertilizaciÃ³n segÃºn necesidad del lote y anÃ¡lisis tÃ©cnico.`,
-            `Apoyo en suelos con requerimientos especÃ­ficos de nutriciÃ³n o recuperaciÃ³n.`
+            `Aplicación en ${row[8].toLowerCase()}.`,
+            `Programas de fertilización según necesidad del lote y análisis técnico.`,
+            `Apoyo en suelos con requerimientos específicos de nutrición o recuperación.`
           ],
-          recommendation: `Se recomienda revisar dosis, humedad del suelo y compatibilidad del producto antes de aplicarlo. CertificaciÃ³n registrada: ${row[9]}.`
+          recommendation: `Se recomienda revisar dosis, humedad del suelo y compatibilidad del producto antes de aplicarlo. Certificación registrada: ${row[9]}.`
         };
       }
 
       if (category === "herramientas") {
         return {
-          usage: `${row[1]} se utiliza como equipo de trabajo para tareas operativas en campo, mantenimiento del cultivo o soporte logÃ­stico dentro de la finca.`,
+          usage: `${row[1]} se utiliza como equipo de trabajo para tareas operativas en campo, mantenimiento del cultivo o soporte logístico dentro de la finca.`,
           applications: [
-            `Uso en la ubicaciÃ³n o frente de trabajo: ${row[8]}.`,
-            `Apoyo en labores de preparaciÃ³n, mantenimiento o intervenciÃ³n tÃ©cnica.`,
-            `AsignaciÃ³n por responsable segÃºn disponibilidad y estado del equipo.`
+            `Uso en la ubicación o frente de trabajo: ${row[8]}.`,
+            `Apoyo en labores de preparación, mantenimiento o intervención técnica.`,
+            `Asignación por responsable según disponibilidad y estado del equipo.`
           ],
           recommendation: `Antes de utilizarlo, conviene validar estado actual, mantenimiento programado y responsable asignado. Estado registrado: ${row[4]}.`
         };
       }
 
       return {
-        usage: `${row[1]} se utiliza dentro del manejo agrÃ­cola para apoyar la producciÃ³n, protecciÃ³n o establecimiento del cultivo segÃºn la necesidad operativa.`,
+        usage: `${row[1]} se utiliza dentro del manejo agrícola para apoyar la producción, protección o establecimiento del cultivo según la necesidad operativa.`,
         applications: [
           `Uso recomendado en ${row[8].toLowerCase()}.`,
-          `AplicaciÃ³n en cultivos o lotes que requieran soporte de tipo ${row[2].toLowerCase()}.`,
-          `IntegraciÃ³n con planes de compra, distribuciÃ³n y control de inventario.`
+          `Aplicación en cultivos o lotes que requieran soporte de tipo ${row[2].toLowerCase()}.`,
+          `Integración con planes de compra, distribución y control de inventario.`
         ],
         recommendation: `Conviene revisar fecha clave, almacenamiento y disponibilidad antes de su uso. Proveedor o marca asociada: ${row[3]}.`
       };
@@ -1101,9 +1207,9 @@
         const currentQty = getCurrentQuantity(category, row);
         const statusText = currentQty <= 0 ? "Sin stock" : row[10];
         return {
-          usage: `${row[2]} Â· ${currentQty} ${row[5]} disponibles Â· Estado ${statusText}`,
+          usage: `${row[2]} · ${currentQty} ${row[5]} disponibles · Estado ${statusText}`,
           applications: [
-            `PresentaciÃ³n: ${row[3]}`,
+            `Presentación: ${row[3]}`,
             `Contenido por unidad: ${row[6]}`,
             `Proveedor principal: ${row[8]}`,
             `Costo base: ${row[7]}`
@@ -1116,9 +1222,9 @@
         const currentQty = getCurrentQuantity(category, row);
         const statusText = currentQty <= 0 ? "Sin unidades" : row[4];
         return {
-          usage: `${row[2]} Â· Estado ${statusText} Â· ${currentQty} und`,
+          usage: `${row[2]} · Estado ${statusText} · ${currentQty} und`,
           applications: [
-            `PresentaciÃ³n: ${row[3]}`,
+            `Presentación: ${row[3]}`,
             `Contenido o capacidad: ${row[6]}`,
             `Proveedor principal: ${row[8]}`,
             `Costo base: ${row[7]}`
@@ -1130,9 +1236,9 @@
       const currentQty = getCurrentQuantity(category, row);
       const statusText = currentQty <= 0 ? "Sin stock" : row[10];
       return {
-        usage: `${row[2]} Â· ${currentQty} ${row[5]} disponibles Â· Estado ${statusText}`,
+        usage: `${row[2]} · ${currentQty} ${row[5]} disponibles · Estado ${statusText}`,
         applications: [
-          `PresentaciÃ³n: ${row[3]}`,
+          `Presentación: ${row[3]}`,
           `Contenido por unidad: ${row[6]}`,
           `Proveedor principal: ${row[8]}`,
           `Costo base: ${row[7]}`
@@ -1166,16 +1272,16 @@
       detailModal.classList.remove("hidden");
       detailLoading.classList.remove("hidden");
       detailContent.classList.add("hidden");
-      detailTitle.textContent = "InformaciÃ³n del producto";
+      detailTitle.textContent = "Información del producto";
       detailSubtitle.textContent = "Consultando datos clave...";
-      if (detailUsageLabel) detailUsageLabel.textContent = "Resumen rÃ¡pido";
+      if (detailUsageLabel) detailUsageLabel.textContent = "Resumen rápido";
       if (detailApplicationsLabel) detailApplicationsLabel.textContent = "Datos clave";
       if (detailRecommendationLabel) detailRecommendationLabel.textContent = "Observaciones";
 
       try {
         const info = await getProductInfoFromApi(category, id);
         detailTitle.textContent = info.name;
-        detailSubtitle.textContent = "Resumen con lo mÃ¡s importante del producto.";
+        detailSubtitle.textContent = "Resumen con lo más importante del producto.";
         detailImage.src = info.image;
         detailImage.alt = `Imagen de ${info.name}`;
         detailImage.onerror = () => {
@@ -1194,14 +1300,14 @@
         detailContent.classList.remove("hidden");
       } catch (error) {
         detailTitle.textContent = "No se pudo cargar el detalle";
-        detailSubtitle.textContent = "La informaciÃ³n del producto no estuvo disponible.";
-        detailLoading.textContent = "No se encontrÃ³ informaciÃ³n para este producto.";
+        detailSubtitle.textContent = "La información del producto no estuvo disponible.";
+        detailLoading.textContent = "No se encontró información para este producto.";
       }
     }
 
     function closeDetailModal() {
       detailModal.classList.add("hidden");
-      detailLoading.textContent = "Consultando informaciÃ³n...";
+      detailLoading.textContent = "Consultando información...";
       detailLoading.classList.remove("hidden");
       detailContent.classList.add("hidden");
     }
@@ -1213,7 +1319,7 @@
 
       editMode = false;
       formModalTitle.textContent = "Nuevo producto";
-      formModalSubtitle.textContent = "Completa los datos clave y guarda el registro en la categorÃ­a seleccionada.";
+      formModalSubtitle.textContent = "Completa los datos clave y guarda el registro en la categoría seleccionada.";
       submitProductFormButton.textContent = "Guardar ficha base";
       formModalSubtitle.textContent = "Crea la ficha base del producto para incorporarlo al inventario.";
       productBaseStatus.value = "Disponible";
@@ -1262,7 +1368,7 @@
         heroTitle.textContent = "Inventario central para control de stock y movimientos.";
       }
       if (heroSubtitle) {
-        heroSubtitle.textContent = "Vista pensada para trabajar rÃ¡pido hoy y seguir creciendo hacia BD y punto de venta.";
+        heroSubtitle.textContent = "Vista pensada para trabajar rápido hoy y seguir creciendo hacia BD y punto de venta.";
       }
 
       const supportPill = document.querySelector("#open-exit-modal + span");
@@ -1271,9 +1377,9 @@
       }
 
       const panelCopy = {
-        insumos: "Control de productos base del inventario. La lista muestra resumen, stock actual y acceso rÃ¡pido al detalle.",
+        insumos: "Control de productos base del inventario. La lista muestra resumen, stock actual y acceso rápido al detalle.",
         abonos: "Control de abonos y fertilizantes con una vista resumida para stock, contenido y estado.",
-        herramientas: "Control de herramientas y maquinarias con foco en estado, cantidad y presentaciÃ³n."
+        herramientas: "Control de herramientas y maquinarias con foco en estado, cantidad y presentación."
       };
 
       Object.entries(panelCopy).forEach(([panelId, copy]) => {
@@ -1291,9 +1397,9 @@
       });
 
       const labelMap = {
-        "product-category": "CategorÃ­a",
-        "product-subcategory": "SubcategorÃ­a",
-        "product-presentation": "PresentaciÃ³n",
+        "product-category": "Categoría",
+        "product-subcategory": "Subcategoría",
+        "product-presentation": "Presentación",
         "product-usage": "Proveedor principal"
       };
 
@@ -1384,13 +1490,13 @@
 
       const row = findRowById(selectedProduct.category, selectedProduct.id);
       if (!row) {
-        alert("El producto seleccionado ya no estÃ¡ disponible.");
+        alert("El producto seleccionado ya no está disponible.");
         return;
       }
 
       editMode = true;
       formModalTitle.textContent = "Editar producto del inventario";
-      formModalSubtitle.textContent = "Actualiza la informaciÃ³n del producto seleccionado y guarda los cambios.";
+      formModalSubtitle.textContent = "Actualiza la información del producto seleccionado y guarda los cambios.";
       submitProductFormButton.textContent = "Guardar cambios";
       productCategory.value = selectedProduct.category;
       updateProductSelectors(row[2], row[3]);
@@ -1424,12 +1530,12 @@
       const row = findRowById(category, targetId);
 
       if (!row) {
-        alert("El producto elegido ya no estÃ¡ disponible.");
+        alert("El producto elegido ya no está disponible.");
         updateDeleteProductOptions();
         return;
       }
 
-      const confirmed = window.confirm(`Â¿Deseas eliminar "${row[1]}" (${row[0]}) del inventario?`);
+      const confirmed = window.confirm(`¿Deseas eliminar "${row[1]}" (${row[0]}) del inventario?`);
       if (!confirmed) {
         return;
       }
@@ -1460,7 +1566,7 @@
       updateDeleteProductOptions();
     }
 
-    function deleteSelectedProduct() {
+    async function deleteSelectedProduct() {
       if (!requireAuth("Eliminar productos")) {
         return;
       }
@@ -1472,40 +1578,42 @@
 
       const row = findRowById(selectedProduct.category, selectedProduct.id);
       if (!row) {
-        alert("El producto seleccionado ya no estÃ¡ disponible.");
+        alert("El producto seleccionado ya no está disponible.");
         clearSelectedProduct();
         return;
       }
 
-      const confirmed = window.confirm(`Â¿Deseas eliminar "${row[1]}" (${row[0]}) del inventario?`);
+      const confirmed = window.confirm(`¿Deseas eliminar "${row[1]}" (${row[0]}) del inventario?`);
       if (!confirmed) {
         return;
       }
 
-      const category = selectedProduct.category;
-      const updatedRows = getCategoryRows(category).filter((item) => item[0] !== selectedProduct.id);
+      try {
+        await inventoryFetchJson("/api/products/delete", {
+          method: "POST",
+          body: JSON.stringify({ sku: selectedProduct.id })
+        });
 
-      setCategoryRows(category, updatedRows);
-      saveInventoryState();
-      filteredRowsByCategory[category] = updatedRows;
-      activeCategory = category;
-      currentPage = 1;
-      setActiveCategoryView(category);
-      if (executiveSearch) {
-        executiveSearch.value = "";
+        activeCategory = selectedProduct.category;
+        currentPage = 1;
+        if (executiveSearch) {
+          executiveSearch.value = "";
+        }
+        filterSearch.value = "";
+        filterStatus.value = "";
+        if (categorySearch) {
+          categorySearch.value = "";
+        }
+        if (categoryProductSelect) {
+          categoryProductSelect.value = "";
+        }
+
+        clearSelectedProduct();
+        await syncInventoryModule();
+      } catch (error) {
+        alert(error instanceof Error ? error.message : "No se pudo eliminar el producto.");
       }
-      filterSearch.value = "";
-      filterStatus.value = "";
-      if (categorySearch) {
-        categorySearch.value = "";
-      }
-      if (categoryProductSelect) {
-        categoryProductSelect.value = "";
-      }
-      updatePagination(category);
-      clearSelectedProduct();
     }
-
     function buildRowFromForm(category) {
       const id = productId.value.trim();
       const name = productName.value.trim();
@@ -1522,7 +1630,7 @@
           id,
           name,
           subcategory,
-          presentation || "Sin presentaciÃ³n",
+          presentation || "Sin presentación",
           status,
           "0",
           content || "Sin detalle",
@@ -1537,7 +1645,7 @@
         id,
         name,
         subcategory,
-        presentation || "Sin presentaciÃ³n",
+        presentation || "Sin presentación",
         "0",
         unit,
         content || "Sin detalle",
@@ -1567,19 +1675,19 @@
       es: {
         pageTitle: "AgroControl | Inventario",
         nav: { home: "Inicio", about: "Nosotros", inventory: "Inventario", movements: "Movimientos", contact: "Contacto" },
-        auth: { login: "Iniciar sesiÃ³n", logout: "Cerrar sesiÃ³n" },
+        auth: { login: "Iniciar sesión", logout: "Cerrar sesión" },
         hero: { title: "Inventario central" },
-        preview: { notice: "EstÃ¡s en modo vista previa. Puedes consultar inventario y movimientos recientes, pero para agregar, editar, eliminar o registrar cambios debes iniciar sesiÃ³n." },
+        preview: { notice: "Estás en modo vista previa. Puedes consultar inventario y movimientos recientes, pero para agregar, editar, eliminar o registrar cambios debes iniciar sesión." },
         sidebar: {
           label: "Panel lateral",
-          quickActions: "Acciones rÃ¡pidas",
+          quickActions: "Acciones rápidas",
           selectedProduct: "Producto seleccionado",
-          noSelectedProduct: "NingÃºn producto seleccionado."
+          noSelectedProduct: "Ningún producto seleccionado."
         },
         actions: { add: "Nuevo Producto", edit: "Editar", delete: "Eliminar" },
         categories: { inputs: "Insumos", fertilizers: "Abonos", tools: "Herramientas y Maquinarias" },
         filters: { toggle: "Filtrar productos" },
-        messages: { previewAuth: "Esta acciÃ³n requiere iniciar sesiÃ³n. EstÃ¡s en modo vista previa." }
+        messages: { previewAuth: "Esta acción requiere iniciar sesión. Estás en modo vista previa." }
       },
       en: {
         pageTitle: "AgroControl | Inventory",
@@ -1607,10 +1715,15 @@
 
     initializeStoredProducts();
     updateAuthUI();
-    updateExecutiveSummary();
-    populateCategoryProductOptions();
-    updatePagination(activeCategory);
-    renderRecentMovements();
+    refreshInventoryUi();
+
+    (async () => {
+      try {
+        await syncInventoryModule();
+      } catch {
+        refreshInventoryUi();
+      }
+    })();
 
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -1707,7 +1820,9 @@
       openAddModal();
     });
     openEditModalButton.addEventListener("click", openEditModal);
-    deleteProductButton.addEventListener("click", deleteSelectedProduct);
+    deleteProductButton.addEventListener("click", () => {
+      deleteSelectedProduct().catch(() => {});
+    });
     closeProductPanelButton?.addEventListener("click", closeProductPanel);
     productPanelBackdrop?.addEventListener("click", closeProductPanel);
     productPanelDetailButton?.addEventListener("click", () => {
@@ -1734,13 +1849,13 @@
         openMovementModal("Salida");
       });
     }
-    logoutButton?.addEventListener("click", () => {
+    logoutButton?.addEventListener("click", async () => {
       if (!isAuthenticated()) {
         redirectToLogin();
         return;
       }
 
-      safeStorage.removeItem(window.AGRO_APP_KEYS.auth);
+      await logoutAgroSession();
       updateAuthUI();
       window.location.href = "login.html";
     });
@@ -1786,7 +1901,7 @@
       }
     });
 
-    addProductForm.addEventListener("submit", (event) => {
+    addProductForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
       if (!requireAuth(editMode ? "Guardar cambios del producto" : "Crear productos")) {
@@ -1799,48 +1914,32 @@
       }
 
       const category = productCategory.value;
-      let updatedRows;
+      const payload = buildProductPayloadFromForm(category);
 
-      if (editMode && selectedProduct) {
-        const currentRows = getCategoryRows(category);
-        const editedRow = buildRowFromForm(category);
-        updatedRows = currentRows.map((row) => row[0] === selectedProduct.id ? editedRow : row);
-        selectedProduct = { category, id: editedRow[0] };
-        updateProductPanel(category, editedRow);
+      try {
+        if (editMode && selectedProduct) {
+          await inventoryFetchJson("/api/products/update", {
+            method: "POST",
+            body: JSON.stringify(payload)
+          });
+        } else {
+          await inventoryFetchJson("/api/products", {
+            method: "POST",
+            body: JSON.stringify(payload)
+          });
+        }
+
+        activeCategory = category;
+        selectedProduct = { category, id: payload.sku };
+        await syncInventoryModule();
         openProductPanel();
-      } else {
-        const newRow = buildRowFromForm(category);
-        updatedRows = [...getCategoryRows(category), newRow];
-        selectedProduct = { category, id: newRow[0] };
-        updateProductPanel(category, newRow);
-        openProductPanel();
+        closeAddModal();
+      } catch (error) {
+        alert(error instanceof Error ? error.message : "No se pudo guardar el producto.");
       }
-
-      setCategoryRows(category, updatedRows);
-      saveInventoryState();
-      filteredRowsByCategory[category] = updatedRows;
-      activeCategory = category;
-      currentPage = Math.max(1, Math.ceil(updatedRows.length / pageSize));
-
-      buttons.forEach((item) => {
-        setCategoryButtonState(item, item.dataset.target === category);
-      });
-
-      panels.forEach((panel) => {
-        panel.classList.toggle("hidden", panel.id !== category);
-      });
-
-      if (executiveSearch) {
-        executiveSearch.value = "";
-      }
-      filterSearch.value = "";
-      filterStatus.value = "";
-      filteredRowsByCategory[category] = getCategoryRows(category);
-      updatePagination(category);
-      closeAddModal();
     });
 
-    movementForm.addEventListener("submit", (event) => {
+    movementForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
       if (!requireAuth(`Registrar ${currentMovementType.toLowerCase()}`)) {
@@ -1855,56 +1954,49 @@
 
       const amount = Number(movementAmount.value);
       if (!amount || amount <= 0) {
-        alert("Ingresa una cantidad vÃ¡lida para el movimiento.");
+        alert("Ingresa una cantidad válida para el movimiento.");
         return;
       }
 
       const { category, row, id } = movementSelection;
       if (!row) {
-        alert("El producto seleccionado ya no estÃ¡ disponible.");
+        alert("El producto seleccionado ya no está disponible.");
         closeMovementModal();
         return;
       }
 
-      const quantityIndex = getQuantityIndex(category);
       const currentQty = getCurrentQuantity(category, row);
       const nextQty = currentMovementType === "Entrada" ? currentQty + amount : currentQty - amount;
-
       if (nextQty < 0) {
         alert("La salida no puede dejar el stock en negativo.");
         return;
       }
 
-      const updatedRows = getCategoryRows(category).map((item) => {
-        if (item[0] !== id) return item;
-        const next = [...item];
-        next[quantityIndex] = String(nextQty);
-        return next;
-      });
+      try {
+        await inventoryFetchJson("/api/movements", {
+          method: "POST",
+          body: JSON.stringify({
+            sku: id,
+            type: currentMovementType === "Entrada" ? "entrada" : "salida",
+            quantity: amount,
+            date: movementDate.value || new Date().toISOString().slice(0, 10),
+            note: movementNote.value.trim(),
+            provider: movementProvider.value.trim(),
+            cost_unit: movementCostUnit.value.trim(),
+            cost_total: movementCostTotal.value.trim(),
+            lot: movementLot.value.trim(),
+            expiry: movementExpiry.value.trim(),
+            reference: movementProductRef.value.trim()
+          })
+        });
 
-      setCategoryRows(category, updatedRows);
-      saveInventoryState();
-      filteredRowsByCategory[category] = updatedRows;
-      movementHistory.unshift({
-        type: currentMovementType,
-        category,
-        id: row[0],
-        name: row[1],
-        amount,
-        date: movementDate.value || new Date().toISOString().slice(0, 10),
-        note: movementNote.value.trim() || "Sin detalle",
-        provider: movementProvider.value.trim(),
-        costUnit: movementCostUnit.value.trim(),
-        costTotal: movementCostTotal.value.trim(),
-        lot: movementLot.value.trim(),
-        expiry: movementExpiry.value.trim(),
-        reference: movementProductRef.value.trim()
-      });
-      movementHistory = movementHistory.slice(0, 30);
-      saveMovementHistory();
-      renderRecentMovements();
-      setSelectedProduct(category, id);
-      updatePagination(category);
-      closeMovementModal();
+        selectedProduct = { category, id };
+        await syncInventoryModule();
+        setSelectedProduct(category, id);
+        closeMovementModal();
+      } catch (error) {
+        alert(error instanceof Error ? error.message : "No se pudo registrar el movimiento.");
+      }
     });
+  })();
 

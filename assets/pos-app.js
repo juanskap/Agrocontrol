@@ -2,11 +2,17 @@
   const inventoryStateKey = window.AGRO_APP_KEYS.inventoryState;
   const movementsKey = window.AGRO_APP_KEYS.movements;
   const salesKey = window.AGRO_APP_KEYS.sales;
+  const customerAccountsKey = "agrocontrol-customer-accounts-v1";
   const authKey = window.AGRO_APP_KEYS.auth;
   const languageKey = window.AGRO_APP_KEYS.language || "agrocontrol-language";
   const translations = window.posTranslations || {};
+  const appBasePath = window.location.pathname
+    .replace(/\/$/, "")
+    .replace(/\/(?:pos(?:\.html)?)$/, "");
 
   const logoutButton = document.getElementById("logout-button");
+  const inventoryNavLink = document.querySelector('[data-i18n="nav.inventory"]');
+  const movementsNavLink = document.querySelector('[data-i18n="nav.movements"]');
   const openCartModalButton = document.getElementById("open-cart-modal");
   const closeCartModalButton = document.getElementById("close-cart-modal");
   const cartModal = document.getElementById("cart-modal");
@@ -21,7 +27,18 @@
   const discountValue = document.getElementById("discount-value");
   const totalValue = document.getElementById("total-value");
   const discountInput = document.getElementById("sale-discount");
-  const customerInput = document.getElementById("sale-customer");
+  const customerAccountSelect = document.getElementById("customer-account-select");
+  const selectedCustomerSummary = document.getElementById("selected-customer-summary");
+  const openCustomerAccountModalButton = document.getElementById("open-customer-account-modal");
+  const customerAccountModal = document.getElementById("customer-account-modal");
+  const closeCustomerAccountModalButton = document.getElementById("close-customer-account-modal");
+  const cancelCustomerAccountModalButton = document.getElementById("cancel-customer-account-modal");
+  const customerAccountForm = document.getElementById("customer-account-form");
+  const customerAccountName = document.getElementById("customer-account-name");
+  const customerAccountEmail = document.getElementById("customer-account-email");
+  const customerAccountPhone = document.getElementById("customer-account-phone");
+  const customerAccountPassword = document.getElementById("customer-account-password");
+  const customerAccountPasswordConfirm = document.getElementById("customer-account-password-confirm");
   const paymentMethod = document.getElementById("payment-method");
   const saleNote = document.getElementById("sale-note");
   const confirmSaleButton = document.getElementById("confirm-sale");
@@ -61,6 +78,8 @@
 
   let inventoryState = loadInventoryState();
   let salesHistory = loadSalesHistory();
+  let customerAccounts = loadCustomerAccounts();
+  let paymentMethodsCatalog = [];
   let activeCategory = "all";
   let currentProductPage = 1;
   let cart = [];
@@ -92,14 +111,116 @@
     const keys = {
       cash: "checkout.paymentCash",
       transfer: "checkout.paymentTransfer",
-      card: "checkout.paymentCard",
+      cards: "checkout.paymentCards",
+      card: "checkout.paymentCards",
+      paypal: "checkout.paymentPayPal",
       Efectivo: "checkout.paymentCash",
       Transferencia: "checkout.paymentTransfer",
-      Tarjeta: "checkout.paymentCard",
+      Tarjetas: "checkout.paymentCards",
+      Tarjeta: "checkout.paymentCards",
+      PayPal: "checkout.paymentPayPal",
       Cash: "checkout.paymentCash",
-      Card: "checkout.paymentCard"
+      Cards: "checkout.paymentCards",
+      Card: "checkout.paymentCards"
     };
     return keys[payment] ? t(keys[payment]) : payment;
+  }
+
+  function getPublicPosCopy() {
+    return currentLanguage === "en"
+      ? {
+          badge: "Public access",
+          title: "POS open for online purchases",
+          description: "Anyone can browse products and build a cart. We only ask for a customer account when confirming the purchase.",
+          action: "Sign in or create account"
+        }
+      : {
+          badge: "Acceso publico",
+          title: "POS abierto para compras en linea",
+          description: "Cualquier visitante puede explorar productos y armar su carrito. Solo pedimos una cuenta cliente al momento de confirmar la compra.",
+          action: "Entrar o crear cuenta"
+        };
+  }
+
+  function ensurePublicPosBanner() {
+    const host = document.querySelector("main section.space-y-6");
+    if (!host) return;
+
+    const copy = getPublicPosCopy();
+    let banner = document.getElementById("public-pos-banner");
+
+    if (!banner) {
+      banner = document.createElement("section");
+      banner.id = "public-pos-banner";
+      banner.className = "overflow-hidden rounded-[2rem] border border-hoja/10 bg-[linear-gradient(135deg,_rgba(62,107,72,0.94),_rgba(109,139,78,0.92))] px-5 py-5 text-white shadow-suave sm:px-7";
+      banner.innerHTML = `
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div class="max-w-3xl space-y-3">
+            <span data-public-pos=\"badge\" class="inline-flex w-fit items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em]"></span>
+            <div class="space-y-2">
+              <h1 data-public-pos=\"title\" class="text-2xl font-black tracking-tight sm:text-3xl"></h1>
+              <p data-public-pos=\"description\" class="max-w-2xl text-sm text-white/85 sm:text-base"></p>
+            </div>
+          </div>
+          <a data-public-pos=\"action\" href="login.html?redirect=pos.html" class="inline-flex items-center justify-center gap-2 rounded-full border border-white/18 bg-white/12 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/18"></a>
+        </div>
+      `;
+      host.insertBefore(banner, host.firstChild);
+    }
+
+    const badge = banner.querySelector('[data-public-pos="badge"]');
+    const title = banner.querySelector('[data-public-pos="title"]');
+    const description = banner.querySelector('[data-public-pos="description"]');
+    const action = banner.querySelector('[data-public-pos="action"]');
+    if (badge) badge.textContent = copy.badge;
+    if (title) title.textContent = copy.title;
+    if (description) description.textContent = copy.description;
+    if (action) action.textContent = copy.action;
+  }
+
+  function apiUrl(path) {
+    return `${window.location.origin}${appBasePath}${path}`;
+  }
+
+  function buildNetworkErrorMessage() {
+    const expectedBase = `${window.location.origin}${appBasePath || ""}`;
+    if (window.location.protocol === "file:") {
+      return "No se pudo conectar con el servidor. Abre el sistema desde http://localhost o desde tu proyecto en XAMPP.";
+    }
+    return `No se pudo conectar con el servidor. Verifica que abras el sistema desde ${expectedBase || window.location.origin}.`;
+  }
+
+  async function fetchJson(path, options = {}) {
+    let response;
+    try {
+      response = await fetch(apiUrl(path), {
+        headers: {
+          "Content-Type": "application/json",
+          ...(options.headers || {})
+        },
+        ...options
+      });
+    } catch (error) {
+      throw new Error(buildNetworkErrorMessage());
+    }
+
+    const rawText = await response.text();
+    const payload = (() => {
+      try {
+        return JSON.parse(rawText);
+      } catch {
+        return {
+          status: "error",
+          message: rawText.trim() || "No se pudo procesar la respuesta del servidor."
+        };
+      }
+    })();
+
+    if (!response.ok || payload.status === "error") {
+      throw new Error(payload.message || "No se pudo completar la solicitud.");
+    }
+
+    return payload.data;
   }
 
   function getSession() {
@@ -110,8 +231,52 @@
     }
   }
 
+  function saveSession(session) {
+    if (!session) {
+      safeStorage.removeItem(authKey);
+      return;
+    }
+
+    safeStorage.setItem(authKey, JSON.stringify(session));
+  }
+
   function isAuthenticated() {
     return Boolean(getSession());
+  }
+
+  function isAdminSession() {
+    return getSession()?.role === "admin";
+  }
+
+  async function syncServerSession() {
+    try {
+      const session = await fetchJson("/api/session", {
+        headers: { Accept: "application/json" }
+      });
+      saveSession(session || null);
+      return session || null;
+    } catch {
+      return getSession();
+    }
+  }
+
+  async function logoutSession() {
+    try {
+      await fetchJson("/api/logout", {
+        method: "POST",
+        headers: { Accept: "application/json" }
+      });
+    } catch {
+      // Clear the client state even if the request fails.
+    }
+
+    saveSession(null);
+  }
+
+  function syncPrivateNav() {
+    const adminVisible = isAdminSession();
+    inventoryNavLink?.classList.toggle("hidden", !adminVisible);
+    movementsNavLink?.classList.toggle("hidden", !adminVisible);
   }
 
   function updateSessionButton() {
@@ -120,6 +285,8 @@
     if (label) {
       label.textContent = isAuthenticated() ? t("actions.logout") : t("actions.login");
     }
+
+    syncPrivateNav();
   }
 
   function openCartModal() {
@@ -205,6 +372,186 @@
     } catch {
       return [];
     }
+  }
+
+  function loadCustomerAccounts() {
+    try {
+      const parsed = JSON.parse(safeStorage.getItem(customerAccountsKey) || "[]");
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveCustomerAccounts() {
+    safeStorage.setItem(customerAccountsKey, JSON.stringify(customerAccounts));
+  }
+
+  function renderPaymentMethods() {
+    if (!paymentMethod || paymentMethodsCatalog.length === 0) return;
+
+    paymentMethod.innerHTML = paymentMethodsCatalog.map((method) => `
+      <option value="${method.code}" class="bg-slate-900 text-white">${paymentLabel(method.code)}</option>
+    `).join("");
+  }
+
+  function getSelectedCustomerAccount() {
+    const selectedId = customerAccountSelect?.value || "";
+    return customerAccounts.find((account) => account.id === selectedId) || null;
+  }
+
+  function updateCheckoutAvailability() {
+    if (!confirmSaleButton) return;
+
+    const hasCustomer = Boolean(customerAccountSelect?.value);
+    const canCheckout = hasCustomer;
+    confirmSaleButton.disabled = !canCheckout;
+    confirmSaleButton.className = canCheckout
+      ? "inline-flex items-center justify-center gap-2 rounded-full bg-sol px-6 py-3 text-sm font-bold text-slate-950 transition hover:brightness-105 sm:min-w-[15rem]"
+      : "inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-full bg-slate-500/40 px-6 py-3 text-sm font-bold text-white/60 sm:min-w-[15rem]";
+  }
+
+  function renderCustomerAccounts(selectedId = null) {
+    if (!customerAccountSelect) return;
+
+    const nextSelectedId = selectedId ?? customerAccountSelect.value;
+    customerAccountSelect.innerHTML = [
+      `<option value="" class="bg-slate-900 text-white">${t("checkout.customerSelect")}</option>`,
+      ...customerAccounts.map((account) => `<option value="${account.id}" class="bg-slate-900 text-white">${account.fullName} - ${account.email}</option>`)
+    ].join("");
+
+    if (nextSelectedId && customerAccountSelect.querySelector(`option[value="${nextSelectedId}"]`)) {
+      customerAccountSelect.value = nextSelectedId;
+    }
+
+    const selectedAccount = getSelectedCustomerAccount();
+    if (selectedCustomerSummary) {
+      selectedCustomerSummary.textContent = selectedAccount
+        ? `${t("dynamic.selectedAccount").replace("{name}", selectedAccount.fullName)} - ${t("dynamic.accountCode").replace("{code}", selectedAccount.code)}`
+        : t("checkout.noAccountSelected");
+    }
+
+    updateCheckoutAvailability();
+  }
+
+  async function loadRemoteCustomerAccounts() {
+    if (!isAuthenticated()) {
+      customerAccounts = [];
+      saveCustomerAccounts();
+      renderCustomerAccounts();
+      return;
+    }
+
+    const rows = await fetchJson("/api/customers");
+    customerAccounts = rows.map((account) => ({
+      id: String(account.id),
+      code: account.code,
+      fullName: account.full_name,
+      email: account.email,
+      phone: account.phone || ""
+    }));
+    saveCustomerAccounts();
+    renderCustomerAccounts();
+  }
+
+  async function loadRemotePaymentMethods() {
+    paymentMethodsCatalog = await fetchJson("/api/payment-methods");
+    renderPaymentMethods();
+  }
+
+  async function syncInventoryStateFromApi() {
+    const state = await fetchJson("/api/inventory-state", {
+      headers: { Accept: "application/json" }
+    });
+    inventoryState = state || { insumos: [], abonos: [], herramientas: [] };
+  }
+
+  async function syncSalesHistoryFromApi() {
+    if (!isAuthenticated()) {
+      salesHistory = [];
+      return;
+    }
+
+    salesHistory = await fetchJson("/api/sales?limit=30", {
+      headers: { Accept: "application/json" }
+    });
+  }
+
+  async function syncPosData() {
+    await syncInventoryStateFromApi();
+    await syncSalesHistoryFromApi();
+    renderProducts();
+    renderCart();
+
+    if (detailProduct) {
+      const refreshedProduct = findProduct(detailProduct.category, detailProduct.id);
+      if (refreshedProduct) {
+        openProductDetail(refreshedProduct);
+      } else {
+        closeProductDetail();
+      }
+    }
+  }
+  function openCustomerAccountModal() {
+    customerAccountModal?.classList.remove("hidden");
+    customerAccountName?.focus();
+  }
+
+  function closeCustomerAccountModal() {
+    customerAccountModal?.classList.add("hidden");
+    customerAccountForm?.reset();
+  }
+
+  function buildCustomerAccountCode() {
+    return `CLI-${String(customerAccounts.length + 1).padStart(4, "0")}`;
+  }
+
+  async function createCustomerAccount() {
+    const fullName = customerAccountName?.value.trim() || "";
+    const email = customerAccountEmail?.value.trim() || "";
+    const phone = customerAccountPhone?.value.trim() || "";
+    const password = customerAccountPassword?.value || "";
+    const passwordConfirm = customerAccountPasswordConfirm?.value || "";
+
+    if (!fullName) {
+      alert(t("alerts.accountNameRequired"));
+      return;
+    }
+
+    if (!email || !email.includes("@")) {
+      alert(t("alerts.accountEmailRequired"));
+      return;
+    }
+
+    if (password.length < 6) {
+      alert(t("alerts.accountPasswordRequired"));
+      return;
+    }
+
+    if (password !== passwordConfirm) {
+      alert(t("alerts.accountPasswordMismatch"));
+      return;
+    }
+
+    const account = await fetchJson("/api/customers", {
+      method: "POST",
+      body: JSON.stringify({
+        full_name: fullName,
+        email,
+        phone,
+        password
+      })
+    });
+
+    saveSession(account.session || null);
+    updateSessionButton();
+    await loadRemoteCustomerAccounts();
+    const selectedId = String(account.id);
+    renderCustomerAccounts(selectedId);
+    customerAccountSelect.value = selectedId;
+    updateCheckoutAvailability();
+    closeCustomerAccountModal();
+    alert(t("alerts.accountCreated").replace("{name}", account.full_name || fullName));
   }
 
   function saveSalesHistory() {
@@ -545,7 +892,8 @@
     return `POS-${String(salesHistory.length + 1).padStart(4, "0")}`;
   }
 
-  function recordSale() {
+  async function recordSale() {
+
     const items = getCartDetails();
     if (items.length === 0) {
       alert(t("alerts.addProductFirst"));
@@ -571,80 +919,53 @@
       }
     }
 
-    items.forEach((item) => {
-      inventoryState[item.category] = inventoryState[item.category].map((row) => {
-        if (row[0] !== item.id) return row;
-        const nextRow = [...row];
-        const quantityIndex = quantityIndexByCategory(item.category);
-        nextRow[quantityIndex] = String(getCurrentQuantity(item.category, row) - item.quantity);
-        return nextRow;
-      });
-    });
+    const selectedCustomer = getSelectedCustomerAccount();
+    if (!selectedCustomer) {
+      alert(t("alerts.selectCustomerAccount"));
+      return;
+    }
 
-    saveInventoryState();
-
-    const movements = loadMovementHistory();
-    const note = saleNote.value.trim() || t("dynamic.saleRecordedNote").replace("{saleNumber}", saleNumber);
-    const payment = paymentMethod.value;
-    const customer = customerInput.value.trim();
-
-    items.slice().reverse().forEach((item) => {
-      const row = inventoryState[item.category].find((product) => product[0] === item.id);
-      const nextQty = row ? getCurrentQuantity(item.category, row) : 0;
-      movements.unshift({
-        type: currentLanguage === "en" ? "Output" : "Salida",
-        category: item.category,
-        id: item.id,
-        name: item.product.name,
-        amount: item.quantity,
-        date: saleDate,
-        responsible: customer,
-        supplier: "",
-        note,
-        price: formatCurrency(item.product.price),
-        totalValue: formatCurrency(item.subtotal),
-        stockAfter: nextQty,
-        provider: "",
-        costUnit: String(item.product.price.toFixed(2)),
-        costTotal: String(item.subtotal.toFixed(2)),
-        lot: "",
-        expiry: "",
-        reference: `${saleNumber} - ${paymentLabel(payment)}${customer ? ` - ${customer}` : ""}`
-      });
-    });
-    saveMovementHistory(movements.slice(0, 100));
-
-    salesHistory.unshift({
-      number: saleNumber,
-      date: saleDate,
-      customer: customer || t("dynamic.walkInCustomer"),
-      payment,
-      note,
-      subtotal,
+    const salePayload = {
+      customer_id: Number(selectedCustomer.id),
+      payment_code: paymentMethod.value,
+      note: saleNote.value.trim(),
       discount,
-      total,
-      items: items.map((item) => ({
-        category: item.category,
-        id: item.id,
-        name: item.product.name,
-        quantity: item.quantity,
-        unitPrice: item.product.price,
-        subtotal: item.subtotal
-      }))
-    });
-    salesHistory = salesHistory.slice(0, 30);
-    saveSalesHistory();
+      items: items.map((item) => {
+        const row = inventoryState[item.category].find((product) => product[0] === item.id);
+        const currentQty = row ? getCurrentQuantity(item.category, row) : 0;
 
+        return {
+          id: item.id,
+          sku: item.id,
+          name: item.product.name,
+          category: item.category,
+          presentation: item.product.presentation,
+          quantity: item.quantity,
+          unit_price: item.product.price,
+          subtotal: item.subtotal,
+          stock_after: Math.max(currentQty - item.quantity, 0)
+        };
+      })
+    };
+
+    const saleResponse = await fetchJson("/api/sales", {
+      method: "POST",
+      body: JSON.stringify(salePayload)
+    });
+
+    const savedSaleNumber = saleResponse.sale_number || saleNumber;
+
+    await syncPosData();
     cart = [];
     discountInput.value = "0";
-    customerInput.value = "";
+    customerAccountSelect.value = "";
+    renderCustomerAccounts();
     saleNote.value = "";
     paymentMethod.value = "cash";
-    inventoryState = loadInventoryState();
     renderProducts();
     renderCart();
     closeCartModal();
-    alert(t("alerts.saleRecorded").replace("{saleNumber}", saleNumber));
+    alert(t("alerts.saleRecorded").replace("{saleNumber}", savedSaleNumber));
   }
 
   function applyDynamicTranslations() {
@@ -659,7 +980,10 @@
   function applyLanguage(lang) {
     currentLanguage = translations[lang] ? lang : "es";
     updateSessionButton();
+    ensurePublicPosBanner();
     applyDynamicTranslations();
+    renderCustomerAccounts();
+    renderPaymentMethods();
     syncCategoryUI();
     renderProducts();
     renderCart();
@@ -670,18 +994,12 @@
 
   window.refreshPosLanguage = applyLanguage;
 
-  function refreshInventoryFromStorage() {
-    inventoryState = loadInventoryState();
-    renderProducts();
-    renderCart();
-
-    if (detailProduct) {
-      const refreshedProduct = findProduct(detailProduct.category, detailProduct.id);
-      if (refreshedProduct) {
-        openProductDetail(refreshedProduct);
-      } else {
-        closeProductDetail();
-      }
+  async function refreshInventoryFromStorage() {
+    try {
+      await syncPosData();
+    } catch {
+      renderProducts();
+      renderCart();
     }
   }
 
@@ -699,6 +1017,25 @@
     renderProducts();
   });
   discountInput.addEventListener("input", updateTotals);
+  customerAccountSelect?.addEventListener("change", () => {
+    renderCustomerAccounts(customerAccountSelect.value);
+  });
+  openCustomerAccountModalButton?.addEventListener("click", openCustomerAccountModal);
+  closeCustomerAccountModalButton?.addEventListener("click", closeCustomerAccountModal);
+  cancelCustomerAccountModalButton?.addEventListener("click", closeCustomerAccountModal);
+  customerAccountModal?.addEventListener("click", (event) => {
+    if (event.target === customerAccountModal) {
+      closeCustomerAccountModal();
+    }
+  });
+  customerAccountForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      await createCustomerAccount();
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "No se pudo crear la cuenta cliente.");
+    }
+  });
   openCartModalButton?.addEventListener("click", openCartModal);
   closeCartModalButton?.addEventListener("click", closeCartModal);
   cartModal?.addEventListener("click", (event) => {
@@ -720,17 +1057,21 @@
     if (!detailProduct) return;
     addToCart(detailProduct.category, detailProduct.id);
   });
-  saleForm?.addEventListener("submit", (event) => {
+  saleForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    recordSale();
+    try {
+      await recordSale();
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "No se pudo registrar la venta.");
+    }
   });
-  logoutButton?.addEventListener("click", () => {
+  logoutButton?.addEventListener("click", async () => {
     if (!isAuthenticated()) {
       window.location.href = "login.html?redirect=pos.html";
       return;
     }
 
-    safeStorage.removeItem(authKey);
+    await logoutSession();
     updateSessionButton();
     window.location.href = "pos.html";
   });
@@ -739,7 +1080,32 @@
     if (event.key === inventoryStateKey) {
       refreshInventoryFromStorage();
     }
+    if (event.key === customerAccountsKey) {
+      customerAccounts = loadCustomerAccounts();
+      renderCustomerAccounts();
+    }
   });
 
-  applyLanguage(currentLanguage);
+  renderCustomerAccounts();
+  loadRemotePaymentMethods().catch(() => {});
+  (async () => {
+    await syncServerSession();
+    updateSessionButton();
+    renderCustomerAccounts();
+    await Promise.all([
+      loadRemoteCustomerAccounts().catch(() => {}),
+      syncPosData().catch(() => {})
+    ]);
+    applyLanguage(currentLanguage);
+  })();
 })();
+
+
+
+
+
+
+
+
+
+
