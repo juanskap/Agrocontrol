@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AgroControl | Iniciar sesion</title>
+  <title>AgroControl | Iniciar sesión</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%233E6B48'/><path d='M20 39c0-10 7-18 18-20-2 3-3 6-3 10 0 6 3 11 9 15-3 1-5 1-8 1-10 0-16-6-16-6Z' fill='%23D9A441'/><path d='M23 42c4-7 11-12 21-14' stroke='%23F5F0E6' stroke-width='4' stroke-linecap='round'/></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="assets/storage-helper.js"></script>
@@ -40,18 +40,18 @@
           </div>
         </div>
         <p class="mt-6 text-xs font-bold uppercase tracking-[0.28em] text-sol" data-i18n="hero.label">Acceso protegido</p>
-        <h1 class="mt-3 text-3xl font-black leading-tight md:text-4xl" data-i18n="hero.title">Ingresa al sistema de inventario agricola.</h1>
-        <p class="mt-4 max-w-xl text-base leading-7 text-white/75" data-i18n="hero.description">Accede con tu cuenta cliente para comprar en linea o usa el acceso administrativo para gestionar el sistema.</p>
+        <h1 class="mt-3 text-3xl font-black leading-tight md:text-4xl" data-i18n="hero.title">Ingresa al sistema de inventario agrícola.</h1>
+        <p class="mt-4 max-w-xl text-base leading-7 text-white/75" data-i18n="hero.description">Accede con tu cuenta cliente para comprar en línea o usa el acceso administrativo para gestionar el sistema.</p>
         <div class="mt-auto space-y-4 pt-8">
           <div class="rounded-[1.5rem] border border-sol/25 bg-sol/10 px-4 py-4">
             <p class="text-xs font-bold uppercase tracking-[0.2em] text-sol" data-i18n="hero.redirectLabel">Destino del acceso</p>
-            <p id="login-redirect-label" class="mt-2 text-sm text-white/85">Seras enviado al panel privado despues de iniciar sesion.</p>
+            <p id="login-redirect-label" class="mt-2 text-sm text-white/85">Serás enviado al panel privado después de iniciar sesión.</p>
           </div>
         </div>
       </section>
 
       <section class="flex h-full flex-col rounded-[2.25rem] bg-white p-7 shadow-suave md:p-8">
-        <p class="text-xs font-bold uppercase tracking-[0.24em] text-hoja" data-i18n="form.label">Iniciar sesion</p>
+        <p class="text-xs font-bold uppercase tracking-[0.24em] text-hoja" data-i18n="form.label">Iniciar sesión</p>
         <h2 class="mt-3 text-2xl font-black text-slate-900 md:text-3xl" data-i18n="form.title">Acceso de clientes y administracion</h2>
         <p class="mt-3 text-sm leading-7 text-slate-600" data-i18n="form.description">Ingresa con tu cuenta cliente o crea una nueva para comprar en linea.</p>
 
@@ -63,8 +63,8 @@
           <label class="block">
             <span class="mb-1 block text-sm font-semibold text-slate-700" data-i18n="form.passwordLabel">Contrasena</span>
             <div class="flex items-center gap-2 rounded-2xl border border-slate-200 bg-crema px-4 py-2.5 transition focus-within:border-hoja focus-within:bg-white">
-              <input id="login-password" type="password" autocomplete="current-password" class="w-full bg-transparent text-sm outline-none" data-i18n-placeholder="form.passwordPlaceholder" placeholder="Ingresa tu contrasena">
-              <button id="toggle-password" type="button" class="rounded-full border border-hoja/15 bg-hoja/15 p-1 text-hoja transition hover:bg-hoja/25 hover:text-hoja" aria-label="Mostrar contrasena">
+              <input id="login-password" type="password" autocomplete="current-password" class="w-full bg-transparent text-sm outline-none" data-i18n-placeholder="form.passwordPlaceholder" placeholder="Ingresa tu contraseña">
+              <button id="toggle-password" type="button" class="rounded-full border border-hoja/15 bg-hoja/15 p-1 text-hoja transition hover:bg-hoja/25 hover:text-hoja" aria-label="Mostrar contraseña">
                 <svg id="toggle-password-icon" viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M12 5c5.5 0 9.5 5.6 9.7 5.8l.3.4-.3.4C21.5 11.8 17.5 17.4 12 17.4S2.5 11.8 2.3 11.6l-.3-.4.3-.4C2.5 10.6 6.5 5 12 5Zm0 2c-3.6 0-6.6 3.2-7.6 4.2 1 1.1 4 4.2 7.6 4.2s6.6-3.2 7.6-4.2C18.6 10.2 15.6 7 12 7Zm0 1.5a2.7 2.7 0 1 1 0 5.4 2.7 2.7 0 0 1 0-5.4Z"/></svg>
               </button>
             </div>
@@ -73,7 +73,7 @@
           <div class="flex flex-wrap items-center gap-3 pt-3">
             <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-hoja px-6 py-3 text-sm font-semibold text-white shadow-suave" data-i18n="form.submit">Ingresar</button>
             <button id="toggle-register-panel" type="button" class="inline-flex items-center gap-2 rounded-full border border-sol bg-sol/10 px-6 py-3 text-sm font-semibold text-hoja" data-i18n="form.createAccount">Crear cuenta</button>
-            <a href="/" class="inline-flex items-center gap-2 rounded-full border border-hoja px-6 py-3 text-sm font-semibold text-hoja" data-i18n="form.back">Volver al inicio</a>
+            <a href="index.html" class="inline-flex items-center gap-2 rounded-full border border-hoja px-6 py-3 text-sm font-semibold text-hoja" data-i18n="form.back">Volver al inicio</a>
           </div>
         </form>
 
@@ -106,7 +106,7 @@
           <input id="register-email" type="email" autocomplete="email" required class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 text-sm outline-none transition focus:border-hoja focus:bg-white" data-i18n-placeholder="register.emailPlaceholder" placeholder="cliente@correo.com">
         </label>
         <label class="block">
-          <span class="mb-1 block text-sm font-semibold text-slate-700" data-i18n="register.phoneLabel">Telefono</span>
+          <span class="mb-1 block text-sm font-semibold text-slate-700" data-i18n="register.phoneLabel">Teléfono</span>
           <input id="register-phone" type="text" autocomplete="tel" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 text-sm outline-none transition focus:border-hoja focus:bg-white" data-i18n-placeholder="register.phonePlaceholder" placeholder="0999999999">
         </label>
         <label class="block">
@@ -114,8 +114,8 @@
           <input id="register-password" type="password" autocomplete="new-password" required minlength="6" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 text-sm outline-none transition focus:border-hoja focus:bg-white" data-i18n-placeholder="register.passwordPlaceholder" placeholder="Minimo 6 caracteres">
         </label>
         <label class="block">
-          <span class="mb-1 block text-sm font-semibold text-slate-700" data-i18n="register.passwordConfirmLabel">Confirmar contrasena</span>
-          <input id="register-password-confirm" type="password" autocomplete="new-password" required minlength="6" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 text-sm outline-none transition focus:border-hoja focus:bg-white" data-i18n-placeholder="register.passwordConfirmPlaceholder" placeholder="Repite tu contrasena">
+          <span class="mb-1 block text-sm font-semibold text-slate-700" data-i18n="register.passwordConfirmLabel">Confirmar contraseña</span>
+          <input id="register-password-confirm" type="password" autocomplete="new-password" required minlength="6" class="w-full rounded-2xl border border-slate-200 bg-crema px-4 py-3 text-sm outline-none transition focus:border-hoja focus:bg-white" data-i18n-placeholder="register.passwordConfirmPlaceholder" placeholder="Repite tu contraseña">
         </label>
         <div id="register-message" class="hidden rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700"></div>
         <div class="flex flex-wrap items-center gap-3 pt-2">
@@ -129,28 +129,28 @@
   <script>
     const loginTranslations = {
       es: {
-        pageTitle: "AgroControl | Iniciar sesion",
+        pageTitle: "AgroControl | Iniciar sesión",
         hero: {
           label: "Acceso protegido",
-          title: "Ingresa al sistema de inventario agricola.",
-          description: "Accede con tu cuenta cliente para comprar en linea o usa el acceso administrativo para gestionar el sistema.",
+          title: "Ingresa al sistema de inventario agrícola.",
+          description: "Accede con tu cuenta cliente para comprar en línea o usa el acceso administrativo para gestionar el sistema.",
           redirectLabel: "Destino del acceso",
-          redirectInventory: "Seras enviado al panel de inventario despues de iniciar sesion.",
-          redirectMovements: "Seras enviado al panel de movimientos despues de iniciar sesion.",
-          redirectPrivate: "Seras enviado al panel privado despues de iniciar sesion."
+          redirectInventory: "Serás enviado al panel de inventario después de iniciar sesión.",
+          redirectMovements: "Serás enviado al panel de movimientos después de iniciar sesión.",
+          redirectPrivate: "Serás enviado al panel privado después de iniciar sesión."
         },
         form: {
-          label: "Iniciar sesion",
+          label: "Iniciar sesión",
           title: "Acceso de clientes y administracion",
           description: "Ingresa con tu cuenta cliente o crea una nueva para comprar en linea.",
           userLabel: "Correo o usuario",
           userPlaceholder: "Ingresa tu correo o admin",
           passwordLabel: "Contrasena",
-          passwordPlaceholder: "Ingresa tu contrasena",
+          passwordPlaceholder: "Ingresa tu contraseña",
           submit: "Ingresar",
           createAccount: "Crear cuenta",
           back: "Volver al inicio",
-          invalid: "Usuario o contrasena incorrectos. Revisa los datos e intentalo de nuevo."
+          invalid: "Usuario o contraseña incorrectos. Revisa los datos e inténtalo de nuevo."
         },
         register: {
           label: "Crear cuenta",
@@ -160,17 +160,17 @@
           namePlaceholder: "Ej: Maria Lopez",
           emailLabel: "Correo",
           emailPlaceholder: "cliente@correo.com",
-          phoneLabel: "Telefono",
+          phoneLabel: "Teléfono",
           phonePlaceholder: "0999999999",
           passwordLabel: "Contrasena",
           passwordPlaceholder: "Minimo 6 caracteres",
-          passwordConfirmLabel: "Confirmar contrasena",
-          passwordConfirmPlaceholder: "Repite tu contrasena",
+          passwordConfirmLabel: "Confirmar contraseña",
+          passwordConfirmPlaceholder: "Repite tu contraseña",
           submit: "Crear cuenta",
           cancel: "Cancelar",
           invalid: "No se pudo crear la cuenta.",
-          passwordMismatch: "Las contrasenas no coinciden.",
-          passwordShort: "La contrasena debe tener al menos 6 caracteres."
+          passwordMismatch: "Las contraseñas no coinciden.",
+          passwordShort: "La contraseña debe tener al menos 6 caracteres."
         }
       },
       en: {
@@ -422,7 +422,7 @@
 
     (async () => {
       const activeSession = await loadServerSession();
-      if (activeSession || isAuthenticated()) {
+      if (activeSession) {
         window.location.replace(resolvePostLoginUrl(activeSession || getStoredSession()));
       }
     })();

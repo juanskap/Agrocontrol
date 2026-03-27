@@ -37,6 +37,7 @@
       ...(options.routes || {})
     };
     const loginRedirect = options.loginRedirect || routes.inventory;
+    const logoutRedirect = options.logoutRedirect || "index.html";
     const languageStorageKey = options.languageStorageKey || "agrocontrol-language";
     const appBasePath = window.location.pathname.replace(/\/$/, "").replace(/\/(?:index|nosotros|contacto|login|pos|inventario|movimientos)(?:\.html)?$/, "");
 
@@ -134,6 +135,7 @@
         if (!isAuthenticated()) return;
         event.preventDefault();
         await logout(safeStorage.getItem(languageStorageKey) || "es");
+        window.location.href = logoutRedirect;
       });
       loginLink.dataset.publicAuthBound = "true";
     }

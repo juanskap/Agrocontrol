@@ -23,6 +23,13 @@ require_once BASE_PATH . '/app/Core/helpers.php';
 App\Core\Env::load(BASE_PATH . '/.env');
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
+    $sessionPath = (string) env('SESSION_SAVE_PATH', base_path('storage/sessions'));
+
+    if (!is_dir($sessionPath)) {
+        mkdir($sessionPath, 0777, true);
+    }
+
+    session_save_path($sessionPath);
     session_name((string) env('SESSION_NAME', 'agrocontrol_session'));
     session_start([
         'cookie_httponly' => true,

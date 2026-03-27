@@ -73,12 +73,12 @@ final class PageController extends Controller
     public function login(): void
     {
         if (Auth::isAdmin()) {
-            Response::redirect(app_url('/inventario'));
+            Response::redirect(app_url('/inventario.html'));
             return;
         }
 
         if (Auth::isCustomer()) {
-            Response::redirect(app_url('/pos'));
+            Response::redirect(app_url('/pos.html'));
             return;
         }
 
@@ -101,12 +101,13 @@ final class PageController extends Controller
     private function requireAdminPage(string $path): bool
     {
         if (!Auth::check()) {
-            Response::redirect(app_url('/login?redirect=' . urlencode($path)));
+            $target = str_ends_with($path, '.html') ? $path : $path . '.html';
+            Response::redirect(app_url('/login.html?redirect=' . urlencode($target)));
             return true;
         }
 
         if (!Auth::isAdmin()) {
-            Response::redirect(app_url('/pos'));
+            Response::redirect(app_url('/pos.html'));
             return true;
         }
 
@@ -136,13 +137,13 @@ final class PageController extends Controller
         }
 
         $replacements = [
-            'index.html' => '/',
-            'nosotros.html' => '/nosotros',
-            'inventario.html' => '/inventario',
-            'movimientos.html' => '/movimientos',
-            'contacto.html' => '/contacto',
-            'login.html' => '/login',
-            'pos.html' => '/pos',
+            'index.html' => '/index.html',
+            'nosotros.html' => '/nosotros.html',
+            'inventario.html' => '/inventario.html',
+            'movimientos.html' => '/movimientos.html',
+            'contacto.html' => '/contacto.html',
+            'login.html' => '/login.html',
+            'pos.html' => '/pos.html',
         ];
 
         $html = str_replace(array_keys($replacements), array_values($replacements), $html);

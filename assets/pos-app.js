@@ -21,6 +21,11 @@
   const productGrid = document.getElementById("product-grid");
   const productPaginationSummary = document.getElementById("product-pagination-summary");
   const productPagination = document.getElementById("product-pagination");
+  const featuredSlider = document.getElementById("featured-slider");
+  const featuredTrack = document.getElementById("featured-track");
+  const featuredDots = document.getElementById("featured-dots");
+  const featuredPrevButton = document.getElementById("featured-prev");
+  const featuredNextButton = document.getElementById("featured-next");
   const cartItems = document.getElementById("cart-items");
   const cartStatus = document.getElementById("cart-status");
   const subtotalValue = document.getElementById("subtotal-value");
@@ -39,10 +44,14 @@
   const customerAccountPhone = document.getElementById("customer-account-phone");
   const customerAccountPassword = document.getElementById("customer-account-password");
   const customerAccountPasswordConfirm = document.getElementById("customer-account-password-confirm");
+  const customerAccountMessage = document.getElementById("customer-account-message");
+  const submitCustomerAccountButton = document.getElementById("submit-customer-account");
   const paymentMethod = document.getElementById("payment-method");
   const saleNote = document.getElementById("sale-note");
   const confirmSaleButton = document.getElementById("confirm-sale");
   const saleForm = document.getElementById("sale-form");
+  const saleFormMessage = document.getElementById("sale-form-message");
+  const checkoutSessionBanner = document.getElementById("checkout-session-banner");
   const clearCartButton = document.getElementById("clear-cart");
   const categoryChips = Array.from(document.querySelectorAll(".category-chip"));
   const productDetailModal = document.getElementById("product-detail-modal");
@@ -81,11 +90,22 @@
   let customerAccounts = loadCustomerAccounts();
   let paymentMethodsCatalog = [];
   let activeCategory = "all";
-  let currentProductPage = 1;
+  let currentProductPage = {
+    insumos: 1,
+    abonos: 1,
+    herramientas: 1
+  };
   let cart = [];
-  const productsPerPage = 36;
+  const productsPerPage = 12;
   let detailProduct = null;
   let currentLanguage = safeStorage.getItem(languageKey) || "es";
+  let featuredIndex = 0;
+  let featuredTimer = null;
+  let featuredOffset = 0;
+  let featuredTrackHalfWidth = 0;
+  let featuredLastFrame = 0;
+  const featuredStepSize = 320;
+  const featuredSpeed = 38;
 
   function getNestedValue(source, path) {
     return path.split(".").reduce((value, segment) => value?.[segment], source);
@@ -143,7 +163,9 @@
   }
 
   function ensurePublicPosBanner() {
-    const host = document.querySelector("main section.space-y-6");
+    const host =
+      document.getElementById("public-pos-action-host") ||
+      document.querySelector("main section.space-y-6");
     if (!host) return;
 
     const copy = getPublicPosCopy();
@@ -152,29 +174,14 @@
     if (!banner) {
       banner = document.createElement("section");
       banner.id = "public-pos-banner";
-      banner.className = "overflow-hidden rounded-[2rem] border border-hoja/10 bg-[linear-gradient(135deg,_rgba(62,107,72,0.94),_rgba(109,139,78,0.92))] px-5 py-5 text-white shadow-suave sm:px-7";
+      banner.className = "flex w-full justify-start lg:justify-end";
       banner.innerHTML = `
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div class="max-w-3xl space-y-3">
-            <span data-public-pos=\"badge\" class="inline-flex w-fit items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em]"></span>
-            <div class="space-y-2">
-              <h1 data-public-pos=\"title\" class="text-2xl font-black tracking-tight sm:text-3xl"></h1>
-              <p data-public-pos=\"description\" class="max-w-2xl text-sm text-white/85 sm:text-base"></p>
-            </div>
-          </div>
-          <a data-public-pos=\"action\" href="login.html?redirect=pos.html" class="inline-flex items-center justify-center gap-2 rounded-full border border-white/18 bg-white/12 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/18"></a>
-        </div>
+        <a data-public-pos=\"action\" href="login.html?redirect=pos.html" class="inline-flex min-h-[3rem] items-center justify-center gap-2 rounded-full border border-hoja/15 bg-white px-5 py-3 text-sm font-semibold text-hoja shadow-[0_12px_24px_rgba(62,107,72,0.10)] transition-all duration-200 ease-out hover:-translate-y-[1px] hover:border-hoja/30 hover:bg-hoja/5 hover:shadow-[0_16px_28px_rgba(62,107,72,0.16)]"></a>
       `;
       host.insertBefore(banner, host.firstChild);
     }
 
-    const badge = banner.querySelector('[data-public-pos="badge"]');
-    const title = banner.querySelector('[data-public-pos="title"]');
-    const description = banner.querySelector('[data-public-pos="description"]');
     const action = banner.querySelector('[data-public-pos="action"]');
-    if (badge) badge.textContent = copy.badge;
-    if (title) title.textContent = copy.title;
-    if (description) description.textContent = copy.description;
     if (action) action.textContent = copy.action;
   }
 
@@ -387,6 +394,65 @@
     safeStorage.setItem(customerAccountsKey, JSON.stringify(customerAccounts));
   }
 
+  function showInlineMessage(target, message, type = "info") {
+    if (!target) return;
+    target.textContent = message;
+    target.classList.remove(
+      "hidden",
+      "border-rose-300",
+      "bg-rose-50",
+      "text-rose-700",
+      "border-emerald-300",
+      "bg-emerald-50",
+      "text-emerald-700",
+      "border-amber-300",
+      "bg-amber-50",
+      "text-amber-800",
+      "border-white/10",
+      "bg-white/5",
+      "text-white/75"
+    );
+
+    if (type === "error") {
+      target.classList.add("border-rose-300", "bg-rose-50", "text-rose-700");
+    } else if (type === "success") {
+      target.classList.add("border-emerald-300", "bg-emerald-50", "text-emerald-700");
+    } else if (type === "warning") {
+      target.classList.add("border-amber-300", "bg-amber-50", "text-amber-800");
+    } else {
+      target.classList.add("border-white/10", "bg-white/5", "text-white/75");
+    }
+  }
+
+  function hideInlineMessage(target) {
+    if (!target) return;
+    target.classList.add("hidden");
+    target.textContent = "";
+  }
+
+  function setSaleSubmitting(isSubmitting) {
+    if (!confirmSaleButton) return;
+    confirmSaleButton.disabled = isSubmitting || confirmSaleButton.disabled;
+    confirmSaleButton.dataset.busy = isSubmitting ? "true" : "false";
+    const label = confirmSaleButton.querySelector("[data-i18n-text]") || confirmSaleButton.querySelector("span");
+    if (label) {
+      label.textContent = isSubmitting ? t("checkout.submittingSale") : t("checkout.confirm");
+    }
+  }
+
+  function setCustomerAccountSubmitting(isSubmitting) {
+    if (!submitCustomerAccountButton) return;
+    submitCustomerAccountButton.disabled = isSubmitting;
+    submitCustomerAccountButton.classList.toggle("opacity-70", isSubmitting);
+    submitCustomerAccountButton.classList.toggle("cursor-not-allowed", isSubmitting);
+    submitCustomerAccountButton.textContent = isSubmitting ? t("accountModal.creating") : t("accountModal.submit");
+  }
+
+  function getSessionDisplayName() {
+    const session = getSession();
+    return session?.user || session?.email || "";
+  }
+
   function renderPaymentMethods() {
     if (!paymentMethod || paymentMethodsCatalog.length === 0) return;
 
@@ -400,6 +466,26 @@
     return customerAccounts.find((account) => account.id === selectedId) || null;
   }
 
+  function getPreferredCustomerAccountId(candidateId = "") {
+    const preferredId = String(candidateId || "");
+    const session = getSession();
+    const sessionId = session?.role === "customer" && session?.id ? String(session.id) : "";
+
+    if (preferredId && customerAccounts.some((account) => account.id === preferredId)) {
+      return preferredId;
+    }
+
+    if (sessionId && customerAccounts.some((account) => account.id === sessionId)) {
+      return sessionId;
+    }
+
+    if (customerAccounts.length === 1) {
+      return customerAccounts[0].id;
+    }
+
+    return "";
+  }
+
   function updateCheckoutAvailability() {
     if (!confirmSaleButton) return;
 
@@ -409,12 +495,22 @@
     confirmSaleButton.className = canCheckout
       ? "inline-flex items-center justify-center gap-2 rounded-full bg-sol px-6 py-3 text-sm font-bold text-slate-950 transition hover:brightness-105 sm:min-w-[15rem]"
       : "inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-full bg-slate-500/40 px-6 py-3 text-sm font-bold text-white/60 sm:min-w-[15rem]";
+
+    if (confirmSaleButton.dataset.busy === "true") {
+      confirmSaleButton.disabled = true;
+    }
+
+    showInlineMessage(
+      saleFormMessage,
+      canCheckout ? t("checkout.readyToBuy") : t("checkout.selectAccountFirst"),
+      canCheckout ? "success" : "warning"
+    );
   }
 
   function renderCustomerAccounts(selectedId = null) {
     if (!customerAccountSelect) return;
 
-    const nextSelectedId = selectedId ?? customerAccountSelect.value;
+    const nextSelectedId = getPreferredCustomerAccountId(selectedId ?? customerAccountSelect.value);
     customerAccountSelect.innerHTML = [
       `<option value="" class="bg-slate-900 text-white">${t("checkout.customerSelect")}</option>`,
       ...customerAccounts.map((account) => `<option value="${account.id}" class="bg-slate-900 text-white">${account.fullName} - ${account.email}</option>`)
@@ -431,7 +527,49 @@
         : t("checkout.noAccountSelected");
     }
 
+    if (checkoutSessionBanner) {
+      const sessionName = getSessionDisplayName();
+      const isReady = isAuthenticated();
+      checkoutSessionBanner.textContent = sessionName
+        ? t("checkout.sessionReadyNamed").replace("{name}", sessionName)
+        : t("checkout.sessionReady");
+      checkoutSessionBanner.classList.toggle("hidden", !isReady);
+    }
+
+    if (openCustomerAccountModalButton) {
+      openCustomerAccountModalButton.textContent = getSession()?.role === "customer"
+        ? t("checkout.useMyAccount")
+        : t("checkout.createAccount");
+    }
+
     updateCheckoutAvailability();
+  }
+
+  function applyCurrentCustomerSession() {
+    const session = getSession();
+    if (session?.role !== "customer") {
+      openCustomerAccountModal();
+      return;
+    }
+
+    const preferredId = getPreferredCustomerAccountId(String(session.id || ""));
+    if (!preferredId) {
+      openCustomerAccountModal();
+      return;
+    }
+
+    renderCustomerAccounts(preferredId);
+    customerAccountSelect.value = preferredId;
+    updateCheckoutAvailability();
+
+    const sessionName = getSessionDisplayName();
+    showInlineMessage(
+      saleFormMessage,
+      sessionName
+        ? t("checkout.sessionReadyNamed").replace("{name}", sessionName)
+        : t("checkout.sessionReady"),
+      "success"
+    );
   }
 
   async function loadRemoteCustomerAccounts() {
@@ -480,6 +618,7 @@
   async function syncPosData() {
     await syncInventoryStateFromApi();
     await syncSalesHistoryFromApi();
+    renderFeaturedSlider();
     renderProducts();
     renderCart();
 
@@ -493,6 +632,7 @@
     }
   }
   function openCustomerAccountModal() {
+    hideInlineMessage(customerAccountMessage);
     customerAccountModal?.classList.remove("hidden");
     customerAccountName?.focus();
   }
@@ -500,6 +640,8 @@
   function closeCustomerAccountModal() {
     customerAccountModal?.classList.add("hidden");
     customerAccountForm?.reset();
+    hideInlineMessage(customerAccountMessage);
+    setCustomerAccountSubmitting(false);
   }
 
   function buildCustomerAccountCode() {
@@ -514,44 +656,54 @@
     const passwordConfirm = customerAccountPasswordConfirm?.value || "";
 
     if (!fullName) {
-      alert(t("alerts.accountNameRequired"));
+      showInlineMessage(customerAccountMessage, t("alerts.accountNameRequired"), "error");
       return;
     }
 
     if (!email || !email.includes("@")) {
-      alert(t("alerts.accountEmailRequired"));
+      showInlineMessage(customerAccountMessage, t("alerts.accountEmailRequired"), "error");
       return;
     }
 
     if (password.length < 6) {
-      alert(t("alerts.accountPasswordRequired"));
+      showInlineMessage(customerAccountMessage, t("alerts.accountPasswordRequired"), "error");
       return;
     }
 
     if (password !== passwordConfirm) {
-      alert(t("alerts.accountPasswordMismatch"));
+      showInlineMessage(customerAccountMessage, t("alerts.accountPasswordMismatch"), "error");
       return;
     }
 
-    const account = await fetchJson("/api/customers", {
-      method: "POST",
-      body: JSON.stringify({
-        full_name: fullName,
-        email,
-        phone,
-        password
-      })
-    });
+    hideInlineMessage(customerAccountMessage);
+    setCustomerAccountSubmitting(true);
 
-    saveSession(account.session || null);
-    updateSessionButton();
-    await loadRemoteCustomerAccounts();
-    const selectedId = String(account.id);
-    renderCustomerAccounts(selectedId);
-    customerAccountSelect.value = selectedId;
-    updateCheckoutAvailability();
-    closeCustomerAccountModal();
-    alert(t("alerts.accountCreated").replace("{name}", account.full_name || fullName));
+    try {
+      const account = await fetchJson("/api/customers", {
+        method: "POST",
+        body: JSON.stringify({
+          full_name: fullName,
+          email,
+          phone,
+          password
+        })
+      });
+
+      saveSession(account.session || null);
+      updateSessionButton();
+      await loadRemoteCustomerAccounts();
+      const selectedId = String(account.id);
+      renderCustomerAccounts(selectedId);
+      customerAccountSelect.value = selectedId;
+      updateCheckoutAvailability();
+      showInlineMessage(customerAccountMessage, t("accountModal.createdInline"), "success");
+      showInlineMessage(saleFormMessage, t("alerts.accountCreated").replace("{name}", account.full_name || fullName), "success");
+      window.setTimeout(() => {
+        closeCustomerAccountModal();
+      }, 700);
+    } finally {
+      setCustomerAccountSubmitting(false);
+    }
   }
 
   function saveSalesHistory() {
@@ -619,6 +771,116 @@
     })));
   }
 
+  function getFeaturedProducts() {
+    return getFlatProducts()
+      .filter((product) => product.stock > 0)
+      .sort((a, b) => {
+        if (b.price !== a.price) return b.price - a.price;
+        return b.stock - a.stock;
+      })
+      .slice(0, 12);
+  }
+
+  function applyFeaturedOffset() {
+    if (!featuredTrack) return;
+    if (featuredTrackHalfWidth > 0) {
+      while (featuredOffset >= featuredTrackHalfWidth) {
+        featuredOffset -= featuredTrackHalfWidth;
+      }
+      while (featuredOffset < 0) {
+        featuredOffset += featuredTrackHalfWidth;
+      }
+    }
+    featuredTrack.style.transform = `translate3d(-${featuredOffset}px, 0, 0)`;
+  }
+
+  function stopFeaturedAutoplay() {
+    if (!featuredTimer) return;
+    window.cancelAnimationFrame(featuredTimer);
+    featuredTimer = null;
+    featuredLastFrame = 0;
+  }
+
+  function tickFeaturedAutoplay(timestamp) {
+    if (!featuredTrackHalfWidth || getFeaturedProducts().length <= 1) {
+      featuredTimer = null;
+      featuredLastFrame = 0;
+      return;
+    }
+
+    if (featuredLastFrame) {
+      const deltaSeconds = (timestamp - featuredLastFrame) / 1000;
+      featuredOffset += featuredSpeed * deltaSeconds;
+      applyFeaturedOffset();
+    }
+
+    featuredLastFrame = timestamp;
+    featuredTimer = window.requestAnimationFrame(tickFeaturedAutoplay);
+  }
+
+  function startFeaturedAutoplay() {
+    stopFeaturedAutoplay();
+    if (!featuredTrackHalfWidth || getFeaturedProducts().length <= 1) return;
+    featuredTimer = window.requestAnimationFrame(tickFeaturedAutoplay);
+  }
+
+  function renderFeaturedSlider() {
+    if (!featuredSlider || !featuredTrack || !featuredDots) return;
+
+    const products = getFeaturedProducts();
+    if (products.length === 0) {
+      featuredSlider.classList.add("hidden");
+      return;
+    }
+
+    featuredSlider.classList.remove("hidden");
+    const marqueeProducts = products.length > 1 ? [...products, ...products] : products;
+
+    featuredTrack.innerHTML = marqueeProducts.map((product) => `
+      <article class="group relative mr-3 min-w-[13.25rem] flex-none overflow-hidden rounded-[1.32rem] bg-[linear-gradient(135deg,rgba(255,255,255,0.04),rgba(255,202,97,0.05),rgba(62,107,72,0.08))] p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:min-w-[14.5rem] lg:min-w-[15.5rem]">
+        <div class="pointer-events-none absolute inset-y-0 left-[-12%] w-40 rounded-full bg-white/8 blur-3xl"></div>
+        <div class="pointer-events-none absolute inset-y-0 right-[-10%] w-40 rounded-full bg-sol/15 blur-3xl"></div>
+        <div class="relative">
+          <div class="absolute inset-[0.15rem] rounded-[1.12rem] bg-gradient-to-br from-sol/28 via-white/10 to-hoja/28 opacity-85 blur-[5px] transition-all duration-500 ease-out group-hover:opacity-100 group-hover:blur-[7px]"></div>
+          <div class="absolute inset-[0.2rem] rounded-[1.08rem] bg-[linear-gradient(135deg,rgba(255,255,255,0.22),rgba(255,202,97,0.16),rgba(62,107,72,0.20))] opacity-80 transition-all duration-500 ease-out group-hover:opacity-100"></div>
+          <div class="absolute inset-[0.32rem] rounded-[0.95rem] bg-white/12 blur-2xl transition duration-300 group-hover:bg-white/16"></div>
+          <div class="relative overflow-hidden rounded-[1rem] bg-white/10 shadow-[0_18px_30px_rgba(15,23,42,0.18)] transition-all duration-700 ease-linear group-hover:shadow-[0_24px_36px_rgba(15,23,42,0.24)]">
+            <img src="${product.image}" alt="${product.name}" class="h-36 w-full object-cover object-center transition-transform duration-700 ease-linear group-hover:scale-[1.03] sm:h-40 lg:h-42">
+            <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.02),rgba(15,23,42,0.18),rgba(15,23,42,0.88))]"></div>
+            <div class="absolute left-3 top-3 z-10 inline-flex rounded-full border border-white/18 bg-slate-950/28 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-white/88 backdrop-blur-sm">${categoryLabel(product.category)}</div>
+            <div class="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-2 p-3">
+              <div class="space-y-2">
+                <div class="space-y-1">
+                  <h3 class="line-clamp-2 text-[0.92rem] font-extrabold leading-5 tracking-[-0.01em] text-white drop-shadow-[0_6px_16px_rgba(15,23,42,0.45)]">${product.name}</h3>
+                  <p class="text-[0.98rem] font-black tracking-tight text-[#ffd977] drop-shadow-[0_6px_18px_rgba(255,202,97,0.26)]">${formatCurrency(product.price)}</p>
+                </div>
+                <button type="button" class="featured-add inline-flex w-fit items-center justify-center gap-1.5 rounded-full bg-white/92 px-3 py-1.5 text-[11px] font-bold text-slate-950 shadow-[0_12px_24px_rgba(15,23,42,0.18)] transition-all duration-200 ease-out hover:-translate-y-[1px] hover:bg-white hover:shadow-[0_16px_28px_rgba(15,23,42,0.22)]" data-category="${product.category}" data-id="${product.id}">
+                  <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 fill-current" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>
+                  ${t("detail.addToCart")}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    `).join("");
+
+    featuredTrackHalfWidth = products.length > 1 ? featuredTrack.scrollWidth / 2 : featuredTrack.scrollWidth;
+    applyFeaturedOffset();
+
+    featuredDots.innerHTML = "";
+    featuredDots.classList.add("hidden");
+
+    featuredTrack.querySelectorAll(".featured-add").forEach((button) => {
+      button.addEventListener("click", () => {
+        addToCart(button.dataset.category, button.dataset.id);
+      });
+    });
+
+    if (featuredPrevButton) featuredPrevButton.disabled = products.length <= 1;
+    if (featuredNextButton) featuredNextButton.disabled = products.length <= 1;
+  }
+
   function getFilteredProducts() {
     const search = productSearch.value.trim().toLowerCase();
     return getFlatProducts().filter((product) => {
@@ -631,26 +893,53 @@
     });
   }
 
+  function getCategoryPage(category, totalPages = 1) {
+    const page = Number(currentProductPage[category] || 1);
+    return Math.min(Math.max(page, 1), Math.max(totalPages, 1));
+  }
+
+  function setCategoryPage(category, page) {
+    currentProductPage[category] = Math.max(1, Number(page) || 1);
+  }
+
+  function resetCategoryPages(category = "all") {
+    if (category === "all") {
+      currentProductPage = {
+        insumos: 1,
+        abonos: 1,
+        herramientas: 1
+      };
+      return;
+    }
+
+    setCategoryPage(category, 1);
+  }
+
+  function getVisibleCategories() {
+    return activeCategory === "all"
+      ? ["insumos", "abonos", "herramientas"]
+      : [activeCategory];
+  }
+
   function syncCategoryUI() {
     categoryChips.forEach((chip) => {
       const isActive = chip.dataset.category === activeCategory;
       chip.className = isActive
-        ? "category-chip inline-flex items-center gap-1.5 rounded-full bg-hoja px-3 py-1.5 text-xs font-semibold text-white shadow-sm"
-        : "category-chip inline-flex items-center gap-1.5 rounded-full border border-hoja/20 bg-white px-3 py-1.5 text-xs font-semibold text-hoja";
+        ? "category-chip inline-flex items-center gap-1.5 rounded-full bg-hoja px-3.5 py-2 text-xs font-semibold text-white shadow-[0_10px_20px_rgba(62,107,72,0.18)] ring-2 ring-hoja/10 transition-all duration-200 ease-out hover:-translate-y-[1px] hover:shadow-[0_14px_24px_rgba(62,107,72,0.22)]"
+        : "category-chip inline-flex items-center gap-1.5 rounded-full border border-hoja/15 bg-white px-3.5 py-2 text-xs font-semibold text-hoja shadow-[0_8px_18px_rgba(15,23,42,0.05)] transition-all duration-200 ease-out hover:-translate-y-[1px] hover:border-hoja/35 hover:bg-hoja/5 hover:shadow-[0_12px_22px_rgba(62,107,72,0.12)]";
     });
   }
 
   function renderProducts() {
     const products = getFilteredProducts();
     const totalProducts = products.length;
-    const totalPages = Math.max(1, Math.ceil(totalProducts / productsPerPage));
-    currentProductPage = Math.min(Math.max(currentProductPage, 1), totalPages);
-    const startIndex = (currentProductPage - 1) * productsPerPage;
-    const visibleProducts = products.slice(startIndex, startIndex + productsPerPage);
+    const visibleCategories = getVisibleCategories().filter((category) =>
+      products.some((product) => product.category === category)
+    );
 
     if (products.length === 0) {
       productGrid.innerHTML = `
-        <div class="rounded-[1.5rem] border border-dashed border-slate-300 bg-white/70 p-8 text-center text-sm text-slate-500 sm:col-span-2 md:col-span-3 xl:col-span-4 2xl:col-span-6">
+        <div class="rounded-[1.5rem] border border-dashed border-slate-300 bg-white/70 p-8 text-center text-sm text-slate-500">
           ${t("dynamic.noMatchingProducts")}
         </div>
       `;
@@ -663,34 +952,123 @@
       return;
     }
 
-    productGrid.innerHTML = visibleProducts.map((product) => {
+    const renderCard = (product) => {
       const isOut = product.stock <= 0;
       return `
-        <article class="product-card flex h-full min-h-[14.2rem] cursor-pointer flex-col overflow-hidden rounded-[1.1rem] border border-white/70 bg-white/90 shadow-[0_10px_18px_rgba(62,107,72,0.08)] backdrop-blur transition hover:-translate-y-[1px] hover:border-hoja/20" data-category="${product.category}" data-id="${product.id}">
-          <div class="relative bg-[linear-gradient(180deg,_rgba(245,240,230,0.92),_rgba(234,244,236,0.85))] px-2 py-2">
-            <div class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[0.8rem] bg-white/65 ring-1 ring-black/5">
-              <img src="${product.image}" alt="${product.name}" class="h-full w-full object-cover object-center">
+        <article class="product-card group flex h-full min-h-[12.2rem] cursor-pointer flex-col overflow-hidden rounded-[1.1rem] border border-white/75 bg-[linear-gradient(180deg,_rgba(255,255,255,0.96),_rgba(248,244,236,0.92))] shadow-[0_10px_22px_rgba(62,107,72,0.08)] backdrop-blur transition duration-200 hover:-translate-y-[2px] hover:border-hoja/25 hover:shadow-[0_16px_28px_rgba(62,107,72,0.12)]" data-category="${product.category}" data-id="${product.id}">
+          <div class="relative bg-[linear-gradient(180deg,_rgba(245,240,230,0.96),_rgba(234,244,236,0.88))] px-2 py-2">
+            <div class="flex aspect-[4/2.65] items-center justify-center overflow-hidden rounded-[0.85rem] bg-white/70 ring-1 ring-black/5">
+              <img src="${product.image}" alt="${product.name}" class="h-full w-full object-cover object-center transition duration-300 group-hover:scale-[1.04]">
             </div>
-            <span class="absolute left-2.5 top-2.5 rounded-full bg-slate-950/70 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white">${categoryLabel(product.category)}</span>
-            <span class="absolute right-2.5 top-2.5 rounded-full px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${isOut ? "bg-rose-100 text-rose-700" : "bg-emerald-100 text-emerald-700"}">${isOut ? t("dynamic.outOfStock") : t("dynamic.unitsShort").replace("{count}", String(product.stock))}</span>
+            <span class="absolute left-3 top-3 rounded-full bg-slate-950/72 px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-white">${categoryLabel(product.category)}</span>
+            <span class="absolute right-3 top-3 rounded-full px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.14em] ${isOut ? "bg-rose-100 text-rose-700" : "bg-emerald-100 text-emerald-700"}">${isOut ? t("dynamic.outOfStock") : t("dynamic.unitsShort").replace("{count}", String(product.stock))}</span>
           </div>
-          <div class="flex flex-1 flex-col p-2">
-            <div class="min-h-[2.9rem]">
-              <p class="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-400">${product.id}</p>
-              <h3 class="mt-1 line-clamp-2 text-[13px] font-black leading-[1.05rem] text-slate-900">${product.name}</h3>
+          <div class="flex flex-1 flex-col p-3">
+            <div class="min-h-[3.3rem]">
+              <p class="text-[8px] font-bold uppercase tracking-[0.14em] text-slate-400">${product.id}</p>
+              <h3 class="mt-1 line-clamp-2 text-[12px] font-black leading-[1rem] text-slate-900">${product.name}</h3>
+              <p class="mt-1 line-clamp-1 text-[10px] text-slate-500">${product.subcategory}</p>
             </div>
-            <div class="mt-auto flex items-end justify-between gap-1.5 pt-2">
+            <div class="mt-auto flex items-end justify-between gap-2 pt-2">
               <div>
-                <p class="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-400">${t("detail.price")}</p>
-                <p class="mt-0.5 text-[0.92rem] font-black leading-none text-hoja">${formatCurrency(product.price)}</p>
+                <p class="text-[8px] font-bold uppercase tracking-[0.14em] text-slate-400">${t("detail.price")}</p>
+                <p class="mt-1 text-[0.92rem] font-black leading-none text-hoja">${formatCurrency(product.price)}</p>
               </div>
-              <button class="add-to-cart inline-flex items-center gap-1 rounded-full px-2 py-1.5 text-[10px] font-semibold leading-none ${isOut ? "cursor-not-allowed bg-slate-200 text-slate-400" : "bg-hoja text-white transition hover:bg-hoja/95"}" data-category="${product.category}" data-id="${product.id}" ${isOut ? "disabled" : ""}>
-                <svg viewBox="0 0 24 24" class="h-3 w-3 fill-current" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>
+              <button class="add-to-cart inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[9px] font-semibold leading-none ${isOut ? "cursor-not-allowed bg-slate-200 text-slate-400" : "bg-hoja text-white transition hover:bg-hoja/95"}" data-category="${product.category}" data-id="${product.id}" ${isOut ? "disabled" : ""}>
+                <svg viewBox="0 0 24 24" class="h-2.5 w-2.5 fill-current" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>
                 ${t("dynamic.add")}
               </button>
             </div>
           </div>
         </article>
+      `;
+    };
+
+    productGrid.innerHTML = visibleCategories.map((category) => {
+      const categoryProducts = products.filter((product) => product.category === category);
+      const totalCategoryProducts = categoryProducts.length;
+      const totalPages = Math.max(1, Math.ceil(totalCategoryProducts / productsPerPage));
+      const page = getCategoryPage(category, totalPages);
+      const startIndex = (page - 1) * productsPerPage;
+      const visibleProducts = categoryProducts.slice(startIndex, startIndex + productsPerPage);
+
+      const paginationButtons = totalPages > 1
+        ? Array.from({ length: totalPages }, (_, index) => {
+            const buttonPage = index + 1;
+            const active = buttonPage === page;
+            return `
+              <button
+                type="button"
+                data-category-page="${category}"
+                data-page="${buttonPage}"
+                class="inline-flex min-w-[2.25rem] items-center justify-center rounded-full px-3 py-2 text-sm font-semibold transition ${
+                  active
+                    ? "bg-hoja text-white"
+                    : "border border-slate-200 bg-white text-slate-700 hover:border-hoja/25 hover:text-hoja"
+                }"
+              >${buttonPage}</button>
+            `;
+          }).join("")
+        : `
+          <button
+            type="button"
+            data-category-page="${category}"
+            data-page="1"
+            class="inline-flex min-w-[2.25rem] items-center justify-center rounded-full bg-hoja px-3 py-2 text-sm font-semibold text-white"
+          >1</button>
+        `;
+
+      return `
+        <section class="rounded-[1.7rem] border border-white/70 bg-[linear-gradient(180deg,_rgba(255,255,255,0.78),_rgba(247,243,235,0.76))] p-4 shadow-[0_14px_30px_rgba(62,107,72,0.08)] sm:p-5" data-category-section="${category}">
+          <div class="flex flex-col gap-3 border-b border-slate-200/70 pb-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p class="inline-flex w-fit rounded-full bg-hoja/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-hoja">${categoryLabel(category)}</p>
+              <h2 class="mt-1 text-2xl font-black text-slate-900">${categoryLabel(category)}</h2>
+              <p class="mt-1 text-sm text-slate-600">
+                ${totalCategoryProducts} productos en esta categoría.
+              </p>
+            </div>
+            <div class="rounded-full bg-crema px-4 py-2 text-xs font-semibold text-slate-700">
+              ${t("dynamic.showingRange")
+                .replace("{start}", String(totalCategoryProducts === 0 ? 0 : startIndex + 1))
+                .replace("{end}", String(Math.min(startIndex + productsPerPage, totalCategoryProducts)))
+                .replace("{total}", String(totalCategoryProducts))}
+            </div>
+          </div>
+          <div class="mt-4 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+            ${visibleProducts.map(renderCard).join("")}
+          </div>
+          <div class="mt-4 flex flex-col items-center gap-3 rounded-[1.1rem] border border-slate-200/70 bg-white/85 px-4 py-4">
+            <p class="text-center text-sm text-slate-600">
+              Página ${page} de ${totalPages}
+            </p>
+            <div class="flex flex-wrap items-center justify-center gap-2">
+              <button
+                type="button"
+                data-category-page="${category}"
+                data-page="${page - 1}"
+                ${page === 1 ? "disabled" : ""}
+                class="inline-flex items-center justify-center rounded-full border px-3 py-2 text-sm font-semibold transition ${
+                  page === 1
+                    ? "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400"
+                    : "border-slate-200 bg-white text-slate-700 hover:border-hoja/25 hover:text-hoja"
+                }"
+              >${t("dynamic.previous")}</button>
+              ${paginationButtons}
+              <button
+                type="button"
+                data-category-page="${category}"
+                data-page="${page + 1}"
+                ${page === totalPages ? "disabled" : ""}
+                class="inline-flex items-center justify-center rounded-full border px-3 py-2 text-sm font-semibold transition ${
+                  page === totalPages
+                    ? "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400"
+                    : "border-slate-200 bg-white text-slate-700 hover:border-hoja/25 hover:text-hoja"
+                }"
+              >${t("dynamic.next")}</button>
+            </div>
+          </div>
+        </section>
       `;
     }).join("");
 
@@ -710,48 +1088,30 @@
       });
     });
 
+    productGrid.querySelectorAll("button[data-category-page]").forEach((button) => {
+      button.addEventListener("click", () => {
+        if (button.disabled) return;
+        const category = button.dataset.categoryPage;
+        const nextPage = Number(button.dataset.page);
+        if (!category || !Number.isFinite(nextPage)) return;
+        setCategoryPage(category, nextPage);
+        renderProducts();
+      });
+    });
+
     if (productPaginationSummary) {
-      productPaginationSummary.textContent = t("dynamic.showingRange")
-        .replace("{start}", String(startIndex + 1))
-        .replace("{end}", String(Math.min(startIndex + productsPerPage, totalProducts)))
-        .replace("{total}", String(totalProducts));
+      const categorySummary = activeCategory === "all"
+        ? `${visibleCategories.length} categorías visibles`
+        : `${categoryLabel(activeCategory)} activa`;
+      productPaginationSummary.textContent = `${categorySummary} - ${totalProducts} productos encontrados en el catálogo.`;
     }
 
     if (productPagination) {
-      const createButton = (label, page, disabled = false, active = false) => `
-        <button
-          type="button"
-          data-page="${page}"
-          ${disabled ? "disabled" : ""}
-          class="inline-flex min-w-[2.25rem] items-center justify-center rounded-full px-3 py-2 text-sm font-semibold transition ${
-            active
-              ? "bg-hoja text-white"
-              : disabled
-                ? "cursor-not-allowed border border-slate-200 bg-slate-100 text-slate-400"
-                : "border border-slate-200 bg-white text-slate-700 hover:border-hoja/25 hover:text-hoja"
-          }"
-        >${label}</button>
-      `;
-
-      const pageButtons = [];
-      for (let page = 1; page <= totalPages; page += 1) {
-        pageButtons.push(createButton(String(page), page, false, page === currentProductPage));
-      }
-
       productPagination.innerHTML = `
-        ${createButton(t("dynamic.previous"), currentProductPage - 1, currentProductPage === 1)}
-        ${pageButtons.join("")}
-        ${createButton(t("dynamic.next"), currentProductPage + 1, currentProductPage === totalPages)}
+        <div class="rounded-full bg-crema px-4 py-2 text-xs font-semibold text-slate-700">
+          Cada categoría mantiene su propia paginación con bloques de 12 productos.
+        </div>
       `;
-
-      productPagination.querySelectorAll("button[data-page]").forEach((button) => {
-        button.addEventListener("click", () => {
-          const nextPage = Number(button.dataset.page);
-          if (!Number.isFinite(nextPage) || nextPage === currentProductPage) return;
-          currentProductPage = nextPage;
-          renderProducts();
-        });
-      });
     }
   }
 
@@ -893,10 +1253,10 @@
   }
 
   async function recordSale() {
-
+    hideInlineMessage(saleFormMessage);
     const items = getCartDetails();
     if (items.length === 0) {
-      alert(t("alerts.addProductFirst"));
+      showInlineMessage(saleFormMessage, t("alerts.addProductFirst"), "error");
       return;
     }
 
@@ -909,19 +1269,19 @@
     for (const item of items) {
       const row = inventoryState[item.category].find((product) => product[0] === item.id);
       if (!row) {
-        alert(t("alerts.productUnavailable").replace("{name}", item.product.name));
+        showInlineMessage(saleFormMessage, t("alerts.productUnavailable").replace("{name}", item.product.name), "error");
         return;
       }
       const currentQty = getCurrentQuantity(item.category, row);
       if (item.quantity > currentQty) {
-        alert(t("alerts.productQuantityExceeds").replace("{name}", item.product.name));
+        showInlineMessage(saleFormMessage, t("alerts.productQuantityExceeds").replace("{name}", item.product.name), "error");
         return;
       }
     }
 
     const selectedCustomer = getSelectedCustomerAccount();
     if (!selectedCustomer) {
-      alert(t("alerts.selectCustomerAccount"));
+      showInlineMessage(saleFormMessage, t("alerts.selectCustomerAccount"), "error");
       return;
     }
 
@@ -948,24 +1308,27 @@
       })
     };
 
+    setSaleSubmitting(true);
+
     const saleResponse = await fetchJson("/api/sales", {
       method: "POST",
       body: JSON.stringify(salePayload)
     });
 
     const savedSaleNumber = saleResponse.sale_number || saleNumber;
+    const preservedCustomerId = selectedCustomer.id;
 
     await syncPosData();
     cart = [];
     discountInput.value = "0";
-    customerAccountSelect.value = "";
-    renderCustomerAccounts();
+    renderCustomerAccounts(preservedCustomerId);
     saleNote.value = "";
     paymentMethod.value = "cash";
     renderProducts();
     renderCart();
     closeCartModal();
-    alert(t("alerts.saleRecorded").replace("{saleNumber}", savedSaleNumber));
+    setSaleSubmitting(false);
+    showInlineMessage(saleFormMessage, t("alerts.saleRecorded").replace("{saleNumber}", savedSaleNumber), "success");
   }
 
   function applyDynamicTranslations() {
@@ -979,9 +1342,12 @@
 
   function applyLanguage(lang) {
     currentLanguage = translations[lang] ? lang : "es";
+    setCustomerAccountSubmitting(false);
+    setSaleSubmitting(false);
     updateSessionButton();
     ensurePublicPosBanner();
     applyDynamicTranslations();
+    renderFeaturedSlider();
     renderCustomerAccounts();
     renderPaymentMethods();
     syncCategoryUI();
@@ -998,6 +1364,7 @@
     try {
       await syncPosData();
     } catch {
+      renderFeaturedSlider();
       renderProducts();
       renderCart();
     }
@@ -1006,21 +1373,39 @@
   categoryChips.forEach((chip) => {
     chip.addEventListener("click", () => {
       activeCategory = chip.dataset.category;
-      currentProductPage = 1;
+      resetCategoryPages(activeCategory);
       syncCategoryUI();
       renderProducts();
     });
   });
 
   productSearch.addEventListener("input", () => {
-    currentProductPage = 1;
+    resetCategoryPages();
     renderProducts();
   });
+  featuredPrevButton?.addEventListener("click", () => {
+    const products = getFeaturedProducts();
+    if (products.length <= 1) return;
+    stopFeaturedAutoplay();
+    featuredOffset -= featuredStepSize;
+    applyFeaturedOffset();
+    startFeaturedAutoplay();
+  });
+  featuredNextButton?.addEventListener("click", () => {
+    const products = getFeaturedProducts();
+    if (products.length <= 1) return;
+    stopFeaturedAutoplay();
+    featuredOffset += featuredStepSize;
+    applyFeaturedOffset();
+    startFeaturedAutoplay();
+  });
+  featuredSlider?.addEventListener("mouseenter", stopFeaturedAutoplay);
+  featuredSlider?.addEventListener("mouseleave", startFeaturedAutoplay);
   discountInput.addEventListener("input", updateTotals);
   customerAccountSelect?.addEventListener("change", () => {
     renderCustomerAccounts(customerAccountSelect.value);
   });
-  openCustomerAccountModalButton?.addEventListener("click", openCustomerAccountModal);
+  openCustomerAccountModalButton?.addEventListener("click", applyCurrentCustomerSession);
   closeCustomerAccountModalButton?.addEventListener("click", closeCustomerAccountModal);
   cancelCustomerAccountModalButton?.addEventListener("click", closeCustomerAccountModal);
   customerAccountModal?.addEventListener("click", (event) => {
@@ -1033,7 +1418,8 @@
     try {
       await createCustomerAccount();
     } catch (error) {
-      alert(error instanceof Error ? error.message : "No se pudo crear la cuenta cliente.");
+      setCustomerAccountSubmitting(false);
+      showInlineMessage(customerAccountMessage, error instanceof Error ? error.message : "No se pudo crear la cuenta cliente.", "error");
     }
   });
   openCartModalButton?.addEventListener("click", openCartModal);
@@ -1062,7 +1448,8 @@
     try {
       await recordSale();
     } catch (error) {
-      alert(error instanceof Error ? error.message : "No se pudo registrar la venta.");
+      setSaleSubmitting(false);
+      showInlineMessage(saleFormMessage, error instanceof Error ? error.message : "No se pudo registrar la venta.", "error");
     }
   });
   logoutButton?.addEventListener("click", async () => {
@@ -1073,7 +1460,7 @@
 
     await logoutSession();
     updateSessionButton();
-    window.location.href = "pos.html";
+    window.location.href = "index.html";
   });
 
   window.addEventListener("storage", (event) => {
@@ -1097,6 +1484,7 @@
       syncPosData().catch(() => {})
     ]);
     applyLanguage(currentLanguage);
+    startFeaturedAutoplay();
   })();
 })();
 
