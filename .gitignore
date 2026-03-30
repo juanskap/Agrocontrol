@@ -2,3 +2,5 @@
 vendor/
 logs/
 *.log
+storage/sessions/*
+!storage/sessions/.gitkeep

@@ -355,22 +355,32 @@
 
     authMenu = document.createElement("div");
     authMenu.id = "pos-auth-menu";
-    authMenu.className = "absolute right-0 top-[calc(100%+0.6rem)] z-50 hidden min-w-[12.5rem] overflow-hidden rounded-[1.2rem] border border-white/12 bg-slate-950/96 p-1.5 shadow-[0_18px_40px_rgba(15,23,42,0.28)] backdrop-blur-sm";
+    authMenu.className = "absolute -right-1 top-[calc(100%+0.85rem)] z-50 hidden min-w-[13.25rem] overflow-hidden rounded-[1.1rem] border border-white/14 bg-[radial-gradient(circle_at_top,_rgba(217,164,65,0.16),_rgba(217,164,65,0)_30%),linear-gradient(180deg,_rgba(15,23,42,0.98),_rgba(17,24,39,0.96)_54%,_rgba(10,15,28,0.98))] p-1.5 text-white shadow-[0_20px_36px_rgba(15,23,42,0.28)] backdrop-blur-lg";
     authMenu.innerHTML = `
-      <a href="perfil.html" data-auth-menu="profile" class="flex min-h-[2.65rem] items-center gap-2.5 rounded-[0.95rem] px-3.5 py-2.5 text-sm font-semibold text-slate-100 transition hover:bg-white/8 hover:text-sol">
-        <svg viewBox="0 0 24 24" class="h-4 w-4 flex-none stroke-current stroke-[1.9]" fill="none" aria-hidden="true">
-          <circle cx="12" cy="8" r="3"/>
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5.5 19c1.2-2.7 3.6-4.2 6.5-4.2S17.3 16.3 18.5 19"/>
-        </svg>
-        <span class="leading-none">Mi perfil</span>
+      <a href="perfil.html" data-auth-menu="profile" class="group relative flex min-h-[2.55rem] items-center gap-2.5 rounded-[0.9rem] border border-white/10 bg-white/[0.04] px-3 py-2.5 text-[13px] font-semibold text-slate-100 shadow-[0_10px_18px_rgba(0,0,0,0.14)] transition duration-200 hover:border-sol/35 hover:bg-white/[0.08] hover:text-sol">
+        <span class="flex h-8.5 w-8.5 flex-none items-center justify-center rounded-full border border-white/10 bg-slate-900/40 text-sol shadow-[0_10px_24px_rgba(217,164,65,0.12)] transition group-hover:border-sol/40 group-hover:bg-slate-900/55">
+          <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 stroke-current stroke-[1.9]" fill="none" aria-hidden="true">
+            <circle cx="12" cy="8" r="3"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5.5 19c1.2-2.7 3.6-4.2 6.5-4.2S17.3 16.3 18.5 19"/>
+          </svg>
+        </span>
+        <span class="flex flex-col">
+          <span class="text-[9px] font-bold uppercase tracking-[0.16em] text-sol/80">Cuenta</span>
+          <span class="leading-none" data-auth-menu-text="profile">Mi perfil</span>
+        </span>
       </a>
-      <button type="button" data-auth-menu="logout" class="flex min-h-[2.65rem] w-full items-center gap-2.5 rounded-[0.95rem] px-3.5 py-2.5 text-left text-sm font-semibold text-slate-100 transition hover:bg-white/8 hover:text-sol">
-        <svg viewBox="0 0 24 24" class="h-4 w-4 flex-none stroke-current stroke-[1.9]" fill="none" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10 7.5V6a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2v-1.5"/>
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H4.5"/>
-          <path stroke-linecap="round" stroke-linejoin="round" d="m8.5 8.5-4 3.5 4 3.5"/>
-        </svg>
-        <span class="leading-none">Cerrar sesion</span>
+      <button type="button" data-auth-menu="logout" class="group flex min-h-[2.55rem] w-full items-center gap-2.5 rounded-[0.9rem] border border-white/10 bg-white/[0.04] px-3 py-2.5 text-left text-[13px] font-semibold text-slate-100 shadow-[0_10px_18px_rgba(0,0,0,0.14)] transition duration-200 hover:border-rose-300/30 hover:bg-rose-400/10 hover:text-rose-100">
+        <span class="flex h-8.5 w-8.5 flex-none items-center justify-center rounded-full border border-white/10 bg-white/6 text-rose-100 shadow-[0_10px_24px_rgba(0,0,0,0.14)] transition group-hover:border-rose-300/35 group-hover:bg-rose-400/12">
+          <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 stroke-current stroke-[1.9]" fill="none" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 7.5V6a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2v-1.5"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H4.5"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.5 8.5-4 3.5 4 3.5"/>
+          </svg>
+        </span>
+        <span class="flex flex-col">
+          <span class="text-[9px] font-bold uppercase tracking-[0.16em] text-slate-400">Sesion</span>
+          <span class="leading-none" data-auth-menu-text="logout">Cerrar sesion</span>
+        </span>
       </button>
     `;
     authMenuWrapper.appendChild(authMenu);
@@ -449,8 +459,8 @@
     const menu = ensureAuthMenu();
     const profileLink = menu?.querySelector('[data-auth-menu="profile"]');
     const logoutAction = menu?.querySelector('[data-auth-menu="logout"]');
-    const profileText = profileLink?.querySelector("span");
-    const logoutText = logoutAction?.querySelector("span");
+    const profileText = profileLink?.querySelector('[data-auth-menu-text="profile"]');
+    const logoutText = logoutAction?.querySelector('[data-auth-menu-text="logout"]');
 
     if (label) {
       label.textContent = authenticated
@@ -2210,33 +2220,5 @@
     startFeaturedAutoplay();
   })();
 })();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

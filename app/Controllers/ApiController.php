@@ -9,8 +9,8 @@ use App\Core\Database;
 use App\Core\Request;
 use App\Core\Response;
 use PDO;
+use RuntimeException;
 use Throwable;
-
 final class ApiController
 {
     public function paymentMethods(): void
@@ -156,10 +156,10 @@ final class ApiController
             return;
         }
 
-        $adminUsername = (string) env('ADMIN_USERNAME', 'admin');
-        $adminPassword = (string) env('ADMIN_PASSWORD', 'Agro2026.');
+        $adminUsername = trim((string) env('ADMIN_USERNAME', ''));
+        $adminPassword = (string) env('ADMIN_PASSWORD', '');
 
-        if ($identifier === $adminUsername && $password === $adminPassword) {
+        if ($adminUsername !== '' && $adminPassword !== '' && $identifier === $adminUsername && $password === $adminPassword) {
             $session = Auth::login($this->buildSessionPayload('admin', 0, 'Administrador', $adminUsername));
 
             Response::json([
@@ -638,18 +638,6 @@ final class ApiController
             return;
         }
 
-        $subtotal = 0.0;
-        foreach ($items as $item) {
-            $quantity = (int) ($item['quantity'] ?? 0);
-            $unitPrice = (float) ($item['unit_price'] ?? 0);
-            if ($quantity <= 0) {
-                $this->error('Cada producto debe tener una cantidad valida.', 422);
-                return;
-            }
-            $subtotal += $quantity * $unitPrice;
-        }
-
-        $total = max($subtotal - max($discount, 0), 0);
         $shippingAddressNote = $this->formatShippingAddressNote($shippingAddress);
         $noteForSale = trim(implode(' | ', array_filter([$note, $shippingAddressNote])));
 
@@ -681,6 +669,47 @@ final class ApiController
                 return;
             }
 
+            $saleItems = [];
+            $subtotal = 0.0;
+            foreach ($items as $item) {
+                $sku = trim((string) ($item['sku'] ?? $item['id'] ?? ''));
+                $quantity = (int) ($item['quantity'] ?? 0);
+
+                if ($sku === '' || $quantity <= 0) {
+                    $pdo->rollBack();
+                    $this->error('Cada producto debe tener un SKU y una cantidad validos.', 422);
+                    return;
+                }
+
+                $product = $this->findSaleProduct($pdo, $sku);
+                if ($product === null) {
+                    $pdo->rollBack();
+                    $this->error(sprintf('El producto %s no existe.', $sku), 404);
+                    return;
+                }
+
+                $currentStock = (int) ($product['stock'] ?? 0);
+                if ($currentStock < $quantity) {
+                    $pdo->rollBack();
+                    $this->error(sprintf('Stock insuficiente para %s.', (string) ($product['sku'] ?? $sku)), 422);
+                    return;
+                }
+
+                $unitPrice = (float) ($product['price'] ?? 0);
+                $lineSubtotal = $quantity * $unitPrice;
+                $subtotal += $lineSubtotal;
+
+                $saleItems[] = [
+                    'product_id' => (int) $product['id'],
+                    'quantity' => $quantity,
+                    'unit_price' => $unitPrice,
+                    'line_subtotal' => $lineSubtotal,
+                    'stock_after' => $currentStock - $quantity,
+                ];
+            }
+
+            $discount = max($discount, 0);
+            $total = max($subtotal - $discount, 0);
             $saleNumber = $this->nextSaleNumber($pdo);
             $saleDate = date('Y-m-d H:i:s');
 
@@ -699,42 +728,33 @@ final class ApiController
 
             $saleId = (int) $pdo->lastInsertId();
 
-            foreach ($items as $item) {
-                $productId = $this->resolveProductId($pdo, $item);
-                $quantity = (int) ($item['quantity'] ?? 0);
-                $unitPrice = (float) ($item['unit_price'] ?? 0);
-                $lineSubtotal = $quantity * $unitPrice;
-                $stockAfter = isset($item['stock_after']) ? (int) $item['stock_after'] : null;
-
+            foreach ($saleItems as $item) {
                 $saleItemStmt = $pdo->prepare('INSERT INTO sale_items (sale_id, product_id, quantity, unit_price, subtotal) VALUES (:sale_id, :product_id, :quantity, :unit_price, :subtotal)');
                 $saleItemStmt->execute([
                     'sale_id' => $saleId,
-                    'product_id' => $productId,
-                    'quantity' => $quantity,
-                    'unit_price' => $unitPrice,
-                    'subtotal' => $lineSubtotal,
+                    'product_id' => $item['product_id'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['unit_price'],
+                    'subtotal' => $item['line_subtotal'],
                 ]);
 
-                if ($stockAfter !== null) {
-                    $stockStmt = $pdo->prepare('UPDATE products SET stock = :stock, price = :price WHERE id = :id');
-                    $stockStmt->execute([
-                        'stock' => $stockAfter,
-                        'price' => $unitPrice,
-                        'id' => $productId,
-                    ]);
-                }
+                $stockStmt = $pdo->prepare('UPDATE products SET stock = :stock WHERE id = :id');
+                $stockStmt->execute([
+                    'stock' => $item['stock_after'],
+                    'id' => $item['product_id'],
+                ]);
 
                 $movementStmt = $pdo->prepare('INSERT INTO movements (product_id, sale_id, customer_id, payment_method_id, type, reason, quantity, unit_cost, total_cost, note, responsible_name) VALUES (:product_id, :sale_id, :customer_id, :payment_method_id, :type, :reason, :quantity, :unit_cost, :total_cost, :note, :responsible_name)');
                 $movementStmt->execute([
-                    'product_id' => $productId,
+                    'product_id' => $item['product_id'],
                     'sale_id' => $saleId,
                     'customer_id' => $customerId,
                     'payment_method_id' => (int) $paymentRow['id'],
                     'type' => 'salida',
                     'reason' => 'venta',
-                    'quantity' => $quantity,
-                    'unit_cost' => $unitPrice,
-                    'total_cost' => $lineSubtotal,
+                    'quantity' => $item['quantity'],
+                    'unit_cost' => $item['unit_price'],
+                    'total_cost' => $item['line_subtotal'],
                     'note' => $noteForSale !== '' ? $noteForSale : 'Venta POS',
                     'responsible_name' => (string) $customerRow['full_name'],
                 ]);
@@ -770,6 +790,26 @@ final class ApiController
             }
             $this->error('No se pudo registrar la venta.', 500);
         }
+    }
+
+    private function findSaleProduct(PDO $pdo, string $sku): ?array
+    {
+        if ($sku === '') {
+            throw new RuntimeException('No se pudo resolver el SKU del producto.');
+        }
+
+        $findStmt = $pdo->prepare('SELECT id, sku, price, stock, status FROM products WHERE sku = :sku LIMIT 1');
+        $findStmt->execute(['sku' => $sku]);
+        $product = $findStmt->fetch();
+        if ($product === false) {
+            return null;
+        }
+
+        if ((string) ($product['status'] ?? '') !== 'active') {
+            return null;
+        }
+
+        return $product;
     }
 
     private function resolveProductId(PDO $pdo, array $item): int

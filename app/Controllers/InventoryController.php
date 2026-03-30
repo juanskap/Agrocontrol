@@ -194,6 +194,11 @@ final class InventoryController
 
     public function movements(): void
     {
+        if (!Auth::isAdmin()) {
+            $this->error('Solo los administradores pueden consultar movimientos.', Auth::check() ? 403 : 401);
+            return;
+        }
+
         try {
             $limit = max(1, min((int) ($_GET['limit'] ?? 100), 200));
             $pdo = Database::connection();
