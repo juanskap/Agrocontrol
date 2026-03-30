@@ -101,6 +101,54 @@ CREATE TABLE IF NOT EXISTS movements (
     CONSTRAINT fk_movements_payment_method FOREIGN KEY (payment_method_id) REFERENCES payment_methods(id) ON DELETE SET NULL
 );
 
+CREATE TABLE IF NOT EXISTS customer_carts (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT UNSIGNED NOT NULL,
+    status ENUM('active', 'converted', 'abandoned') NOT NULL DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_customer_carts_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
+    KEY idx_customer_carts_customer_status (customer_id, status)
+);
+
+CREATE TABLE IF NOT EXISTS customer_cart_items (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    cart_id INT UNSIGNED NOT NULL,
+    product_id INT UNSIGNED NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    unit_price DECIMAL(10,2) NOT NULL DEFAULT 0,
+    is_selected TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_customer_cart_items_cart FOREIGN KEY (cart_id) REFERENCES customer_carts(id) ON DELETE CASCADE,
+    CONSTRAINT fk_customer_cart_items_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    UNIQUE KEY uniq_cart_product (cart_id, product_id)
+);
+CREATE TABLE IF NOT EXISTS customer_addresses (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT UNSIGNED NOT NULL,
+    label VARCHAR(80) NOT NULL,
+    recipient_name VARCHAR(150) NOT NULL,
+    phone VARCHAR(30) DEFAULT NULL,
+    address_line VARCHAR(255) NOT NULL,
+    reference VARCHAR(255) DEFAULT NULL,
+    city VARCHAR(120) NOT NULL,
+    province VARCHAR(120) DEFAULT NULL,
+    is_default TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_customer_addresses_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
+    KEY idx_customer_addresses_customer (customer_id)
+);
+CREATE TABLE IF NOT EXISTS customer_favorites (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT UNSIGNED NOT NULL,
+    product_id INT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_customer_favorites_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
+    CONSTRAINT fk_customer_favorites_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    UNIQUE KEY uniq_customer_product (customer_id, product_id)
+);
 INSERT INTO payment_methods (code, name, requires_reference, is_active) VALUES
     ('cash', 'Efectivo', 0, 1),
     ('cards', 'Tarjetas', 1, 1),
@@ -110,3 +158,6 @@ ON DUPLICATE KEY UPDATE
     name = VALUES(name),
     requires_reference = VALUES(requires_reference),
     is_active = VALUES(is_active);
+
+
+

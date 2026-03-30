@@ -35,6 +35,16 @@ return static function (Router $router): void {
     $router->get('/api/payment-methods', [ApiController::class, 'paymentMethods']);
     $router->get('/api/customers', [ApiController::class, 'customers']);
     $router->post('/api/customers', [ApiController::class, 'storeCustomer']);
+    $router->get('/api/favorites', [ApiController::class, 'favorites']);
+    $router->post('/api/favorites', [ApiController::class, 'storeFavorite']);
+    $router->post('/api/favorites/delete', [ApiController::class, 'deleteFavorite']);
+    $router->get('/api/cart', [ApiController::class, 'cart']);
+    $router->post('/api/cart/sync', [ApiController::class, 'syncCart']);
+    $router->post('/api/cart/clear', [ApiController::class, 'clearCart']);
+    $router->get('/api/addresses', [ApiController::class, 'addresses']);
+    $router->post('/api/addresses', [ApiController::class, 'storeAddress']);
+    $router->post('/api/addresses/update', [ApiController::class, 'updateAddress']);
+    $router->post('/api/addresses/delete', [ApiController::class, 'deleteAddress']);
 
     $router->get('/api/inventory-state', [InventoryController::class, 'inventoryState']);
     $router->get('/api/movements', [InventoryController::class, 'movements']);
@@ -47,3 +57,5 @@ return static function (Router $router): void {
 
     $router->get('/health', [PageController::class, 'health']);
 };
+
+

@@ -130,15 +130,8 @@
       abonos: "Abonos",
       herramientas: "Herramientas y Maquinarias"
     };
-    const storageKeys = {
-      insumos: "agrocontrol-insumos-extra",
-      abonos: "agrocontrol-abonos-extra",
-      herramientas: "agrocontrol-herramientas-extra"
-    };
     const stateStorageKey = "agrocontrol-inventory-state-v3";
-    const insumosSeedVersionKey = "agrocontrol-insumos-seed-v3";
     const movementStorageKey = "agrocontrol-movements-v1";
-    const posDemoSeedKey = window.AGRO_APP_KEYS?.posDemoSeed || "agrocontrol-pos-demo-seed-v1";
 
     const insumos = [
       ["INS-001", "Semilla maiz dorado", "Semillas", "Saco", "0", "und", "Saco de 25 kg", "$82", "Siembra extensiva", "Ficha base", "Disponible"],
@@ -640,22 +633,6 @@
         price: productPrice.value.trim() || 0
       };
     }
-    function loadStoredRows(category) {
-      const raw = safeStorage.getItem(storageKeys[category]);
-      if (!raw) return [];
-
-      try {
-        const parsed = JSON.parse(raw);
-        return Array.isArray(parsed) ? parsed : [];
-      } catch {
-        return [];
-      }
-    }
-
-    function saveStoredRows(category, rows) {
-      safeStorage.setItem(storageKeys[category], JSON.stringify(rows));
-    }
-
     function loadInventoryState() {
       const raw = safeStorage.getItem(stateStorageKey);
       if (!raw) return null;
@@ -715,60 +692,6 @@
       safeStorage.setItem(movementStorageKey, JSON.stringify(movementHistory));
     }
 
-    function seedDemoStockForPos() {
-      if (safeStorage.getItem(posDemoSeedKey) === "applied") {
-        return;
-      }
-
-      const demoEntries = [
-        { category: "insumos", id: "INS-001", quantity: 24, provider: "Proveedor Semillas del Norte", note: "Ingreso inicial para pruebas del punto de venta." },
-        { category: "insumos", id: "INS-009", quantity: 18, provider: "Agroinsumos Rivera", note: "Ingreso de herbicidas para venta mostrador." },
-        { category: "insumos", id: "INS-024", quantity: 12, provider: "Riego Campo Verde", note: "Ingreso de accesorios de riego para pruebas." },
-        { category: "abonos", id: "ABO-009", quantity: 20, provider: "NutriCampo Distribuciones", note: "Recepcion inicial de abonos para ventas de prueba." },
-        { category: "abonos", id: "ABO-017", quantity: 16, provider: "BioFert Ecuador", note: "Ingreso de linea foliar para pruebas de mostrador." },
-        { category: "herramientas", id: "HER-002", quantity: 8, provider: "Ferreteria Agro Pro", note: "Ingreso de herramientas livianas para venta inmediata." },
-        { category: "herramientas", id: "HER-011", quantity: 10, provider: "Equipos Campo Activo", note: "Ingreso de pulverizadores para pruebas del POS." }
-      ];
-
-      const seededMovements = [];
-
-      demoEntries.forEach((entry, index) => {
-        const rows = getCategoryRows(entry.category);
-        const target = rows.find((row) => row[0] === entry.id);
-        if (!target) {
-          return;
-        }
-
-        const quantityIndex = getQuantityIndex(entry.category);
-        const currentQty = Number(target[quantityIndex]) || 0;
-        if (currentQty < entry.quantity) {
-          target[quantityIndex] = String(entry.quantity);
-        }
-
-        const unitPrice = parsePriceValue(target[7]);
-        seededMovements.push({
-          type: "Entrada",
-          category: entry.category,
-          id: target[0],
-          name: target[1],
-          amount: entry.quantity,
-          date: `2026-03-${String(10 + index).padStart(2, "0")}`,
-          note: entry.note,
-          provider: entry.provider,
-          costUnit: unitPrice ? String(unitPrice.toFixed(2)) : "",
-          costTotal: unitPrice ? String((unitPrice * entry.quantity).toFixed(2)) : "",
-          lot: `DEMO-${target[0]}`,
-          expiry: "",
-          reference: `${entry.provider} - Carga demo POS`
-        });
-      });
-
-      saveInventoryState();
-      movementHistory = [...seededMovements.reverse(), ...movementHistory].slice(0, 30);
-      saveMovementHistory();
-      safeStorage.setItem(posDemoSeedKey, "applied");
-    }
-
     function getCategoryRows(category) {
       if (category === "abonos") return abonos;
       if (category === "herramientas") return herramientas;
@@ -825,20 +748,9 @@
     }
 
     function initializeStoredProducts() {
-      const state = loadInventoryState();
-
-      if (hasInventoryRows(state)) {
-        setCategoryRows("insumos", state.insumos);
-        setCategoryRows("abonos", state.abonos);
-        setCategoryRows("herramientas", state.herramientas);
-      } else {
-        ["insumos", "abonos", "herramientas"].forEach((category) => {
-          const baseRows = getCategoryRows(category).slice();
-          const extraRows = loadStoredRows(category);
-          setCategoryRows(category, [...baseRows, ...extraRows]);
-        });
-        saveInventoryState();
-      }
+      setCategoryRows("insumos", []);
+      setCategoryRows("abonos", []);
+      setCategoryRows("herramientas", []);
 
       filteredRowsByCategory = {
         insumos,
@@ -846,15 +758,7 @@
         herramientas
       };
 
-      if (safeStorage.getItem(insumosSeedVersionKey) !== "applied") {
-        setCategoryRows("insumos", defaultInsumos.map((row) => [...row]));
-        filteredRowsByCategory.insumos = insumos;
-        saveInventoryState();
-        safeStorage.setItem(insumosSeedVersionKey, "applied");
-      }
-
-      movementHistory = loadMovementHistory();
-      seedDemoStockForPos();
+      movementHistory = [];
     }
 
     function renderRecentMovements() {

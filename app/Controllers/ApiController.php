@@ -202,12 +202,420 @@ final class ApiController
         }
     }
 
+    public function favorites(): void
+    {
+        if (!Auth::isCustomer()) {
+            $this->error('Debes iniciar sesion como cliente para consultar favoritos.', 403);
+            return;
+        }
+
+        try {
+            $pdo = Database::connection();
+            $this->ensureFavoritesTable($pdo);
+
+            $stmt = $pdo->prepare('
+                SELECT
+                    cf.id AS favorite_id,
+                    cf.created_at,
+                    p.id AS product_id,
+                    p.sku,
+                    p.name,
+                    p.category,
+                    p.presentation,
+                    p.price,
+                    p.stock,
+                    p.status
+                FROM customer_favorites cf
+                INNER JOIN products p ON p.id = cf.product_id
+                WHERE cf.customer_id = :customer_id
+                ORDER BY cf.created_at DESC, cf.id DESC
+            ');
+            $stmt->execute([
+                'customer_id' => Auth::id(),
+            ]);
+
+            $rows = array_map(fn (array $row): array => $this->favoriteRowPayload($row), $stmt->fetchAll());
+
+            Response::json([
+                'status' => 'ok',
+                'data' => $rows,
+            ]);
+        } catch (Throwable $error) {
+            $this->error('No se pudieron cargar los favoritos.', 500);
+        }
+    }
+
+    public function storeFavorite(Request $request): void
+    {
+        if (!Auth::isCustomer()) {
+            $this->error('Debes iniciar sesion como cliente para guardar favoritos.', 403);
+            return;
+        }
+
+        $payload = $request->json();
+        $sku = trim((string) ($payload['sku'] ?? $payload['id'] ?? ''));
+
+        if ($sku === '') {
+            $this->error('Debes indicar un producto valido.', 422);
+            return;
+        }
+
+        try {
+            $pdo = Database::connection();
+            $this->ensureFavoritesTable($pdo);
+            $product = $this->findProductBySku($pdo, $sku);
+
+            if ($product === null) {
+                $this->error('El producto seleccionado no existe.', 404);
+                return;
+            }
+
+            $stmt = $pdo->prepare('INSERT IGNORE INTO customer_favorites (customer_id, product_id) VALUES (:customer_id, :product_id)');
+            $stmt->execute([
+                'customer_id' => Auth::id(),
+                'product_id' => (int) $product['product_id'],
+            ]);
+
+            Response::json([
+                'status' => 'ok',
+                'data' => $this->favoriteRowPayload($product),
+            ], 201);
+        } catch (Throwable $error) {
+            $this->error('No se pudo guardar el favorito.', 500);
+        }
+    }
+
+    public function deleteFavorite(Request $request): void
+    {
+        if (!Auth::isCustomer()) {
+            $this->error('Debes iniciar sesion como cliente para quitar favoritos.', 403);
+            return;
+        }
+
+        $payload = $request->json();
+        $sku = trim((string) ($payload['sku'] ?? $payload['id'] ?? ''));
+
+        if ($sku === '') {
+            $this->error('Debes indicar un producto valido.', 422);
+            return;
+        }
+
+        try {
+            $pdo = Database::connection();
+            $this->ensureFavoritesTable($pdo);
+            $product = $this->findProductBySku($pdo, $sku);
+
+            if ($product === null) {
+                $this->error('El producto seleccionado no existe.', 404);
+                return;
+            }
+
+            $stmt = $pdo->prepare('DELETE FROM customer_favorites WHERE customer_id = :customer_id AND product_id = :product_id');
+            $stmt->execute([
+                'customer_id' => Auth::id(),
+                'product_id' => (int) $product['product_id'],
+            ]);
+
+            Response::json([
+                'status' => 'ok',
+                'data' => [
+                    'sku' => (string) $product['sku'],
+                    'removed' => true,
+                ],
+            ]);
+        } catch (Throwable $error) {
+            $this->error('No se pudo quitar el favorito.', 500);
+        }
+    }
+    public function cart(): void
+    {
+        if (!Auth::isCustomer()) {
+            $this->error('Debes iniciar sesion como cliente para consultar el carrito.', 403);
+            return;
+        }
+
+        try {
+            $pdo = Database::connection();
+            $this->ensureCartTables($pdo);
+
+            Response::json([
+                'status' => 'ok',
+                'data' => $this->getActiveCartPayload($pdo, Auth::id()),
+            ]);
+        } catch (Throwable $error) {
+            $this->error('No se pudo cargar el carrito.', 500);
+        }
+    }
+
+    public function syncCart(Request $request): void
+    {
+        if (!Auth::isCustomer()) {
+            $this->error('Debes iniciar sesion como cliente para guardar el carrito.', 403);
+            return;
+        }
+
+        $payload = $request->json();
+        $items = is_array($payload['items'] ?? null) ? $payload['items'] : [];
+
+        try {
+            $pdo = Database::connection();
+            $this->ensureCartTables($pdo);
+            $pdo->beginTransaction();
+
+            $cartId = $this->getOrCreateActiveCartId($pdo, Auth::id());
+            $pdo->prepare('DELETE FROM customer_cart_items WHERE cart_id = :cart_id')->execute(['cart_id' => $cartId]);
+
+            if ($items !== []) {
+                $insertStmt = $pdo->prepare('INSERT INTO customer_cart_items (cart_id, product_id, quantity, unit_price, is_selected) VALUES (:cart_id, :product_id, :quantity, :unit_price, :is_selected)');
+                foreach ($items as $item) {
+                    $sku = trim((string) ($item['sku'] ?? $item['id'] ?? ''));
+                    $quantity = max(0, (int) ($item['quantity'] ?? 0));
+                    $selected = !empty($item['selected']);
+
+                    if ($sku === '' || $quantity <= 0) {
+                        continue;
+                    }
+
+                    $product = $this->findProductBySku($pdo, $sku);
+                    if ($product === null) {
+                        continue;
+                    }
+
+                    $insertStmt->execute([
+                        'cart_id' => $cartId,
+                        'product_id' => (int) $product['product_id'],
+                        'quantity' => $quantity,
+                        'unit_price' => (float) $product['price'],
+                        'is_selected' => $selected ? 1 : 0,
+                    ]);
+                }
+            }
+
+            $pdo->prepare('UPDATE customer_carts SET updated_at = CURRENT_TIMESTAMP WHERE id = :id')->execute(['id' => $cartId]);
+            $pdo->commit();
+
+            Response::json([
+                'status' => 'ok',
+                'data' => $this->getActiveCartPayload($pdo, Auth::id()),
+            ]);
+        } catch (Throwable $error) {
+            if (isset($pdo) && $pdo instanceof PDO && $pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            $this->error('No se pudo guardar el carrito.', 500);
+        }
+    }
+
+    public function clearCart(): void
+    {
+        if (!Auth::isCustomer()) {
+            $this->error('Debes iniciar sesion como cliente para limpiar el carrito.', 403);
+            return;
+        }
+
+        try {
+            $pdo = Database::connection();
+            $this->ensureCartTables($pdo);
+            $cartId = $this->findActiveCartId($pdo, Auth::id());
+            if ($cartId !== null) {
+                $pdo->prepare('DELETE FROM customer_cart_items WHERE cart_id = :cart_id')->execute(['cart_id' => $cartId]);
+                $pdo->prepare('UPDATE customer_carts SET updated_at = CURRENT_TIMESTAMP WHERE id = :id')->execute(['id' => $cartId]);
+            }
+
+            Response::json([
+                'status' => 'ok',
+                'data' => [
+                    'cart_id' => $cartId,
+                    'items' => [],
+                ],
+            ]);
+        } catch (Throwable $error) {
+            $this->error('No se pudo limpiar el carrito.', 500);
+        }
+    }
+    public function addresses(): void
+    {
+        if (!Auth::isCustomer()) {
+            $this->error('Debes iniciar sesion como cliente para consultar direcciones.', 403);
+            return;
+        }
+
+        try {
+            $pdo = Database::connection();
+            $this->ensureAddressesTable($pdo);
+
+            Response::json([
+                'status' => 'ok',
+                'data' => $this->getCustomerAddresses($pdo, Auth::id()),
+            ]);
+        } catch (Throwable $error) {
+            $this->error('No se pudieron cargar las direcciones.', 500);
+        }
+    }
+
+    public function storeAddress(Request $request): void
+    {
+        if (!Auth::isCustomer()) {
+            $this->error('Debes iniciar sesion como cliente para guardar direcciones.', 403);
+            return;
+        }
+
+        $payload = $request->json();
+        $data = $this->normalizeAddressPayload($payload);
+        if ($data === null) {
+            return;
+        }
+
+        try {
+            $pdo = Database::connection();
+            $this->ensureAddressesTable($pdo);
+
+            $countStmt = $pdo->prepare('SELECT COUNT(*) FROM customer_addresses WHERE customer_id = :customer_id');
+            $countStmt->execute(['customer_id' => Auth::id()]);
+            if ((int) $countStmt->fetchColumn() >= 3) {
+                $this->error('Solo puedes guardar hasta 3 direcciones.', 422);
+                return;
+            }
+
+            $pdo->beginTransaction();
+            if ($data['is_default']) {
+                $pdo->prepare('UPDATE customer_addresses SET is_default = 0 WHERE customer_id = :customer_id')->execute(['customer_id' => Auth::id()]);
+            }
+
+            $stmt = $pdo->prepare('INSERT INTO customer_addresses (customer_id, label, recipient_name, phone, address_line, reference, city, province, is_default) VALUES (:customer_id, :label, :recipient_name, :phone, :address_line, :reference, :city, :province, :is_default)');
+            $stmt->execute([
+                'customer_id' => Auth::id(),
+                'label' => $data['label'],
+                'recipient_name' => $data['recipient_name'],
+                'phone' => $data['phone'],
+                'address_line' => $data['address_line'],
+                'reference' => $data['reference'],
+                'city' => $data['city'],
+                'province' => $data['province'],
+                'is_default' => $data['is_default'] ? 1 : 0,
+            ]);
+
+            $pdo->commit();
+
+            Response::json([
+                'status' => 'ok',
+                'data' => $this->getCustomerAddresses($pdo, Auth::id()),
+            ], 201);
+        } catch (Throwable $error) {
+            if (isset($pdo) && $pdo instanceof PDO && $pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            $this->error('No se pudo guardar la direccion.', 500);
+        }
+    }
+
+    public function updateAddress(Request $request): void
+    {
+        if (!Auth::isCustomer()) {
+            $this->error('Debes iniciar sesion como cliente para actualizar direcciones.', 403);
+            return;
+        }
+
+        $payload = $request->json();
+        $addressId = (int) ($payload['id'] ?? 0);
+        if ($addressId <= 0) {
+            $this->error('Debes indicar una direccion valida.', 422);
+            return;
+        }
+
+        $data = $this->normalizeAddressPayload($payload, false);
+        $setDefaultOnly = !is_array($data) && !empty($payload['set_default']);
+        if ($data === null && !$setDefaultOnly) {
+            return;
+        }
+
+        try {
+            $pdo = Database::connection();
+            $this->ensureAddressesTable($pdo);
+            $pdo->beginTransaction();
+
+            $ownerStmt = $pdo->prepare('SELECT id FROM customer_addresses WHERE id = :id AND customer_id = :customer_id LIMIT 1');
+            $ownerStmt->execute(['id' => $addressId, 'customer_id' => Auth::id()]);
+            if ($ownerStmt->fetch() === false) {
+                $pdo->rollBack();
+                $this->error('La direccion indicada no existe.', 404);
+                return;
+            }
+
+            if ($setDefaultOnly || ($data['is_default'] ?? false)) {
+                $pdo->prepare('UPDATE customer_addresses SET is_default = 0 WHERE customer_id = :customer_id')->execute(['customer_id' => Auth::id()]);
+            }
+
+            if ($setDefaultOnly) {
+                $pdo->prepare('UPDATE customer_addresses SET is_default = 1, updated_at = CURRENT_TIMESTAMP WHERE id = :id')->execute(['id' => $addressId]);
+            } else {
+                $stmt = $pdo->prepare('UPDATE customer_addresses SET label = :label, recipient_name = :recipient_name, phone = :phone, address_line = :address_line, reference = :reference, city = :city, province = :province, is_default = :is_default, updated_at = CURRENT_TIMESTAMP WHERE id = :id AND customer_id = :customer_id');
+                $stmt->execute([
+                    'id' => $addressId,
+                    'customer_id' => Auth::id(),
+                    'label' => $data['label'],
+                    'recipient_name' => $data['recipient_name'],
+                    'phone' => $data['phone'],
+                    'address_line' => $data['address_line'],
+                    'reference' => $data['reference'],
+                    'city' => $data['city'],
+                    'province' => $data['province'],
+                    'is_default' => $data['is_default'] ? 1 : 0,
+                ]);
+            }
+
+            $pdo->commit();
+
+            Response::json([
+                'status' => 'ok',
+                'data' => $this->getCustomerAddresses($pdo, Auth::id()),
+            ]);
+        } catch (Throwable $error) {
+            if (isset($pdo) && $pdo instanceof PDO && $pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            $this->error('No se pudo actualizar la direccion.', 500);
+        }
+    }
+
+    public function deleteAddress(Request $request): void
+    {
+        if (!Auth::isCustomer()) {
+            $this->error('Debes iniciar sesion como cliente para eliminar direcciones.', 403);
+            return;
+        }
+
+        $payload = $request->json();
+        $addressId = (int) ($payload['id'] ?? 0);
+        if ($addressId <= 0) {
+            $this->error('Debes indicar una direccion valida.', 422);
+            return;
+        }
+
+        try {
+            $pdo = Database::connection();
+            $this->ensureAddressesTable($pdo);
+            $stmt = $pdo->prepare('DELETE FROM customer_addresses WHERE id = :id AND customer_id = :customer_id');
+            $stmt->execute([
+                'id' => $addressId,
+                'customer_id' => Auth::id(),
+            ]);
+
+            Response::json([
+                'status' => 'ok',
+                'data' => $this->getCustomerAddresses($pdo, Auth::id()),
+            ]);
+        } catch (Throwable $error) {
+            $this->error('No se pudo eliminar la direccion.', 500);
+        }
+    }
     public function storeSale(Request $request): void
     {
         $payload = $request->json();
         $customerId = (int) ($payload['customer_id'] ?? 0);
         $paymentCode = trim((string) ($payload['payment_code'] ?? ''));
         $note = trim((string) ($payload['note'] ?? ''));
+        $shippingAddress = is_array($payload['shipping_address'] ?? null) ? $payload['shipping_address'] : [];
         $discount = (float) ($payload['discount'] ?? 0);
         $items = is_array($payload['items'] ?? null) ? $payload['items'] : [];
 
@@ -242,6 +650,8 @@ final class ApiController
         }
 
         $total = max($subtotal - max($discount, 0), 0);
+        $shippingAddressNote = $this->formatShippingAddressNote($shippingAddress);
+        $noteForSale = trim(implode(' | ', array_filter([$note, $shippingAddressNote])));
 
         try {
             $pdo = Database::connection();
@@ -283,7 +693,7 @@ final class ApiController
                 'subtotal' => $subtotal,
                 'discount' => $discount,
                 'total' => $total,
-                'note' => $note !== '' ? $note : null,
+                'note' => $noteForSale !== '' ? $noteForSale : null,
                 'status' => 'completed',
             ]);
 
@@ -325,12 +735,21 @@ final class ApiController
                     'quantity' => $quantity,
                     'unit_cost' => $unitPrice,
                     'total_cost' => $lineSubtotal,
-                    'note' => $note !== '' ? $note : 'Venta POS',
+                    'note' => $noteForSale !== '' ? $noteForSale : 'Venta POS',
                     'responsible_name' => (string) $customerRow['full_name'],
                 ]);
             }
 
             $pdo->commit();
+
+            if (Auth::isCustomer()) {
+                $this->ensureCartTables($pdo);
+                $activeCartId = $this->findActiveCartId($pdo, Auth::id());
+                if ($activeCartId !== null) {
+                    $pdo->prepare('DELETE FROM customer_cart_items WHERE cart_id = :cart_id AND is_selected = 1')->execute(['cart_id' => $activeCartId]);
+                    $pdo->prepare('UPDATE customer_carts SET updated_at = CURRENT_TIMESTAMP WHERE id = :id')->execute(['id' => $activeCartId]);
+                }
+            }
 
             Response::json([
                 'status' => 'ok',
@@ -386,6 +805,289 @@ final class ApiController
         return (int) $pdo->lastInsertId();
     }
 
+    private function ensureFavoritesTable(PDO $pdo): void
+    {
+        $pdo->exec('
+            CREATE TABLE IF NOT EXISTS customer_favorites (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                customer_id INT UNSIGNED NOT NULL,
+                product_id INT UNSIGNED NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                CONSTRAINT fk_customer_favorites_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
+                CONSTRAINT fk_customer_favorites_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+                UNIQUE KEY uniq_customer_product (customer_id, product_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+        ');
+    }
+
+    private function findProductBySku(PDO $pdo, string $sku): ?array
+    {
+        $stmt = $pdo->prepare('
+            SELECT
+                p.id AS product_id,
+                p.sku,
+                p.name,
+                p.category,
+                p.presentation,
+                p.price,
+                p.stock,
+                p.status,
+                NULL AS favorite_id,
+                NULL AS created_at
+            FROM products p
+            WHERE p.sku = :sku
+            LIMIT 1
+        ');
+        $stmt->execute(['sku' => $sku]);
+        $row = $stmt->fetch();
+
+        return $row === false ? null : $row;
+    }
+
+    private function favoriteRowPayload(array $row): array
+    {
+        return [
+            'favorite_id' => isset($row['favorite_id']) ? (int) $row['favorite_id'] : null,
+            'product_id' => (int) ($row['product_id'] ?? 0),
+            'sku' => (string) ($row['sku'] ?? ''),
+            'id' => (string) ($row['sku'] ?? ''),
+            'name' => (string) ($row['name'] ?? 'Producto'),
+            'category' => (string) ($row['category'] ?? ''),
+            'presentation' => (string) ($row['presentation'] ?? ''),
+            'price' => (float) ($row['price'] ?? 0),
+            'stock' => (int) ($row['stock'] ?? 0),
+            'status' => (string) ($row['status'] ?? 'active'),
+            'created_at' => isset($row['created_at']) ? (string) $row['created_at'] : null,
+        ];
+    }
+    private function ensureCartTables(PDO $pdo): void
+    {
+        $pdo->exec('
+            CREATE TABLE IF NOT EXISTS customer_carts (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                customer_id INT UNSIGNED NOT NULL,
+                status ENUM("active", "converted", "abandoned") NOT NULL DEFAULT "active",
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                CONSTRAINT fk_customer_carts_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
+                KEY idx_customer_carts_customer_status (customer_id, status)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+        ');
+
+        $pdo->exec('
+            CREATE TABLE IF NOT EXISTS customer_cart_items (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                cart_id INT UNSIGNED NOT NULL,
+                product_id INT UNSIGNED NOT NULL,
+                quantity INT NOT NULL DEFAULT 1,
+                unit_price DECIMAL(10,2) NOT NULL DEFAULT 0,
+                is_selected TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                CONSTRAINT fk_customer_cart_items_cart FOREIGN KEY (cart_id) REFERENCES customer_carts(id) ON DELETE CASCADE,
+                CONSTRAINT fk_customer_cart_items_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+                UNIQUE KEY uniq_cart_product (cart_id, product_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+        ');
+    }
+
+    private function findActiveCartId(PDO $pdo, int $customerId): ?int
+    {
+        $stmt = $pdo->prepare('SELECT id FROM customer_carts WHERE customer_id = :customer_id AND status = :status ORDER BY id DESC LIMIT 1');
+        $stmt->execute([
+            'customer_id' => $customerId,
+            'status' => 'active',
+        ]);
+        $cartId = $stmt->fetchColumn();
+
+        return $cartId === false ? null : (int) $cartId;
+    }
+
+    private function getOrCreateActiveCartId(PDO $pdo, int $customerId): int
+    {
+        $existing = $this->findActiveCartId($pdo, $customerId);
+        if ($existing !== null) {
+            return $existing;
+        }
+
+        $stmt = $pdo->prepare('INSERT INTO customer_carts (customer_id, status) VALUES (:customer_id, :status)');
+        $stmt->execute([
+            'customer_id' => $customerId,
+            'status' => 'active',
+        ]);
+
+        return (int) $pdo->lastInsertId();
+    }
+
+    private function getActiveCartPayload(PDO $pdo, int $customerId): array
+    {
+        $cartId = $this->findActiveCartId($pdo, $customerId);
+        if ($cartId === null) {
+            return [
+                'cart_id' => null,
+                'items' => [],
+            ];
+        }
+
+        $stmt = $pdo->prepare('
+            SELECT
+                ci.id AS cart_item_id,
+                ci.quantity,
+                ci.unit_price,
+                ci.is_selected,
+                p.id AS product_id,
+                p.sku,
+                p.name,
+                p.category,
+                p.presentation,
+                p.price,
+                p.stock,
+                p.status
+            FROM customer_cart_items ci
+            INNER JOIN products p ON p.id = ci.product_id
+            WHERE ci.cart_id = :cart_id
+            ORDER BY ci.id ASC
+        ');
+        $stmt->execute(['cart_id' => $cartId]);
+
+        $items = array_map(function (array $row): array {
+            return [
+                'cart_item_id' => (int) ($row['cart_item_id'] ?? 0),
+                'product_id' => (int) ($row['product_id'] ?? 0),
+                'sku' => (string) ($row['sku'] ?? ''),
+                'id' => (string) ($row['sku'] ?? ''),
+                'name' => (string) ($row['name'] ?? 'Producto'),
+                'category' => (string) ($row['category'] ?? ''),
+                'presentation' => (string) ($row['presentation'] ?? ''),
+                'price' => (float) ($row['price'] ?? 0),
+                'unit_price' => (float) ($row['unit_price'] ?? 0),
+                'stock' => (int) ($row['stock'] ?? 0),
+                'status' => (string) ($row['status'] ?? 'active'),
+                'quantity' => (int) ($row['quantity'] ?? 0),
+                'selected' => ((int) ($row['is_selected'] ?? 0)) === 1,
+            ];
+        }, $stmt->fetchAll());
+
+        return [
+            'cart_id' => $cartId,
+            'items' => $items,
+        ];
+    }
+
+    private function ensureAddressesTable(PDO $pdo): void
+    {
+        $pdo->exec('
+            CREATE TABLE IF NOT EXISTS customer_addresses (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                customer_id INT UNSIGNED NOT NULL,
+                label VARCHAR(80) NOT NULL,
+                recipient_name VARCHAR(150) NOT NULL,
+                phone VARCHAR(30) DEFAULT NULL,
+                address_line VARCHAR(255) NOT NULL,
+                reference VARCHAR(255) DEFAULT NULL,
+                city VARCHAR(120) NOT NULL,
+                province VARCHAR(120) DEFAULT NULL,
+                is_default TINYINT(1) NOT NULL DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                CONSTRAINT fk_customer_addresses_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
+                KEY idx_customer_addresses_customer (customer_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+        ');
+    }
+
+    private function normalizeAddressPayload(array $payload, bool $requireAll = true): ?array
+    {
+        $data = [
+            'label' => trim((string) ($payload['label'] ?? '')),
+            'recipient_name' => trim((string) ($payload['recipient_name'] ?? '')),
+            'phone' => trim((string) ($payload['phone'] ?? '')),
+            'address_line' => trim((string) ($payload['address_line'] ?? '')),
+            'reference' => trim((string) ($payload['reference'] ?? '')),
+            'city' => trim((string) ($payload['city'] ?? '')),
+            'province' => trim((string) ($payload['province'] ?? '')),
+            'is_default' => !empty($payload['is_default']),
+        ];
+
+        if ($requireAll) {
+            if ($data['label'] === '' || $data['recipient_name'] === '' || $data['address_line'] === '' || $data['city'] === '') {
+                $this->error('Completa etiqueta, destinatario, direccion y ciudad.', 422);
+                return null;
+            }
+        } elseif (
+            $data['label'] === ''
+            || $data['recipient_name'] === ''
+            || $data['address_line'] === ''
+            || $data['city'] === ''
+        ) {
+            return null;
+        }
+
+        return $data;
+    }
+
+    private function getCustomerAddresses(PDO $pdo, int $customerId): array
+    {
+        $stmt = $pdo->prepare('
+            SELECT
+                id,
+                label,
+                recipient_name,
+                phone,
+                address_line,
+                reference,
+                city,
+                province,
+                is_default,
+                created_at,
+                updated_at
+            FROM customer_addresses
+            WHERE customer_id = :customer_id
+            ORDER BY is_default DESC, updated_at DESC, id DESC
+        ');
+        $stmt->execute(['customer_id' => $customerId]);
+
+        return array_map(static function (array $row): array {
+            return [
+                'id' => (int) ($row['id'] ?? 0),
+                'label' => (string) ($row['label'] ?? ''),
+                'recipient_name' => (string) ($row['recipient_name'] ?? ''),
+                'phone' => (string) ($row['phone'] ?? ''),
+                'address_line' => (string) ($row['address_line'] ?? ''),
+                'reference' => (string) ($row['reference'] ?? ''),
+                'city' => (string) ($row['city'] ?? ''),
+                'province' => (string) ($row['province'] ?? ''),
+                'is_default' => ((int) ($row['is_default'] ?? 0)) === 1,
+                'created_at' => isset($row['created_at']) ? (string) $row['created_at'] : null,
+                'updated_at' => isset($row['updated_at']) ? (string) $row['updated_at'] : null,
+            ];
+        }, $stmt->fetchAll());
+    }
+
+    private function formatShippingAddressNote(array $address): string
+    {
+        $label = trim((string) ($address['label'] ?? ''));
+        $recipient = trim((string) ($address['recipient_name'] ?? ''));
+        $line = trim((string) ($address['address_line'] ?? ''));
+        $city = trim((string) ($address['city'] ?? ''));
+        $province = trim((string) ($address['province'] ?? ''));
+        $reference = trim((string) ($address['reference'] ?? ''));
+
+        if ($line === '' || $city === '') {
+            return '';
+        }
+
+        $parts = array_filter([
+            $label !== '' ? $label : null,
+            $recipient !== '' ? $recipient : null,
+            $line,
+            $city,
+            $province !== '' ? $province : null,
+            $reference !== '' ? 'Ref. ' . $reference : null,
+        ]);
+
+        return $parts === [] ? '' : 'Direccion de envio: ' . implode(', ', $parts);
+    }
     private function nextCustomerCode(PDO $pdo): string
     {
         $lastCode = (string) $pdo->query('SELECT code FROM customers ORDER BY id DESC LIMIT 1')->fetchColumn();
@@ -418,4 +1120,16 @@ final class ApiController
         ];
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 

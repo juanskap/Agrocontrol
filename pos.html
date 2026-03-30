@@ -25,10 +25,20 @@
       }
     };
   </script>
+  <style>
+    @keyframes promo-marquee {
+      0% {
+        transform: translate3d(0, 0, 0);
+      }
+      100% {
+        transform: translate3d(-50%, 0, 0);
+      }
+    }
+  </style>
   <script src="assets/app-config.js"></script>
   <script src="assets/i18n-helper.js"></script>
 </head>
-<body class="flex min-h-screen flex-col bg-[linear-gradient(180deg,_#f5f0e6_0%,_#eef4ec_100%)] text-slate-800">
+<body class="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.92),_rgba(255,255,255,0)_34%),linear-gradient(135deg,_#f8f3e8_0%,_#eef4ec_48%,_#f5efe2_100%)] text-slate-800">
   <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
     <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
       <div class="flex flex-wrap items-center justify-center gap-3">
@@ -86,9 +96,9 @@
           <span data-i18n-text>Contacto</span>
         </a>
       </nav>
-      <div class="flex items-center gap-2">
+      <div class="relative flex items-center gap-2">
         <div class="hidden items-center gap-1 rounded-full border border-hoja/15 bg-gradient-to-r from-white via-crema to-white p-1.5 shadow-[0_10px_30px_rgba(62,107,72,0.14)] md:flex">
-          <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-hoja transition duration-200 hover:bg-white/80" data-lang="es" aria-label="Cambiar a español">
+          <button type="button" class="language-option inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold tracking-[0.12em] text-hoja transition duration-200 hover:bg-white/80" data-lang="es" aria-label="Cambiar a espanol">
             <svg class="h-4 w-4 flex-shrink-0 stroke-current stroke-[1.8]" fill="none" viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="12" cy="12" r="8.25"/>
               <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5M12 3.75c2.15 2.2 3.35 5.1 3.35 8.25S14.15 18.05 12 20.25c-2.15-2.2-3.35-5.1-3.35-8.25S9.85 5.95 12 3.75Z"/>
@@ -116,28 +126,47 @@
             <circle cx="12" cy="8.25" r="3"/>
             <path stroke-linecap="round" stroke-linejoin="round" d="M5.75 19c1.45-2.95 3.95-4.5 6.25-4.5s4.8 1.55 6.25 4.5"/>
           </svg>
-          <span data-i18n="actions.logout"><span data-i18n-text>Cerrar sesión</span></span>
+          <span data-i18n="actions.logout"><span data-i18n-text>Cerrar sesion</span></span>
         </button>
       </div>
     </div>
   </header>
 
-  <main class="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6">
+  <section class="overflow-hidden border-b border-white/10 bg-slate-950 text-white">
+    <div class="relative mx-auto flex max-w-7xl overflow-hidden px-4 py-2 sm:px-6">
+      <div class="flex min-w-max items-center gap-8 whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.14em] [animation:promo-marquee_20s_linear_infinite] sm:text-xs">
+        <span>🚚 Envios gratis desde $100</span>
+        <span>🌿</span>
+        <span>💸 Hasta 30% off con descuento acumulable</span>
+        <span>🌾</span>
+        <span>☀️ Temporada de verano</span>
+        <span>🌿</span>
+        <span>🚚 Envios gratis desde $100</span>
+        <span>🌾</span>
+        <span>💸 Hasta 30% off con descuento acumulable</span>
+        <span>🌿</span>
+        <span>☀️ Temporada de verano</span>
+      </div>
+    </div>
+  </section>
+
+  <main class="relative mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6">
+    <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-64 rounded-[2rem] bg-[radial-gradient(circle_at_18%_18%,rgba(255,202,97,0.18),rgba(255,202,97,0)_36%),radial-gradient(circle_at_82%_12%,rgba(62,107,72,0.12),rgba(62,107,72,0)_34%),radial-gradient(circle_at_50%_78%,rgba(255,255,255,0.34),rgba(255,255,255,0)_42%)] blur-2xl"></div>
     <section class="space-y-6">
       <div class="space-y-5">
-        <section class="space-y-3">
-          <div class="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_auto] lg:items-end">
+        <section class="flex flex-col gap-3">
+          <div class="order-2 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_auto] lg:items-end">
             <div class="space-y-3">
               <div class="hidden">
                 <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-hoja/70">Punto de venta</p>
-                <h1 class="mt-1 text-2xl font-black text-slate-900 sm:text-[2.15rem]">Catálogo listo para vender</h1>
-                <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Busca rápido, cambia de categoría y agrega productos al carrito sin perder de vista el resumen de la venta.</p>
+                <h1 class="mt-1 text-2xl font-black text-slate-900 sm:text-[2.15rem]">Catalogo listo para vender</h1>
+                <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">Busca rapido, cambia de categoria y agrega productos al carrito sin perder de vista el resumen de la venta.</p>
               </div>
               <div class="w-full max-w-[36rem]">
                 <label class="block">
                   <div class="flex items-center gap-2 rounded-[1.05rem] border border-white/70 bg-white/90 px-3.5 py-3 shadow-[0_12px_24px_rgba(15,23,42,0.05)] backdrop-blur-md transition-all duration-300 ease-out focus-within:border-hoja focus-within:ring-[3px] focus-within:ring-hoja/15">
                     <svg viewBox="0 0 24 24" class="h-4 w-4 flex-shrink-0 fill-current text-hoja/80" aria-hidden="true"><path d="M10.5 4a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Zm0 1.8a4.7 4.7 0 1 0 0 9.4 4.7 4.7 0 0 0 0-9.4Zm8.2 11.6L22 20.7 20.7 22l-3.3-3.3 1.3-1.3Z"/></svg>
-                    <input id="product-search" type="text" class="w-full bg-transparent text-sm outline-none placeholder:text-slate-400" placeholder="Código o nombre del producto" data-i18n-placeholder="search.placeholder">
+                    <input id="product-search" type="text" class="w-full bg-transparent text-sm outline-none placeholder:text-slate-400" placeholder="Codigo o nombre del producto" data-i18n-placeholder="search.placeholder">
                   </div>
                 </label>
               </div>
@@ -153,13 +182,13 @@
                 <p class="mt-1 text-sm font-semibold text-slate-800">Carrito y checkout</p>
               </div>
               <div class="rounded-[1.15rem] border border-white/70 bg-white/80 px-4 py-3 shadow-[0_10px_20px_rgba(15,23,42,0.04)]">
-                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Catálogo</p>
-                <p class="mt-1 text-sm font-semibold text-slate-800">Categorías activas</p>
+                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Catalogo</p>
+                <p class="mt-1 text-sm font-semibold text-slate-800">Categorias activas</p>
               </div>
             </div>
           </div>
 
-          <section id="featured-slider" class="relative overflow-hidden rounded-[1.7rem] border border-white/70 bg-[linear-gradient(135deg,_rgba(62,107,72,0.97),_rgba(107,79,58,0.92))] px-4 py-3 text-white shadow-[0_20px_38px_rgba(62,107,72,0.20)] sm:px-5">
+          <section id="featured-slider" class="order-1 relative overflow-hidden rounded-[1.7rem] border border-white/70 bg-[linear-gradient(135deg,_rgba(62,107,72,0.97),_rgba(107,79,58,0.92))] px-4 py-3 text-white shadow-[0_20px_38px_rgba(62,107,72,0.20)] sm:px-5">
           <div class="pointer-events-none absolute inset-y-0 right-[-8%] w-1/3 rounded-full bg-white/10 blur-3xl"></div>
           <div class="pointer-events-none absolute inset-x-[12%] top-[-18%] h-28 rounded-full bg-white/10 blur-3xl"></div>
           <div class="pointer-events-none absolute inset-x-[10%] bottom-[-20%] h-36 rounded-full bg-[radial-gradient(circle,rgba(255,202,97,0.22),rgba(255,202,97,0))] blur-3xl"></div>
@@ -194,7 +223,7 @@
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p class="text-[11px] font-bold uppercase tracking-[0.24em] text-white/65">Destacados</p>
-                <p class="hidden">Una vitrina rápida para explorar productos llamativos sin perder el catálogo principal.</p>
+                <p class="hidden">Una vitrina rapida para explorar productos llamativos sin perder el catalogo principal.</p>
               </div>
               <div class="flex items-center gap-2">
                 <button id="featured-prev" type="button" class="inline-flex h-8.5 w-8.5 items-center justify-center rounded-full border border-white/14 bg-white/8 text-white shadow-[0_8px_18px_rgba(15,23,42,0.10)] transition-all duration-200 ease-out hover:-translate-y-[1px] hover:bg-white/14 hover:shadow-[0_12px_22px_rgba(15,23,42,0.14)]" aria-label="Anterior destacado">
@@ -212,7 +241,7 @@
           </div>
         </section>
 
-          <div class="mt-4 flex flex-wrap gap-2" id="category-chips">
+          <div class="order-3 mt-4 flex flex-wrap gap-2" id="category-chips">
             <button class="category-chip inline-flex items-center gap-1.5 rounded-full bg-hoja px-3.5 py-2 text-xs font-semibold text-white shadow-[0_10px_20px_rgba(62,107,72,0.18)] transition-all duration-200 ease-out hover:-translate-y-[1px] hover:shadow-[0_14px_24px_rgba(62,107,72,0.22)]" data-category="all">
               <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 fill-current" aria-hidden="true"><path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z"/></svg>
               <span data-i18n="filters.all"><span data-i18n-text>Todos</span></span>
@@ -245,12 +274,6 @@
 
         <section class="rounded-[1.6rem] border border-white/70 bg-white/70 px-5 py-5 shadow-[0_14px_30px_rgba(62,107,72,0.08)]">
           <div class="flex flex-col gap-3 border-b border-slate-200/70 pb-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-hoja/75">Catálogo por categorías</p>
-              <h2 class="mt-1 text-2xl font-black text-slate-900">Explora insumos, abonos y herramientas</h2>
-              <p class="mt-1 text-sm text-slate-600">Cada categoría muestra sus productos en bloques separados con paginación propia al final.</p>
-            </div>
-            <div class="rounded-full bg-crema px-4 py-2 text-xs font-semibold text-slate-700">Vista 6 columnas x 2 filas por página</div>
           </div>
           <div class="mt-5 space-y-6" id="product-grid"></div>
         </section>
@@ -293,27 +316,39 @@
         <div class="flex min-h-0 flex-col bg-white/[0.03]">
           <form id="sale-form" class="flex flex-1 min-h-0 flex-col">
           <div class="flex-1 overflow-y-auto px-4 py-4 md:px-5">
-            <div class="rounded-[1.35rem] border border-white/10 bg-white/6 p-4">
+            <div class="rounded-[1.2rem] border border-white/10 bg-white/6 p-3.5">
               <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/45" data-i18n="checkout.label">Datos de cobro</p>
               <div class="mt-4 grid gap-3">
-                <label class="block">
+                <label id="customer-account-field" class="block">
                   <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-white/55" data-i18n="checkout.customer">Cuenta cliente</span>
                   <select id="customer-account-select" class="w-full appearance-none rounded-[1rem] border border-white/10 bg-white/5 px-4 py-3 text-sm text-white shadow-inner backdrop-blur-md transition-all duration-300 ease-out focus:border-sol/60 focus:bg-white/10 focus:ring-[3px] focus:ring-sol/20 focus:outline-none hover:bg-white/10">
                     <option value="" class="bg-slate-900 text-white">Selecciona una cuenta cliente</option>
                   </select>
                 </label>
-                <div class="flex flex-col gap-2 rounded-[1rem] border border-dashed border-white/10 bg-white/5 p-3">
+                <div class="flex flex-col gap-2 rounded-[0.95rem] border border-dashed border-white/10 bg-white/5 p-2.5">
                   <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <p class="text-xs text-white/65" data-i18n="checkout.accountHint">Debes crear o elegir una cuenta cliente para habilitar la compra.</p>
-                    <button id="open-customer-account-modal" type="button" class="inline-flex items-center justify-center gap-2 rounded-full border border-sol/40 bg-sol/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-sol transition hover:bg-sol hover:text-slate-950" data-i18n="checkout.createAccount">Crear cuenta</button>
+                    <p id="checkout-account-hint" class="text-xs text-white/65" data-i18n="checkout.accountHint">Debes crear o elegir una cuenta cliente para habilitar la compra.</p>
+                    <button id="open-customer-account-modal" type="button" class="inline-flex items-center justify-center gap-2 rounded-full border border-sol/40 bg-sol/10 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-sol transition hover:bg-sol hover:text-slate-950" data-i18n="checkout.createAccount">Crear cuenta</button>
                   </div>
-                  <p id="selected-customer-summary" class="text-xs text-white/55" data-i18n="checkout.noAccountSelected">Aún no has seleccionado una cuenta.</p>
+                  <p id="selected-customer-summary" class="text-xs text-white/55" data-i18n="checkout.noAccountSelected">Aun no has seleccionado una cuenta.</p>
                   <div id="checkout-session-banner" class="hidden rounded-[1rem] border border-emerald-400/20 bg-emerald-400/10 px-3 py-2.5 text-xs text-emerald-50"></div>
+                  <label class="block">
+                    <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-white/55">Direccion de envio</span>
+                    <select id="shipping-address-select" class="w-full appearance-none rounded-[0.95rem] border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white shadow-inner backdrop-blur-md transition-all duration-300 ease-out focus:border-sol/60 focus:bg-white/10 focus:ring-[3px] focus:ring-sol/20 focus:outline-none hover:bg-white/10">
+                      <option value="" class="bg-slate-900 text-white">Selecciona una direccion</option>
+                    </select>
+                  </label>
+                  <div class="flex justify-end">
+                    <button id="open-address-modal" type="button" class="inline-flex items-center justify-center gap-2 rounded-full border border-sol/35 bg-sol/10 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-sol transition hover:bg-sol hover:text-slate-950">
+                      <span>Agregar direccion</span>
+                    </button>
+                  </div>
+                  <p id="shipping-address-summary" class="text-xs text-white/55">No has seleccionado direccion de envio.</p>
                 </div>
                 <div class="grid gap-3 sm:grid-cols-2 md:grid-cols-1">
                   <label class="block">
                     <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-white/55" data-i18n="checkout.payment">Pago</span>
-                    <select id="payment-method" class="w-full appearance-none rounded-[1rem] border border-white/10 bg-white/5 px-4 py-3 text-sm text-white shadow-inner backdrop-blur-md transition-all duration-300 ease-out focus:border-sol/60 focus:bg-white/10 focus:ring-[3px] focus:ring-sol/20 focus:outline-none hover:bg-white/10">
+                    <select id="payment-method" class="w-full appearance-none rounded-[0.95rem] border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white shadow-inner backdrop-blur-md transition-all duration-300 ease-out focus:border-sol/60 focus:bg-white/10 focus:ring-[3px] focus:ring-sol/20 focus:outline-none hover:bg-white/10">
                       <option value="cash" class="bg-slate-900 text-white" data-i18n="checkout.paymentCash">Efectivo</option>
                       <option value="cards" class="bg-slate-900 text-white" data-i18n="checkout.paymentCards">Tarjetas</option>
                       <option value="paypal" class="bg-slate-900 text-white" data-i18n="checkout.paymentPayPal">PayPal</option>
@@ -322,18 +357,18 @@
                   </label>
                   <label class="block">
                     <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-white/55" data-i18n="checkout.discount">Descuento</span>
-                    <input id="sale-discount" type="number" min="0" step="0.01" inputmode="decimal" class="w-full rounded-[1rem] border border-white/10 bg-white/5 px-4 py-3 text-sm text-white shadow-inner backdrop-blur-md transition-all duration-300 ease-out placeholder:text-white/30 focus:border-sol/60 focus:bg-white/10 focus:ring-[3px] focus:ring-sol/20 focus:outline-none hover:bg-white/10" value="0">
+                    <input id="sale-discount" type="number" min="0" step="0.01" inputmode="decimal" class="w-full rounded-[0.95rem] border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white shadow-inner backdrop-blur-md transition-all duration-300 ease-out placeholder:text-white/30 focus:border-sol/60 focus:bg-white/10 focus:ring-[3px] focus:ring-sol/20 focus:outline-none hover:bg-white/10" value="0">
                   </label>
                 </div>
-                <label class="block">
+                <label id="sale-note-field" class="block">
                   <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-white/55" data-i18n="checkout.note">Nota</span>
-                  <input id="sale-note" type="text" class="w-full rounded-[1rem] border border-white/10 bg-white/5 px-4 py-3 text-sm text-white shadow-inner backdrop-blur-md transition-all duration-300 ease-out placeholder:text-white/30 focus:border-sol/60 focus:bg-white/10 focus:ring-[3px] focus:ring-sol/20 focus:outline-none hover:bg-white/10" placeholder="Observación de la venta" data-i18n-placeholder="checkout.notePlaceholder">
+                  <input id="sale-note" type="text" class="w-full rounded-[0.95rem] border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white shadow-inner backdrop-blur-md transition-all duration-300 ease-out placeholder:text-white/30 focus:border-sol/60 focus:bg-white/10 focus:ring-[3px] focus:ring-sol/20 focus:outline-none hover:bg-white/10" placeholder="Observacion de la venta" data-i18n-placeholder="checkout.notePlaceholder">
                 </label>
                 <div id="sale-form-message" class="hidden rounded-[1rem] border px-4 py-3 text-sm"></div>
               </div>
             </div>
 
-            <div class="mt-4 rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.08),_rgba(255,255,255,0.04))] p-4">
+            <div class="mt-4 rounded-[1.2rem] border border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.08),_rgba(255,255,255,0.04))] p-3.5">
               <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/45" data-i18n="summary.label">Resumen</p>
               <div class="mt-4 flex items-center justify-between text-sm text-white/72">
                 <span data-i18n="summary.subtotal">Subtotal</span>
@@ -343,7 +378,7 @@
                 <span data-i18n="summary.discount">Descuento</span>
                 <span id="discount-value">$0.00</span>
               </div>
-              <div class="mt-3 rounded-[1rem] bg-sol px-4 py-3 text-slate-950">
+              <div class="mt-3 rounded-[0.95rem] bg-sol px-4 py-2.5 text-slate-950">
                 <div class="flex items-center justify-between">
                   <span class="text-sm font-semibold" data-i18n="summary.total">Total a cobrar</span>
                   <span id="total-value" class="text-xl font-black">$0.00</span>
@@ -357,7 +392,7 @@
 
       <div class="border-t border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.04),_rgba(255,255,255,0.02))] px-4 py-4 md:px-5">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p class="text-sm text-white/60" data-i18n="checkout.footerHint">Revisa cantidades y confirma la venta cuando esté lista.</p>
+          <p class="text-sm text-white/60" data-i18n="checkout.footerHint">Revisa cantidades y confirma la venta cuando este lista.</p>
           <button id="confirm-sale" type="submit" form="sale-form" class="inline-flex items-center justify-center gap-2 rounded-full bg-sol px-6 py-3 text-sm font-bold text-slate-950 transition hover:brightness-105 sm:min-w-[15rem]">
             <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="M7 4h10l1 3h2v2h-1l-1.3 7.2A2 2 0 0 1 15.7 18H8.3a2 2 0 0 1-1.97-1.8L5 7H4V5h2l1-1Zm1.1 5 .7 7h6.4l.7-7H8.1ZM9 20.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/></svg>
             <span data-i18n="checkout.confirm"><span data-i18n-text>Confirmar venta</span></span>
@@ -367,6 +402,77 @@
     </div>
   </div>
 
+    <div id="auth-modal" class="fixed inset-0 z-40 hidden flex items-center justify-center bg-slate-950/55 px-4 py-4 backdrop-blur-[4px] sm:px-6 sm:py-6">
+    <div class="mx-auto flex max-h-[calc(100vh-2rem)] w-full max-w-3xl flex-col overflow-hidden rounded-[1.7rem] border border-white/20 bg-white shadow-[0_28px_80px_rgba(15,23,42,0.28)] lg:grid lg:grid-cols-[0.82fr_1.18fr] sm:max-h-[calc(100vh-3rem)]">
+      <section class="relative hidden overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(62,107,72,0.16),_rgba(62,107,72,0)_32%),linear-gradient(180deg,_rgba(17,24,39,0.98),_rgba(11,18,32,0.98)_56%,_rgba(7,12,22,0.99))] px-6 py-6 text-white lg:flex lg:flex-col">
+        <div class="pointer-events-none absolute inset-x-[-15%] top-[-10%] h-40 rounded-full bg-white/6 blur-3xl"></div>
+        <div class="pointer-events-none absolute bottom-[-12%] right-[-10%] h-44 w-44 rounded-full bg-hoja/16 blur-3xl"></div>
+        <div class="pointer-events-none absolute right-6 top-10 h-16 w-16 rounded-full border border-white/8 bg-white/6 [animation:authPulse_4.6s_ease-in-out_infinite]"></div>
+        <div class="relative z-10 mt-auto text-center">
+          <p class="mb-3 text-[13px] font-bold uppercase tracking-[0.22em] text-emerald-300 [animation:promoTitleFloat_4.8s_ease-in-out_infinite,promoTitleShine_4.8s_ease-in-out_infinite]">Empieza a comprar hoy</p>
+          <div class="rounded-[1.2rem] border border-white/10 bg-white/[0.05] p-5 backdrop-blur-sm [animation:authReveal_.7s_ease-out,authGlow_6s_ease-in-out_infinite]">
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-white/10 bg-slate-900/40 text-sol shadow-[0_10px_24px_rgba(217,164,65,0.12)]">
+              <svg viewBox="0 0 24 24" class="h-6 w-6 stroke-current stroke-[1.8]" fill="none" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 6.5h1.8l1.5 8.2a1.5 1.5 0 0 0 1.48 1.23h7.86a1.5 1.5 0 0 0 1.46-1.14l1.27-5.31a1 1 0 0 0-.98-1.23H7.1"/>
+                <circle cx="10" cy="19" r="1.25"/>
+                <circle cx="17" cy="19" r="1.25"/>
+              </svg>
+            </div>
+            <p class="mt-4 text-[16px] font-semibold leading-7 text-white/94">Compra facil, rapida y sin vueltas.</p>
+            <p class="mx-auto mt-3 max-w-xs text-[13px] leading-7 text-slate-300">Crea tu cuenta y ten tus datos listos para seguir comprando cuando quieras.</p>
+          </div>
+        </div>
+      </section>
+      <section class="relative flex flex-col overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(217,164,65,0.16),_rgba(217,164,65,0)_28%),linear-gradient(180deg,_rgba(15,23,42,0.98),_rgba(17,24,39,0.96)_54%,_rgba(10,15,28,0.98))] p-5 text-white md:p-6">
+        <div class="pointer-events-none absolute inset-x-[-10%] top-[-18%] h-40 rounded-full bg-white/6 blur-3xl"></div>
+        <div class="pointer-events-none absolute bottom-[-14%] left-[-8%] h-40 w-40 rounded-full bg-hoja/20 blur-3xl"></div>
+        <div class="flex items-start justify-between gap-4">
+          <div class="relative z-10">
+            <p class="text-[11px] font-bold uppercase tracking-[0.24em] text-sol/90">Iniciar sesion</p>
+          </div>
+          <button id="close-auth-modal" type="button" class="relative z-10 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/6 text-slate-200 transition hover:border-white/20 hover:bg-white/10 hover:text-white" aria-label="Cerrar inicio de sesion">
+            <svg viewBox="0 0 24 24" class="h-5 w-5 stroke-current stroke-[2]" fill="none" aria-hidden="true">
+              <path stroke-linecap="round" d="M6 6 18 18"/>
+              <path stroke-linecap="round" d="M18 6 6 18"/>
+            </svg>
+          </button>
+        </div>
+        <form id="auth-login-form" class="relative z-10 mt-5 flex flex-1 flex-col gap-3">
+          <div class="rounded-[1.3rem] border border-white/12 bg-white/[0.04] p-4 shadow-[0_22px_45px_rgba(0,0,0,0.28)] backdrop-blur-sm">
+            <label class="block">
+              <span class="mb-2 block text-[11px] font-bold uppercase tracking-[0.16em] text-slate-300">Correo o usuario</span>
+              <input id="auth-login-user" type="text" autocomplete="username" class="w-full rounded-[0.9rem] border border-white/12 bg-slate-900/70 px-4 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition-all duration-300 ease-out placeholder:text-slate-500 hover:border-sol/30 hover:bg-slate-900/85 focus:border-sol/70 focus:bg-slate-950 focus:ring-[3px] focus:ring-sol/18 focus:outline-none" placeholder="Ingresa tu correo o admin">
+            </label>
+            <label class="mt-4 block">
+              <span class="mb-2 block text-[11px] font-bold uppercase tracking-[0.16em] text-slate-300">Contrasena</span>
+              <div class="relative">
+                <input id="auth-login-password" type="password" autocomplete="current-password" class="w-full rounded-[0.9rem] border border-white/12 bg-slate-900/70 px-4 py-2.5 pr-16 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition-all duration-300 ease-out placeholder:text-slate-500 hover:border-sol/30 hover:bg-slate-900/85 focus:border-sol/70 focus:bg-slate-950 focus:ring-[3px] focus:ring-sol/18 focus:outline-none" placeholder="Ingresa tu contrasena">
+                <button id="toggle-auth-password" type="button" class="absolute inset-y-1 right-1 inline-flex items-center justify-center rounded-full px-3 text-xs font-bold uppercase tracking-[0.12em] text-sol transition hover:bg-white/8 hover:text-white">Ver</button>
+              </div>
+            </label>
+          </div>
+          <div id="auth-login-message" class="hidden rounded-[1rem] border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm font-medium text-rose-100"></div>
+          <div class="mt-auto flex flex-wrap items-center gap-2.5 pt-1">
+            <button id="submit-auth-login" type="submit" class="inline-flex items-center gap-2 rounded-full bg-sol px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_18px_34px_rgba(217,164,65,0.24)] transition hover:bg-[#e0b457]">
+              <svg viewBox="0 0 24 24" class="h-4 w-4 stroke-current stroke-[2]" fill="none" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h12"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="m13 6 6 6-6 6"/>
+              </svg>
+              <span data-auth-submit-label>Ingresar</span>
+            </button>
+            <button id="open-auth-register" type="button" class="inline-flex items-center gap-2 rounded-full border border-white/14 bg-white/6 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_22px_rgba(0,0,0,0.16)] transition hover:border-sol/40 hover:bg-white/10 hover:text-sol">
+              <svg viewBox="0 0 24 24" class="h-4 w-4 stroke-current stroke-[2]" fill="none" aria-hidden="true">
+                <circle cx="12" cy="8" r="3"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5.5 19c1.2-2.7 3.6-4.2 6.5-4.2S17.3 16.3 18.5 19"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 8.5h4M20 6.5v4"/>
+              </svg>
+              <span>Crear cuenta</span>
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
   <div id="customer-account-modal" class="fixed inset-0 z-40 hidden bg-slate-950/55 px-3 py-3 backdrop-blur-[2px] md:px-4 md:py-4">
     <div class="mx-auto flex max-h-[calc(100vh-1.5rem)] w-full max-w-lg flex-col overflow-hidden rounded-[1.7rem] border border-white/15 bg-white shadow-[0_24px_55px_rgba(15,23,42,0.20)] md:max-h-[calc(100vh-2rem)]">
       <div class="flex items-start justify-between gap-4 border-b border-slate-100 px-4 py-4 md:px-5">
@@ -389,7 +495,7 @@
           <input id="customer-account-email" type="email" class="w-full rounded-[1rem] border border-slate-200/80 bg-white/50 px-4 py-3 text-sm text-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] backdrop-blur-sm transition-all duration-300 ease-out placeholder:text-slate-400 hover:bg-slate-50/80 focus:border-hoja focus:bg-white focus:ring-[3px] focus:ring-hoja/20 focus:outline-none" placeholder="cliente@correo.com" data-i18n-placeholder="accountModal.emailPlaceholder" autocomplete="email">
         </label>
         <label class="block">
-          <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-slate-500" data-i18n="accountModal.phone">Teléfono</span>
+          <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-slate-500" data-i18n="accountModal.phone">Telefono</span>
           <input id="customer-account-phone" type="text" class="w-full rounded-[1rem] border border-slate-200/80 bg-white/50 px-4 py-3 text-sm text-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] backdrop-blur-sm transition-all duration-300 ease-out placeholder:text-slate-400 hover:bg-slate-50/80 focus:border-hoja focus:bg-white focus:ring-[3px] focus:ring-hoja/20 focus:outline-none" placeholder="0999999999" data-i18n-placeholder="accountModal.phonePlaceholder" autocomplete="tel">
         </label>
         <label class="block">
@@ -397,14 +503,69 @@
           <input id="customer-account-password" type="password" class="w-full rounded-[1rem] border border-slate-200/80 bg-white/50 px-4 py-3 text-sm text-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] backdrop-blur-sm transition-all duration-300 ease-out placeholder:text-slate-400 hover:bg-slate-50/80 focus:border-hoja focus:bg-white focus:ring-[3px] focus:ring-hoja/20 focus:outline-none" placeholder="Minimo 6 caracteres" data-i18n-placeholder="accountModal.passwordPlaceholder" autocomplete="new-password">
         </label>
         <label class="block">
-          <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-slate-500" data-i18n="accountModal.passwordConfirm">Confirmar contraseña</span>
-          <input id="customer-account-password-confirm" type="password" class="w-full rounded-[1rem] border border-slate-200/80 bg-white/50 px-4 py-3 text-sm text-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] backdrop-blur-sm transition-all duration-300 ease-out placeholder:text-slate-400 hover:bg-slate-50/80 focus:border-hoja focus:bg-white focus:ring-[3px] focus:ring-hoja/20 focus:outline-none" placeholder="Repite tu contraseña" data-i18n-placeholder="accountModal.passwordConfirmPlaceholder" autocomplete="new-password">
+          <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-slate-500" data-i18n="accountModal.passwordConfirm">Confirmar contrasena</span>
+          <input id="customer-account-password-confirm" type="password" class="w-full rounded-[1rem] border border-slate-200/80 bg-white/50 px-4 py-3 text-sm text-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] backdrop-blur-sm transition-all duration-300 ease-out placeholder:text-slate-400 hover:bg-slate-50/80 focus:border-hoja focus:bg-white focus:ring-[3px] focus:ring-hoja/20 focus:outline-none" placeholder="Repite tu contrasena" data-i18n-placeholder="accountModal.passwordConfirmPlaceholder" autocomplete="new-password">
         </label>
-        <p class="rounded-[1rem] bg-crema px-4 py-3 text-xs leading-6 text-slate-600" data-i18n="accountModal.helper">Al crear la cuenta también se iniciará sesión para continuar tu compra.</p>
+        <p class="rounded-[1rem] bg-crema px-4 py-3 text-xs leading-6 text-slate-600" data-i18n="accountModal.helper">Al crear la cuenta tambien se iniciara sesion para continuar tu compra.</p>
         <div id="customer-account-message" class="hidden rounded-[1rem] border px-4 py-3 text-sm"></div>
         <div class="mt-auto flex flex-col gap-3 sm:flex-row sm:justify-end">
           <button id="cancel-customer-account-modal" type="button" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700" data-i18n="accountModal.cancel">Cancelar</button>
-          <button id="submit-customer-account" type="submit" class="inline-flex items-center justify-center gap-2 rounded-full bg-hoja px-5 py-3 text-sm font-semibold text-white shadow-suave" data-i18n="accountModal.submit">Guardar cuenta</button>
+          <button id="submit-customer-account" type="submit" class="inline-flex items-center justify-center gap-2 rounded-full bg-hoja px-5 py-3 text-sm font-semibold text-white shadow-suave" data-i18n="accountModal.submit">Crear cuenta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="address-modal" class="fixed inset-0 z-40 hidden bg-slate-950/55 px-3 py-3 backdrop-blur-[2px] md:px-4 md:py-4">
+    <div class="mx-auto flex max-h-[calc(100vh-1.5rem)] w-full max-w-xl flex-col overflow-hidden rounded-[1.7rem] border border-white/15 bg-white shadow-[0_24px_55px_rgba(15,23,42,0.20)] md:max-h-[calc(100vh-2rem)]">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-100 px-4 py-4 md:px-5">
+        <div>
+          <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-hoja/65">Direccion de envio</p>
+          <h2 class="mt-1.5 text-[1.1rem] font-black text-slate-900">Guardar nueva direccion</h2>
+          <p class="mt-1 text-[13px] text-slate-600">Registrala aqui mismo y usala al instante en tu compra.</p>
+        </div>
+        <button id="close-address-modal" type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:border-hoja hover:text-hoja" aria-label="Cerrar formulario de direccion">
+          <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6-5.6 5.6L5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>
+        </button>
+      </div>
+      <form id="address-form-modal" class="flex flex-1 flex-col gap-3.5 px-4 py-4 md:px-5 md:py-5">
+        <div class="grid gap-3.5 md:grid-cols-2">
+          <label class="block">
+            <span class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Etiqueta</span>
+            <input id="address-label-modal" type="text" class="w-full rounded-[0.95rem] border border-slate-200/80 bg-white/50 px-4 py-2.5 text-sm text-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition placeholder:text-slate-400 focus:border-hoja focus:bg-white focus:ring-[3px] focus:ring-hoja/20 focus:outline-none" placeholder="Casa">
+          </label>
+          <label class="block">
+            <span class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Destinatario</span>
+            <input id="address-recipient-modal" type="text" class="w-full rounded-[0.95rem] border border-slate-200/80 bg-white/50 px-4 py-2.5 text-sm text-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition placeholder:text-slate-400 focus:border-hoja focus:bg-white focus:ring-[3px] focus:ring-hoja/20 focus:outline-none" placeholder="Maria Lopez">
+          </label>
+          <label class="block">
+            <span class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Telefono</span>
+            <input id="address-phone-modal" type="text" class="w-full rounded-[0.95rem] border border-slate-200/80 bg-white/50 px-4 py-2.5 text-sm text-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition placeholder:text-slate-400 focus:border-hoja focus:bg-white focus:ring-[3px] focus:ring-hoja/20 focus:outline-none" placeholder="0999999999">
+          </label>
+          <label class="block md:col-span-2">
+            <span class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Direccion</span>
+            <input id="address-line-modal" type="text" class="w-full rounded-[0.95rem] border border-slate-200/80 bg-white/50 px-4 py-2.5 text-sm text-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition placeholder:text-slate-400 focus:border-hoja focus:bg-white focus:ring-[3px] focus:ring-hoja/20 focus:outline-none" placeholder="Av. Principal y Calle 10">
+          </label>
+          <label class="block">
+            <span class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Ciudad</span>
+            <input id="address-city-modal" type="text" class="w-full rounded-[0.95rem] border border-slate-200/80 bg-white/50 px-4 py-2.5 text-sm text-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition placeholder:text-slate-400 focus:border-hoja focus:bg-white focus:ring-[3px] focus:ring-hoja/20 focus:outline-none" placeholder="Guayaquil">
+          </label>
+          <label class="block">
+            <span class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Provincia</span>
+            <input id="address-province-modal" type="text" class="w-full rounded-[0.95rem] border border-slate-200/80 bg-white/50 px-4 py-2.5 text-sm text-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition placeholder:text-slate-400 focus:border-hoja focus:bg-white focus:ring-[3px] focus:ring-hoja/20 focus:outline-none" placeholder="Guayas">
+          </label>
+          <label class="block md:col-span-2">
+            <span class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Referencia</span>
+            <input id="address-reference-modal" type="text" class="w-full rounded-[0.95rem] border border-slate-200/80 bg-white/50 px-4 py-2.5 text-sm text-slate-900 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition placeholder:text-slate-400 focus:border-hoja focus:bg-white focus:ring-[3px] focus:ring-hoja/20 focus:outline-none" placeholder="Frente al parque">
+          </label>
+        </div>
+        <label class="inline-flex items-center gap-3 rounded-[0.95rem] border border-slate-200 bg-crema/70 px-4 py-2.5 text-[13px] font-semibold text-slate-700">
+          <input id="address-default-modal" type="checkbox" class="h-4 w-4 accent-[#3E6B48]">
+          Marcar como principal
+        </label>
+        <div id="address-modal-message" class="hidden rounded-[1rem] border px-4 py-3 text-sm"></div>
+        <div class="mt-auto flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <button id="cancel-address-modal" type="button" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700">Cancelar</button>
+          <button id="submit-address-modal" type="submit" class="inline-flex items-center justify-center gap-2 rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white shadow-suave">Guardar direccion</button>
         </div>
       </form>
     </div>
@@ -427,7 +588,7 @@
           <img id="product-detail-image" src="" alt="Producto" class="h-52 w-full rounded-[1.2rem] object-cover" data-i18n-alt="detail.productAlt">
           <div class="grid gap-3 sm:grid-cols-2">
             <div class="rounded-[1rem] border border-slate-200 bg-crema px-4 py-3">
-              <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-hoja/70" data-i18n="detail.code">Código</p>
+              <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-hoja/70" data-i18n="detail.code">Codigo</p>
               <p id="product-detail-id" class="mt-1 text-sm font-semibold text-slate-900"></p>
             </div>
             <div class="rounded-[1rem] border border-slate-200 bg-crema px-4 py-3">
@@ -439,7 +600,7 @@
 
         <div class="space-y-3">
           <div class="rounded-[1rem] border border-slate-200 bg-slate-50/80 p-3.5">
-            <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-hoja/70" data-i18n="detail.category">Categoría</p>
+            <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-hoja/70" data-i18n="detail.category">Categoria</p>
             <p id="product-detail-category" class="mt-1 text-sm font-semibold text-slate-900"></p>
           </div>
           <div class="rounded-[1rem] border border-slate-200 bg-slate-50/80 p-3.5">
@@ -479,7 +640,7 @@
           <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.5L3 20.8l1.6-4.7a8.5 8.5 0 1 1 15.9-4.3Zm-8.5-6.8a6.8 6.8 0 0 0-5.8 10.4l.4.7-.9 2.5 2.6-.8.6.4A6.8 6.8 0 1 0 12 5Zm3.9 8.7c-.2-.1-1.2-.6-1.4-.7s-.3-.1-.4.1-.5.7-.6.8-.2.1-.4 0a5.5 5.5 0 0 1-1.6-1 6 6 0 0 1-1.1-1.4c-.1-.2 0-.3.1-.4l.3-.4.2-.3v-.3c0-.1-.4-1-.6-1.5s-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3s-.8.8-.8 1.9.8 2.2.9 2.4a10.2 10.2 0 0 0 3.9 3.5c.6.2 1 .4 1.3.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5 .2-1 .2-1.1 0-.1-.1-.2-.3-.3Z"/></svg>
         </a>
       </div>
-      <p class="max-w-2xl text-sm leading-6 text-white/70" data-i18n="footer.description">AgroControl. Gestión corporativa e inventario para productos agrícolas.</p>
+      <p class="max-w-2xl text-sm leading-6 text-white/70" data-i18n="footer.description">AgroControl. Gestion corporativa e inventario para productos agricolas.</p>
       <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-7 w-auto opacity-90">
     </div>
   </footer>
@@ -489,19 +650,19 @@
       es: {
         pageTitle: "AgroControl | Punto de Venta",
         nav: { home: "Inicio", about: "Nosotros", inventory: "Inventario", movements: "Movimientos", pos: "POS", contact: "Contacto" },
-        actions: { openCart: "Abrir carrito", closeCart: "Cerrar carrito", closeDetail: "Cerrar detalle", logout: "Cerrar sesión", login: "Iniciar sesión" },
-        search: { placeholder: "Código o nombre del producto" },
+        actions: { openCart: "Abrir carrito", closeCart: "Cerrar carrito", closeDetail: "Cerrar detalle", logout: "Cerrar sesion", login: "Iniciar sesion" },
+        search: { placeholder: "Codigo o nombre del producto" },
         filters: { all: "Todos", inputs: "Insumos", fertilizers: "Abonos", tools: "Herramientas" },
         products: { summaryEmpty: "Mostrando 0 productos." },
         sales: { label: "Ultimas ventas", title: "Historial reciente" },
         cart: { label: "Carrito", title: "Venta actual", emptyStatus: "No hay productos agregados.", clear: "Vaciar", products: "Productos", adjustHint: "Ajusta cantidades aqui" },
-        checkout: { label: "Datos de cobro", customer: "Cuenta cliente", customerSelect: "Selecciona una cuenta cliente", accountHint: "Debes crear o elegir una cuenta cliente para habilitar la compra.", createAccount: "Crear cuenta", useMyAccount: "Usar mi cuenta", noAccountSelected: "Aún no has seleccionado una cuenta.", sessionReady: "Sesión activa. Tu cuenta ya puede usarse para comprar.", sessionReadyNamed: "Sesión activa con {name}. Ya puedes continuar la compra.", payment: "Pago", paymentCash: "Efectivo", paymentCards: "Tarjetas", paymentPayPal: "PayPal", paymentTransfer: "Transferencia", discount: "Descuento", note: "Nota", notePlaceholder: "Observación de la venta", footerHint: "Revisa cantidades y confirma la venta cuando esté lista.", confirm: "Confirmar compra", readyToBuy: "Checkout habilitado. Ya puedes confirmar la compra.", selectAccountFirst: "Selecciona o crea una cuenta para habilitar la compra.", submittingSale: "Registrando venta...", saleSuccess: "Venta registrada correctamente." },
+        checkout: { label: "Datos de cobro", customer: "Cuenta cliente", customerSelect: "Selecciona una cuenta cliente", accountHint: "Debes crear o elegir una cuenta cliente para habilitar la compra.", createAccount: "Crear cuenta", useMyAccount: "Usar mi cuenta", noAccountSelected: "Aun no has seleccionado una cuenta.", sessionReady: "Sesion activa. Tu cuenta ya puede usarse para comprar.", sessionReadyNamed: "Sesion activa con {name}. Ya puedes continuar la compra.", payment: "Pago", paymentCash: "Efectivo", paymentCards: "Tarjetas", paymentPayPal: "PayPal", paymentTransfer: "Transferencia", discount: "Descuento", note: "Nota", notePlaceholder: "Observacion de la venta", footerHint: "Revisa cantidades y confirma la venta cuando este lista.", confirm: "Confirmar compra", readyToBuy: "Checkout habilitado. Ya puedes confirmar la compra.", selectAccountFirst: "Selecciona o crea una cuenta para habilitar la compra.", submittingSale: "Registrando venta...", saleSuccess: "Venta registrada correctamente." },
         summary: { label: "Resumen", subtotal: "Subtotal", discount: "Descuento", total: "Total a cobrar" },
-        detail: { label: "Detalle del producto", subtitle: "Información del producto seleccionado.", productAlt: "Producto", code: "Código", stock: "Stock", category: "Categoría", presentation: "Presentación", usage: "Uso sugerido", price: "Precio", addToCart: "Agregar al carrito" },
-        dynamic: { unitsAvailable: "{count} unidades disponibles", productReady: "Producto listo para venta.", noMatchingProducts: "No hay productos que coincidan con la búsqueda actual.", showingRangeZero: "Mostrando 0-0 de 0 productos", showingRange: "Mostrando {start}-{end} de {total} productos", outOfStock: "Sin stock", unitsShort: "{count} und", add: "Agregar", previous: "Anterior", next: "Siguiente", addProductsToStart: "Agrega productos desde el catálogo para iniciar una venta.", unitPrice: "Unitario", cartStatus: "{products} productos - {units} unidades en venta", saleRecordedNote: "Venta registrada en {saleNumber}", salesCount: "{count} ventas", noSalesYet: "Aún no hay ventas registradas desde este punto de venta.", saleItems: "{count} productos", selectedAccount: "Cuenta activa: {name}", accountCode: "Código {code}" },
-        alerts: { maxStock: "No puedes agregar más unidades que el stock disponible.", quantityExceedsStock: "La cantidad supera el stock disponible.", addProductFirst: "Agrega al menos un producto al carrito.", productUnavailable: "El producto {name} ya no está disponible.", productQuantityExceeds: "La cantidad de {name} supera el stock disponible.", selectCustomerAccount: "Debes crear o seleccionar una cuenta cliente antes de confirmar la venta.", accountNameRequired: "Ingresa el nombre completo del cliente para crear la cuenta.", accountEmailRequired: "Ingresa un correo electrónico válido para la cuenta cliente.", accountPasswordRequired: "La contraseña debe tener al menos 6 caracteres.", accountPasswordMismatch: "Las contraseñas no coinciden.", accountCreated: "Cuenta {name} creada correctamente.", saleRecorded: "Venta {saleNumber} registrada correctamente." },
-        accountModal: { label: "Cuenta cliente", title: "Crear cuenta para comprar", description: "Registra una cuenta básica y úsala en el checkout del POS.", name: "Nombre completo", namePlaceholder: "Ej: María López", email: "Correo", emailPlaceholder: "cliente@correo.com", phone: "Teléfono", phonePlaceholder: "0999999999", password: "Contraseña", passwordPlaceholder: "Mínimo 6 caracteres", passwordConfirm: "Confirmar contraseña", passwordConfirmPlaceholder: "Repite tu contraseña", helper: "Al crear la cuenta quedará disponible para tus compras en línea.", creating: "Creando cuenta...", createdInline: "Cuenta creada. Ya puedes continuar con la compra.", cancel: "Cancelar", submit: "Crear cuenta" },
-        footer: { description: "AgroControl. Gestión corporativa e inventario para productos agrícolas." }
+        detail: { label: "Detalle del producto", subtitle: "Informacion del producto seleccionado.", productAlt: "Producto", code: "Codigo", stock: "Stock", category: "Categoria", presentation: "Presentacion", usage: "Uso sugerido", price: "Precio", addToCart: "Agregar al carrito" },
+        dynamic: { unitsAvailable: "{count} unidades disponibles", productReady: "Producto listo para venta.", noMatchingProducts: "No hay productos que coincidan con la busqueda actual.", showingRangeZero: "Mostrando 0-0 de 0 productos", showingRange: "Mostrando {start}-{end} de {total} productos", outOfStock: "Sin stock", unitsShort: "{count} und", add: "Agregar", previous: "Anterior", next: "Siguiente", addProductsToStart: "Agrega productos desde el catalogo para iniciar una venta.", unitPrice: "Unitario", cartStatus: "{products} productos - {units} unidades en venta", saleRecordedNote: "Venta registrada en {saleNumber}", salesCount: "{count} ventas", noSalesYet: "Aun no hay ventas registradas desde este punto de venta.", saleItems: "{count} productos", selectedAccount: "Cuenta activa: {name}", accountCode: "Codigo {code}", productsInCategory: "{count} productos en esta categoria.", pageOf: "Pagina {page} de {total}", visibleCategories: "{count} categorias visibles", productsFound: "{count} productos encontrados en el catalogo.", paginationHint: "Cada categoria mantiene su propia paginacion con bloques de 12 productos." },
+        alerts: { maxStock: "No puedes agregar mas unidades que el stock disponible.", quantityExceedsStock: "La cantidad supera el stock disponible.", addProductFirst: "Agrega al menos un producto al carrito.", productUnavailable: "El producto {name} ya no esta disponible.", productQuantityExceeds: "La cantidad de {name} supera el stock disponible.", selectCustomerAccount: "Debes crear o seleccionar una cuenta de cliente antes de confirmar la venta.", accountNameRequired: "Ingresa el nombre completo del cliente para crear la cuenta.", accountEmailRequired: "Ingresa un correo electronico valido para la cuenta de cliente.", accountPasswordRequired: "La contrasena debe tener al menos 6 caracteres.", accountPasswordMismatch: "Las contrasenas no coinciden.", accountCreated: "Cuenta {name} creada correctamente.", saleRecorded: "Venta {saleNumber} registrada correctamente." },
+        accountModal: { label: "Cuenta cliente", title: "Crear cuenta para comprar", description: "Registra una cuenta basica y usala en el checkout del POS.", name: "Nombre completo", namePlaceholder: "Ej: Maria Lopez", email: "Correo", emailPlaceholder: "cliente@correo.com", phone: "Telefono", phonePlaceholder: "0999999999", password: "Contrasena", passwordPlaceholder: "Minimo 6 caracteres", passwordConfirm: "Confirmar contrasena", passwordConfirmPlaceholder: "Repite tu contrasena", helper: "Al crear la cuenta quedara disponible para tus compras en linea.", creating: "Creando cuenta...", createdInline: "Cuenta creada. Ya puedes continuar con la compra.", cancel: "Cancelar", submit: "Crear cuenta" },
+        footer: { description: "AgroControl. Gestion corporativa e inventario para productos agricolas." }
       },
       en: {
         pageTitle: "AgroControl | Point of Sale",
@@ -515,7 +676,7 @@
         checkout: { label: "Checkout details", customer: "Customer account", customerSelect: "Select a customer account", accountHint: "Create or choose a customer account to enable checkout.", createAccount: "Create account", useMyAccount: "Use my account", noAccountSelected: "No account has been selected yet.", sessionReady: "Session active. Your account can already be used for checkout.", sessionReadyNamed: "Session active with {name}. You can continue checkout now.", payment: "Payment", paymentCash: "Cash", paymentCards: "Cards", paymentPayPal: "PayPal", paymentTransfer: "Transfer", discount: "Discount", note: "Note", notePlaceholder: "Sale note", footerHint: "Review quantities and confirm the sale when ready.", confirm: "Confirm purchase", readyToBuy: "Checkout enabled. You can confirm the purchase now.", selectAccountFirst: "Select or create an account to enable checkout.", submittingSale: "Recording sale...", saleSuccess: "Sale recorded successfully." },
         summary: { label: "Summary", subtotal: "Subtotal", discount: "Discount", total: "Total to charge" },
         detail: { label: "Product detail", subtitle: "Selected product information.", productAlt: "Product", code: "Code", stock: "Stock", category: "Category", presentation: "Presentation", usage: "Suggested use", price: "Price", addToCart: "Add to cart" },
-        dynamic: { unitsAvailable: "{count} units available", productReady: "Product ready for sale.", noMatchingProducts: "No products match the current search.", showingRangeZero: "Showing 0-0 of 0 products", showingRange: "Showing {start}-{end} of {total} products", outOfStock: "Out of stock", unitsShort: "{count} pcs", add: "Add", previous: "Previous", next: "Next", addProductsToStart: "Add products from the catalog to start a sale.", unitPrice: "Unit price", cartStatus: "{products} products - {units} units in sale", saleRecordedNote: "Sale recorded in {saleNumber}", salesCount: "{count} sales", noSalesYet: "No sales have been recorded from this point of sale yet.", saleItems: "{count} products", selectedAccount: "Active account: {name}", accountCode: "Code {code}" },
+        dynamic: { unitsAvailable: "{count} units available", productReady: "Product ready for sale.", noMatchingProducts: "No products match the current search.", showingRangeZero: "Showing 0-0 of 0 products", showingRange: "Showing {start}-{end} of {total} products", outOfStock: "Out of stock", unitsShort: "{count} pcs", add: "Add", previous: "Previous", next: "Next", addProductsToStart: "Add products from the catalog to start a sale.", unitPrice: "Unit price", cartStatus: "{products} products - {units} units in sale", saleRecordedNote: "Sale recorded in {saleNumber}", salesCount: "{count} sales", noSalesYet: "No sales have been recorded from this point of sale yet.", saleItems: "{count} products", selectedAccount: "Active account: {name}", accountCode: "Code {code}", productsInCategory: "{count} products in this category.", pageOf: "Page {page} of {total}", visibleCategories: "{count} visible categories", productsFound: "{count} products found in the catalog.", paginationHint: "Each category keeps its own pagination in groups of 12 products." },
         alerts: { maxStock: "You cannot add more units than available stock.", quantityExceedsStock: "The quantity exceeds available stock.", addProductFirst: "Add at least one product to the cart.", productUnavailable: "Product {name} is no longer available.", productQuantityExceeds: "The quantity for {name} exceeds available stock.", selectCustomerAccount: "Create or select a customer account before confirming the sale.", accountNameRequired: "Enter the customer full name to create the account.", accountEmailRequired: "Enter a valid email for the customer account.", accountPasswordRequired: "The password must have at least 6 characters.", accountPasswordMismatch: "Passwords do not match.", accountCreated: "Account {name} created successfully.", saleRecorded: "Sale {saleNumber} recorded successfully." },
         accountModal: { label: "Customer account", title: "Create account to buy", description: "Register a basic account and use it in the POS checkout.", name: "Full name", namePlaceholder: "Ex: Maria Lopez", email: "Email", emailPlaceholder: "customer@mail.com", phone: "Phone", phonePlaceholder: "0999999999", password: "Password", passwordPlaceholder: "At least 6 characters", passwordConfirm: "Confirm password", passwordConfirmPlaceholder: "Repeat your password", helper: "When the account is created, it will be available for your online purchases.", creating: "Creating account...", createdInline: "Account created. You can continue with checkout now.", cancel: "Cancel", submit: "Create account" }, footer: { description: "AgroControl. Corporate management and inventory for agricultural products." }
       }
@@ -529,8 +690,11 @@
       }
     });
   </script>
+  <script src="assets/scroll-reset.js"></script>
 </body>
 </html>
+
+
 
 
 

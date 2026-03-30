@@ -33,11 +33,39 @@
   const totalValue = document.getElementById("total-value");
   const discountInput = document.getElementById("sale-discount");
   const customerAccountSelect = document.getElementById("customer-account-select");
+  const customerAccountField = document.getElementById("customer-account-field");
+  const checkoutAccountHint = document.getElementById("checkout-account-hint");
   const selectedCustomerSummary = document.getElementById("selected-customer-summary");
+  const shippingAddressSelect = document.getElementById("shipping-address-select");
+  const shippingAddressSummary = document.getElementById("shipping-address-summary");
   const openCustomerAccountModalButton = document.getElementById("open-customer-account-modal");
   const customerAccountModal = document.getElementById("customer-account-modal");
   const closeCustomerAccountModalButton = document.getElementById("close-customer-account-modal");
   const cancelCustomerAccountModalButton = document.getElementById("cancel-customer-account-modal");
+  const openAddressModalButton = document.getElementById("open-address-modal");
+  const addressModal = document.getElementById("address-modal");
+  const closeAddressModalButton = document.getElementById("close-address-modal");
+  const cancelAddressModalButton = document.getElementById("cancel-address-modal");
+  const addressFormModal = document.getElementById("address-form-modal");
+  const addressLabelModal = document.getElementById("address-label-modal");
+  const addressRecipientModal = document.getElementById("address-recipient-modal");
+  const addressPhoneModal = document.getElementById("address-phone-modal");
+  const addressLineModal = document.getElementById("address-line-modal");
+  const addressCityModal = document.getElementById("address-city-modal");
+  const addressProvinceModal = document.getElementById("address-province-modal");
+  const addressReferenceModal = document.getElementById("address-reference-modal");
+  const addressDefaultModal = document.getElementById("address-default-modal");
+  const addressModalMessage = document.getElementById("address-modal-message");
+  const submitAddressModalButton = document.getElementById("submit-address-modal");
+  const authModal = document.getElementById("auth-modal");
+  const closeAuthModalButton = document.getElementById("close-auth-modal");
+  const authLoginForm = document.getElementById("auth-login-form");
+  const authLoginUser = document.getElementById("auth-login-user");
+  const authLoginPassword = document.getElementById("auth-login-password");
+  const toggleAuthPasswordButton = document.getElementById("toggle-auth-password");
+  const authLoginMessage = document.getElementById("auth-login-message");
+  const submitAuthLoginButton = document.getElementById("submit-auth-login");
+  const openAuthRegisterButton = document.getElementById("open-auth-register");
   const customerAccountForm = document.getElementById("customer-account-form");
   const customerAccountName = document.getElementById("customer-account-name");
   const customerAccountEmail = document.getElementById("customer-account-email");
@@ -47,6 +75,7 @@
   const customerAccountMessage = document.getElementById("customer-account-message");
   const submitCustomerAccountButton = document.getElementById("submit-customer-account");
   const paymentMethod = document.getElementById("payment-method");
+  const saleNoteField = document.getElementById("sale-note-field");
   const saleNote = document.getElementById("sale-note");
   const confirmSaleButton = document.getElementById("confirm-sale");
   const saleForm = document.getElementById("sale-form");
@@ -89,6 +118,13 @@
   let salesHistory = loadSalesHistory();
   let customerAccounts = loadCustomerAccounts();
   let paymentMethodsCatalog = [];
+  let favoriteProducts = [];
+  let favoriteProductIds = new Set();
+  let favoriteRequests = new Set();
+  let customerAddresses = [];
+  let cartSyncTimer = null;
+  let authMenu = null;
+  let authMenuWrapper = null;
   let activeCategory = "all";
   let currentProductPage = {
     insumos: 1,
@@ -158,7 +194,7 @@
           badge: "Acceso publico",
           title: "POS abierto para compras en linea",
           description: "Cualquier visitante puede explorar productos y armar su carrito. Solo pedimos una cuenta cliente al momento de confirmar la compra.",
-          action: "Entrar o crear cuenta"
+          action: "Crear cuenta"
         };
   }
 
@@ -176,13 +212,15 @@
       banner.id = "public-pos-banner";
       banner.className = "flex w-full justify-start lg:justify-end";
       banner.innerHTML = `
-        <a data-public-pos=\"action\" href="login.html?redirect=pos.html" class="inline-flex min-h-[3rem] items-center justify-center gap-2 rounded-full border border-hoja/15 bg-white px-5 py-3 text-sm font-semibold text-hoja shadow-[0_12px_24px_rgba(62,107,72,0.10)] transition-all duration-200 ease-out hover:-translate-y-[1px] hover:border-hoja/30 hover:bg-hoja/5 hover:shadow-[0_16px_28px_rgba(62,107,72,0.16)]"></a>
+        <button type="button" data-public-pos=\"action\" class="inline-flex min-h-[3rem] items-center justify-center gap-2 rounded-full border border-hoja/18 bg-[linear-gradient(135deg,rgba(62,107,72,0.96),rgba(109,139,78,0.9))] px-5 py-3 text-sm font-bold text-white shadow-[0_14px_28px_rgba(62,107,72,0.22)] transition-all duration-200 ease-out hover:-translate-y-[1px] hover:border-hoja/28 hover:brightness-105 hover:shadow-[0_18px_32px_rgba(62,107,72,0.28)]"><svg viewBox="0 0 24 24" class="h-4 w-4 stroke-current stroke-[1.9]" fill="none" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5.5a3.25 3.25 0 1 1 0 6.5 3.25 3.25 0 0 1 0-6.5Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M5.5 18c1.35-2.75 3.7-4.25 6.5-4.25s5.15 1.5 6.5 4.25"/></svg><span data-public-pos=\"label\"></span></button>
       `;
       host.insertBefore(banner, host.firstChild);
     }
 
     const action = banner.querySelector('[data-public-pos="action"]');
-    if (action) action.textContent = copy.action;
+    const label = banner.querySelector('[data-public-pos="label"]');
+    if (label) label.textContent = copy.action;
+    if (action) action.onclick = () => openCustomerAccountModal();
   }
 
   function apiUrl(path) {
@@ -255,6 +293,119 @@
     return getSession()?.role === "admin";
   }
 
+  function isCustomerSession() {
+    return getSession()?.role === "customer";
+  }
+
+  function getFavoriteCopy() {
+    return currentLanguage === "en"
+      ? {
+          add: "Save favorite",
+          remove: "Remove favorite",
+          loginRequired: "Sign in as customer to save favorite products.",
+          added: "Product added to your favorites.",
+          removed: "Product removed from your favorites.",
+          loading: "Updating favorite..."
+        }
+      : {
+          add: "Guardar favorito",
+          remove: "Quitar favorito",
+          loginRequired: "Inicia sesion como cliente para guardar productos favoritos.",
+          added: "Producto agregado a tus favoritos.",
+          removed: "Producto quitado de tus favoritos.",
+          loading: "Actualizando favorito..."
+        };
+  }
+
+  function setFavoriteProducts(rows) {
+    favoriteProducts = Array.isArray(rows) ? rows : [];
+    favoriteProductIds = new Set(
+      favoriteProducts
+        .map((item) => String(item?.sku || item?.id || ""))
+        .filter(Boolean)
+    );
+  }
+
+  function clearFavoriteProducts() {
+    setFavoriteProducts([]);
+  }
+
+  function normalizeCartItems(items) {
+    return (Array.isArray(items) ? items : []).map((item) => ({
+      category: String(item?.category || ""),
+      id: String(item?.id || item?.sku || ""),
+      quantity: Math.max(1, Number(item?.quantity) || 1),
+      selected: item?.selected !== false
+    })).filter((item) => item.category && item.id);
+  }
+
+  function firstNameFromUser(value) {
+    return String(value || "").trim().split(/\s+/).filter(Boolean)[0] || "";
+  }
+
+  function ensureAuthMenu() {
+    if (authMenu || !logoutButton) return authMenu;
+
+    if (!authMenuWrapper) {
+      authMenuWrapper = document.createElement("div");
+      authMenuWrapper.className = "relative inline-flex";
+      logoutButton.insertAdjacentElement("beforebegin", authMenuWrapper);
+      authMenuWrapper.appendChild(logoutButton);
+    }
+
+    authMenu = document.createElement("div");
+    authMenu.id = "pos-auth-menu";
+    authMenu.className = "absolute right-0 top-[calc(100%+0.6rem)] z-50 hidden min-w-[12.5rem] overflow-hidden rounded-[1.2rem] border border-white/12 bg-slate-950/96 p-1.5 shadow-[0_18px_40px_rgba(15,23,42,0.28)] backdrop-blur-sm";
+    authMenu.innerHTML = `
+      <a href="perfil.html" data-auth-menu="profile" class="flex min-h-[2.65rem] items-center gap-2.5 rounded-[0.95rem] px-3.5 py-2.5 text-sm font-semibold text-slate-100 transition hover:bg-white/8 hover:text-sol">
+        <svg viewBox="0 0 24 24" class="h-4 w-4 flex-none stroke-current stroke-[1.9]" fill="none" aria-hidden="true">
+          <circle cx="12" cy="8" r="3"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5.5 19c1.2-2.7 3.6-4.2 6.5-4.2S17.3 16.3 18.5 19"/>
+        </svg>
+        <span class="leading-none">Mi perfil</span>
+      </a>
+      <button type="button" data-auth-menu="logout" class="flex min-h-[2.65rem] w-full items-center gap-2.5 rounded-[0.95rem] px-3.5 py-2.5 text-left text-sm font-semibold text-slate-100 transition hover:bg-white/8 hover:text-sol">
+        <svg viewBox="0 0 24 24" class="h-4 w-4 flex-none stroke-current stroke-[1.9]" fill="none" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 7.5V6a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2v-1.5"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H4.5"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.5 8.5-4 3.5 4 3.5"/>
+        </svg>
+        <span class="leading-none">Cerrar sesion</span>
+      </button>
+    `;
+    authMenuWrapper.appendChild(authMenu);
+
+    const profileLink = authMenu.querySelector('[data-auth-menu="profile"]');
+    const logoutAction = authMenu.querySelector('[data-auth-menu="logout"]');
+
+    profileLink?.addEventListener("click", () => {
+      closeAuthMenu();
+    });
+
+    logoutAction?.addEventListener("click", async () => {
+      closeAuthMenu();
+      await logoutSession();
+      updateSessionButton();
+      renderCustomerAccounts();
+      renderProducts();
+      renderCart();
+      updateCheckoutAvailability();
+      closeCartModal();
+    });
+
+    return authMenu;
+  }
+
+  function closeAuthMenu() {
+    ensureAuthMenu()?.classList.add("hidden");
+  }
+
+  function toggleAuthMenu() {
+    const menu = ensureAuthMenu();
+    if (!menu || !isAuthenticated()) return;
+    menu.classList.toggle("hidden");
+  }
+
   async function syncServerSession() {
     try {
       const session = await fetchJson("/api/session", {
@@ -278,6 +429,9 @@
     }
 
     saveSession(null);
+    clearFavoriteProducts();
+    customerAddresses = [];
+    cart = [];
   }
 
   function syncPrivateNav() {
@@ -289,8 +443,42 @@
   function updateSessionButton() {
     if (!logoutButton) return;
     const label = logoutButton.querySelector("[data-i18n-text]") || logoutButton.querySelector("span");
+    const session = getSession();
+    const authenticated = Boolean(session);
+    const adminSession = session?.role === "admin";
+    const menu = ensureAuthMenu();
+    const profileLink = menu?.querySelector('[data-auth-menu="profile"]');
+    const logoutAction = menu?.querySelector('[data-auth-menu="logout"]');
+    const profileText = profileLink?.querySelector("span");
+    const logoutText = logoutAction?.querySelector("span");
+
     if (label) {
-      label.textContent = isAuthenticated() ? t("actions.logout") : t("actions.login");
+      label.textContent = authenticated
+        ? firstNameFromUser(session?.user) || (adminSession ? "Admin" : "Cliente")
+        : t("actions.login");
+    }
+
+    logoutButton.dataset.authState = authenticated ? "authenticated" : "guest";
+    logoutButton.classList.toggle("bg-hoja/85", !authenticated);
+    logoutButton.classList.toggle("bg-slate-950", authenticated);
+    logoutButton.classList.toggle("hover:bg-hoja/95", !authenticated);
+    logoutButton.classList.toggle("hover:bg-slate-900", authenticated);
+
+    if (profileLink) {
+      if (profileText) {
+        profileText.textContent = adminSession ? "Panel admin" : "Mi perfil";
+      }
+      profileLink.setAttribute("href", adminSession ? "inventario.html" : "perfil.html");
+    }
+
+    if (logoutAction) {
+      if (logoutText) {
+        logoutText.textContent = t("actions.logout");
+      }
+    }
+
+    if (!authenticated) {
+      closeAuthMenu();
     }
 
     syncPrivateNav();
@@ -302,6 +490,73 @@
 
   function closeCartModal() {
     cartModal?.classList.add("hidden");
+  }
+
+  function setAuthSubmitting(isSubmitting) {
+    if (!submitAuthLoginButton) return;
+    submitAuthLoginButton.disabled = isSubmitting;
+    const label = submitAuthLoginButton.querySelector("[data-auth-submit-label]") || submitAuthLoginButton;
+    label.textContent = isSubmitting
+      ? "Ingresando..."
+      : t("actions.login");
+  }
+
+  function openAuthModal() {
+    hideInlineMessage(authLoginMessage);
+    authModal?.classList.remove("hidden");
+    authLoginUser?.focus();
+  }
+
+  function closeAuthModal() {
+    authModal?.classList.add("hidden");
+    authLoginForm?.reset();
+    hideInlineMessage(authLoginMessage);
+    setAuthSubmitting(false);
+  }
+
+  async function loginFromModal() {
+    const identifier = authLoginUser?.value.trim() || "";
+    const password = authLoginPassword?.value || "";
+
+    if (!identifier || !password) {
+      showInlineMessage(authLoginMessage, "Ingresa tu correo y contrasena para continuar.", "error");
+      return;
+    }
+
+    setAuthSubmitting(true);
+
+    try {
+      const session = await fetchJson("/api/login", {
+        method: "POST",
+        body: JSON.stringify({ identifier, password })
+      });
+
+      saveSession(session);
+      updateSessionButton();
+      await loadRemoteCustomerAccounts().catch(() => {});
+      renderCustomerAccounts(String(session?.id || ""));
+      updateCheckoutAvailability();
+      closeAuthModal();
+
+      if (session?.role === "customer") {
+        await syncFavoritesFromApi().catch(() => {
+          clearFavoriteProducts();
+        });
+        await loadCartForSession().catch(() => {});
+        await loadAddressesForSession().catch(() => {});
+        renderProducts();
+        renderCart();
+        applyCurrentCustomerSession();
+      } else {
+        clearFavoriteProducts();
+        renderProducts();
+        renderCart();
+        showInlineMessage(saleFormMessage, "Sesion iniciada correctamente.", "success");
+      }
+    } catch (error) {
+      setAuthSubmitting(false);
+      showInlineMessage(authLoginMessage, error instanceof Error ? error.message : "No se pudo iniciar sesion.", "error");
+    }
   }
 
   function openProductDetail(product) {
@@ -331,13 +586,6 @@
   }
 
   function loadInventoryState() {
-    try {
-      const parsed = JSON.parse(safeStorage.getItem(inventoryStateKey) || "null");
-      if (parsed?.insumos && parsed?.abonos && parsed?.herramientas) {
-        return normalizeInventoryState(parsed);
-      }
-    } catch {}
-
     return {
       insumos: [],
       abonos: [],
@@ -347,6 +595,15 @@
 
   function saveInventoryState() {
     safeStorage.setItem(inventoryStateKey, JSON.stringify(inventoryState));
+  }
+
+  function hasInventoryRows(state) {
+    if (!state || typeof state !== "object") return false;
+    const categories = ["insumos", "abonos", "herramientas"];
+    if (!categories.every((category) => Array.isArray(state[category]))) {
+      return false;
+    }
+    return categories.some((category) => state[category].length > 0);
   }
 
   function normalizeInventoryState(state) {
@@ -363,8 +620,8 @@
 
       const updatedRow = [...row];
       updatedRow[1] = "Tractor de arado";
-      if (updatedRow[6] === "Motor diésel 90 HP" || updatedRow[6] === "Motor di\u00E9sel 90 HP") {
-        updatedRow[6] = "Motor diésel 90 HP para labores de arado";
+      if (updatedRow[6] === "Motor diesel 90 HP" || updatedRow[6] === "Motor di\u00E9sel 90 HP") {
+        updatedRow[6] = "Motor diesel 90 HP para labores de arado";
       }
       return updatedRow;
     });
@@ -432,7 +689,11 @@
 
   function setSaleSubmitting(isSubmitting) {
     if (!confirmSaleButton) return;
-    confirmSaleButton.disabled = isSubmitting || confirmSaleButton.disabled;
+    if (isSubmitting) {
+      confirmSaleButton.disabled = true;
+    } else {
+      updateCheckoutAvailability();
+    }
     confirmSaleButton.dataset.busy = isSubmitting ? "true" : "false";
     const label = confirmSaleButton.querySelector("[data-i18n-text]") || confirmSaleButton.querySelector("span");
     if (label) {
@@ -446,6 +707,14 @@
     submitCustomerAccountButton.classList.toggle("opacity-70", isSubmitting);
     submitCustomerAccountButton.classList.toggle("cursor-not-allowed", isSubmitting);
     submitCustomerAccountButton.textContent = isSubmitting ? t("accountModal.creating") : t("accountModal.submit");
+  }
+
+  function setAddressSubmitting(isSubmitting) {
+    if (!submitAddressModalButton) return;
+    submitAddressModalButton.disabled = isSubmitting;
+    submitAddressModalButton.classList.toggle("opacity-70", isSubmitting);
+    submitAddressModalButton.classList.toggle("cursor-not-allowed", isSubmitting);
+    submitAddressModalButton.textContent = isSubmitting ? "Guardando..." : "Guardar direccion";
   }
 
   function getSessionDisplayName() {
@@ -490,7 +759,9 @@
     if (!confirmSaleButton) return;
 
     const hasCustomer = Boolean(customerAccountSelect?.value);
-    const canCheckout = hasCustomer;
+    const requiresAddress = getSession()?.role === "customer" && String(customerAccountSelect?.value || "") === String(getSession()?.id || "") && customerAddresses.length > 0;
+    const hasAddress = !requiresAddress || Boolean(shippingAddressSelect?.value);
+    const canCheckout = hasCustomer && hasAddress;
     confirmSaleButton.disabled = !canCheckout;
     confirmSaleButton.className = canCheckout
       ? "inline-flex items-center justify-center gap-2 rounded-full bg-sol px-6 py-3 text-sm font-bold text-slate-950 transition hover:brightness-105 sm:min-w-[15rem]"
@@ -500,9 +771,14 @@
       confirmSaleButton.disabled = true;
     }
 
+    if (isAuthenticated() && canCheckout && saleFormMessage) {
+      hideInlineMessage(saleFormMessage);
+      return;
+    }
+
     showInlineMessage(
       saleFormMessage,
-      canCheckout ? t("checkout.readyToBuy") : t("checkout.selectAccountFirst"),
+      canCheckout ? t("checkout.readyToBuy") : (hasCustomer && !hasAddress ? "Selecciona una direccion de envio para continuar." : t("checkout.selectAccountFirst")),
       canCheckout ? "success" : "warning"
     );
   }
@@ -510,6 +786,7 @@
   function renderCustomerAccounts(selectedId = null) {
     if (!customerAccountSelect) return;
 
+    const customerSessionActive = getSession()?.role === "customer";
     const nextSelectedId = getPreferredCustomerAccountId(selectedId ?? customerAccountSelect.value);
     customerAccountSelect.innerHTML = [
       `<option value="" class="bg-slate-900 text-white">${t("checkout.customerSelect")}</option>`,
@@ -525,6 +802,7 @@
       selectedCustomerSummary.textContent = selectedAccount
         ? `${t("dynamic.selectedAccount").replace("{name}", selectedAccount.fullName)} - ${t("dynamic.accountCode").replace("{code}", selectedAccount.code)}`
         : t("checkout.noAccountSelected");
+      selectedCustomerSummary.classList.add("hidden");
     }
 
     if (checkoutSessionBanner) {
@@ -540,9 +818,91 @@
       openCustomerAccountModalButton.textContent = getSession()?.role === "customer"
         ? t("checkout.useMyAccount")
         : t("checkout.createAccount");
+      openCustomerAccountModalButton.classList.toggle("hidden", isAuthenticated());
     }
 
+    customerAccountSelect.disabled = customerSessionActive;
+    customerAccountSelect.className = customerSessionActive
+      ? "w-full appearance-none rounded-[0.95rem] border border-white/6 bg-white/[0.03] px-4 py-2.5 text-sm text-white/70 shadow-inner backdrop-blur-md outline-none cursor-not-allowed"
+      : "w-full appearance-none rounded-[0.95rem] border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white shadow-inner backdrop-blur-md transition-all duration-300 ease-out focus:border-sol/60 focus:bg-white/10 focus:ring-[3px] focus:ring-sol/20 focus:outline-none hover:bg-white/10";
+
+    if (customerAccountField) {
+      customerAccountField.classList.toggle("opacity-85", customerSessionActive);
+    }
+
+    if (checkoutAccountHint) {
+      checkoutAccountHint.classList.toggle("hidden", isAuthenticated());
+    }
+
+    if (saleNoteField) {
+      const shouldHideNote = isAuthenticated();
+      saleNoteField.classList.toggle("hidden", shouldHideNote);
+      if (shouldHideNote && saleNote) {
+        saleNote.value = "";
+      }
+    }
+
+    renderShippingAddresses();
     updateCheckoutAvailability();
+  }
+
+  function getSelectedShippingAddress() {
+    const addressId = Number(shippingAddressSelect?.value || 0);
+    return customerAddresses.find((address) => Number(address.id) === addressId) || null;
+  }
+
+  function renderShippingAddresses() {
+    if (!shippingAddressSelect || !shippingAddressSummary) return;
+
+    const customerSession = getSession();
+    const selectedAccount = getSelectedCustomerAccount();
+    const canUseAddresses = customerSession?.role === "customer" && selectedAccount && String(selectedAccount.id) === String(customerSession.id || "");
+    const previousValue = String(shippingAddressSelect.value || "");
+
+    if (!canUseAddresses) {
+      customerAddresses = [];
+    }
+
+    shippingAddressSelect.innerHTML = [
+      `<option value="" class="bg-slate-900 text-white">${canUseAddresses ? "Selecciona una direccion" : "Disponible con tu cuenta"}</option>`,
+      ...(canUseAddresses && customerAddresses.length < 3 ? ['<option value="__new__" class="bg-slate-900 text-white">Agregar nueva direccion...</option>'] : []),
+      ...customerAddresses.map((address) => `<option value="${address.id}" class="bg-slate-900 text-white">${address.label} - ${address.city}</option>`)
+    ].join("");
+
+    shippingAddressSelect.disabled = !canUseAddresses || customerAddresses.length === 0;
+
+    const hasPreviousAddress = previousValue && customerAddresses.some((address) => String(address.id) === previousValue);
+    const defaultAddress = customerAddresses.find((address) => address.is_default) || customerAddresses[0] || null;
+    if (canUseAddresses) {
+      if (hasPreviousAddress) {
+        shippingAddressSelect.value = previousValue;
+      } else if (defaultAddress) {
+        shippingAddressSelect.value = String(defaultAddress.id);
+      }
+    }
+
+    const selectedAddress = getSelectedShippingAddress();
+    shippingAddressSummary.textContent = selectedAddress
+      ? `${selectedAddress.label}: ${selectedAddress.address_line}, ${selectedAddress.city}${selectedAddress.province ? `, ${selectedAddress.province}` : ""}`
+      : (canUseAddresses ? "No has seleccionado direccion de envio." : "La direccion de envio se habilita con tu propia cuenta cliente.");
+  }
+
+  async function loadAddressesForSession() {
+    const customerSession = getSession();
+    const selectedAccount = getSelectedCustomerAccount();
+    const canUseAddresses = customerSession?.role === "customer" && selectedAccount && String(selectedAccount.id) === String(customerSession.id || "");
+
+    if (!canUseAddresses) {
+      customerAddresses = [];
+      renderShippingAddresses();
+      return;
+    }
+
+    const rows = await fetchJson("/api/addresses", {
+      headers: { Accept: "application/json" }
+    });
+    customerAddresses = Array.isArray(rows) ? rows : [];
+    renderShippingAddresses();
   }
 
   function applyCurrentCustomerSession() {
@@ -560,6 +920,7 @@
 
     renderCustomerAccounts(preferredId);
     customerAccountSelect.value = preferredId;
+    loadAddressesForSession().catch(() => {});
     updateCheckoutAvailability();
 
     const sessionName = getSessionDisplayName();
@@ -601,7 +962,17 @@
     const state = await fetchJson("/api/inventory-state", {
       headers: { Accept: "application/json" }
     });
-    inventoryState = state || { insumos: [], abonos: [], herramientas: [] };
+    if (hasInventoryRows(state)) {
+      inventoryState = normalizeInventoryState(state);
+      saveInventoryState();
+      return;
+    }
+
+    inventoryState = {
+      insumos: [],
+      abonos: [],
+      herramientas: []
+    };
   }
 
   async function syncSalesHistoryFromApi() {
@@ -615,9 +986,126 @@
     });
   }
 
+  async function syncFavoritesFromApi() {
+    if (!isCustomerSession()) {
+      clearFavoriteProducts();
+      return;
+    }
+
+    const rows = await fetchJson("/api/favorites", {
+      headers: { Accept: "application/json" }
+    });
+    setFavoriteProducts(rows);
+  }
+
+  async function syncCartToApi() {
+    if (!isCustomerSession()) return;
+
+    const payload = {
+      items: cart.map((item) => ({
+        sku: item.id,
+        category: item.category,
+        quantity: item.quantity,
+        selected: item.selected !== false
+      }))
+    };
+
+    const response = await fetchJson("/api/cart/sync", {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+
+    cart = normalizeCartItems(response?.items || []);
+  }
+
+  function queueCartSync() {
+    if (!isCustomerSession()) return;
+    window.clearTimeout(cartSyncTimer);
+    cartSyncTimer = window.setTimeout(() => {
+      syncCartToApi()
+        .then(() => {
+          renderCart();
+        })
+        .catch((error) => {
+          showInlineMessage(saleFormMessage, error instanceof Error ? error.message : "No se pudo guardar el carrito.", "warning");
+        });
+    }, 180);
+  }
+
+  async function loadCartForSession() {
+    if (!isCustomerSession()) return;
+
+    const response = await fetchJson("/api/cart", {
+      headers: { Accept: "application/json" }
+    });
+    const remoteItems = normalizeCartItems(response?.items || []);
+
+    if (remoteItems.length > 0) {
+      cart = remoteItems;
+      return;
+    }
+
+    if (cart.length > 0) {
+      await syncCartToApi();
+      return;
+    }
+
+    cart = [];
+  }
+
+  async function toggleFavorite(category, id) {
+    const product = findProduct(category, id);
+    if (!product) return;
+
+    const favoriteKey = `${category}:${id}`;
+    if (favoriteRequests.has(favoriteKey)) {
+      return;
+    }
+
+    const favoriteCopy = getFavoriteCopy();
+    if (!isCustomerSession()) {
+      openAuthModal();
+      showInlineMessage(saleFormMessage, favoriteCopy.loginRequired, "warning");
+      return;
+    }
+
+    favoriteRequests.add(favoriteKey);
+    const isFavorite = favoriteProductIds.has(String(id));
+
+    try {
+      if (isFavorite) {
+        await fetchJson("/api/favorites/delete", {
+          method: "POST",
+          body: JSON.stringify({ sku: id })
+        });
+        favoriteProductIds.delete(String(id));
+        favoriteProducts = favoriteProducts.filter((item) => String(item?.sku || item?.id || "") !== String(id));
+        showInlineMessage(saleFormMessage, favoriteCopy.removed, "success");
+      } else {
+        const favorite = await fetchJson("/api/favorites", {
+          method: "POST",
+          body: JSON.stringify({ sku: id })
+        });
+        favoriteProductIds.add(String(id));
+        favoriteProducts = [favorite, ...favoriteProducts.filter((item) => String(item?.sku || item?.id || "") !== String(id))];
+        showInlineMessage(saleFormMessage, favoriteCopy.added, "success");
+      }
+
+      renderProducts();
+    } catch (error) {
+      showInlineMessage(saleFormMessage, error instanceof Error ? error.message : favoriteCopy.loading, "error");
+    } finally {
+      favoriteRequests.delete(favoriteKey);
+    }
+  }
+
   async function syncPosData() {
     await syncInventoryStateFromApi();
     await syncSalesHistoryFromApi();
+    await syncFavoritesFromApi().catch(() => {
+      clearFavoriteProducts();
+    });
+    await loadCartForSession().catch(() => {});
     renderFeaturedSlider();
     renderProducts();
     renderCart();
@@ -630,6 +1118,8 @@
         closeProductDetail();
       }
     }
+
+    consumePendingAddFromQuery();
   }
   function openCustomerAccountModal() {
     hideInlineMessage(customerAccountMessage);
@@ -642,6 +1132,37 @@
     customerAccountForm?.reset();
     hideInlineMessage(customerAccountMessage);
     setCustomerAccountSubmitting(false);
+  }
+
+  function openAddressModal() {
+    const session = getSession();
+    const selectedAccount = getSelectedCustomerAccount();
+
+    if (session?.role !== "customer") {
+      showInlineMessage(saleFormMessage, "Inicia sesion como cliente para guardar direcciones.", "warning");
+      openAuthModal();
+      return;
+    }
+
+    if (!selectedAccount || String(selectedAccount.id) !== String(session.id || "")) {
+      applyCurrentCustomerSession();
+    }
+
+    if (customerAddresses.length >= 3) {
+      showInlineMessage(saleFormMessage, "Ya alcanzaste el limite de 3 direcciones. Elimina una para agregar otra.", "warning");
+      return;
+    }
+
+    hideInlineMessage(addressModalMessage);
+    addressModal?.classList.remove("hidden");
+    addressLabelModal?.focus();
+  }
+
+  function closeAddressModal() {
+    addressModal?.classList.add("hidden");
+    addressFormModal?.reset();
+    hideInlineMessage(addressModalMessage);
+    setAddressSubmitting(false);
   }
 
   function buildCustomerAccountCode() {
@@ -691,6 +1212,13 @@
 
       saveSession(account.session || null);
       updateSessionButton();
+      await syncFavoritesFromApi().catch(() => {
+        clearFavoriteProducts();
+      });
+      await loadCartForSession().catch(() => {});
+      await loadAddressesForSession().catch(() => {});
+      renderProducts();
+      renderCart();
       await loadRemoteCustomerAccounts();
       const selectedId = String(account.id);
       renderCustomerAccounts(selectedId);
@@ -703,6 +1231,63 @@
       }, 700);
     } finally {
       setCustomerAccountSubmitting(false);
+    }
+  }
+
+  async function createAddressFromModal() {
+    const session = getSession();
+    if (session?.role !== "customer") {
+      showInlineMessage(addressModalMessage, "Debes iniciar sesion como cliente para guardar direcciones.", "error");
+      return;
+    }
+
+    const payload = {
+      label: addressLabelModal?.value.trim() || "",
+      recipient_name: addressRecipientModal?.value.trim() || "",
+      phone: addressPhoneModal?.value.trim() || "",
+      address_line: addressLineModal?.value.trim() || "",
+      city: addressCityModal?.value.trim() || "",
+      province: addressProvinceModal?.value.trim() || "",
+      reference: addressReferenceModal?.value.trim() || "",
+      is_default: Boolean(addressDefaultModal?.checked)
+    };
+
+    if (!payload.label || !payload.recipient_name || !payload.address_line || !payload.city) {
+      showInlineMessage(addressModalMessage, "Completa etiqueta, destinatario, direccion y ciudad.", "error");
+      return;
+    }
+
+    hideInlineMessage(addressModalMessage);
+    setAddressSubmitting(true);
+
+    try {
+      const rows = await fetchJson("/api/addresses", {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+
+      customerAddresses = Array.isArray(rows) ? rows : [];
+      renderShippingAddresses();
+
+      const preferredAddress = payload.is_default
+        ? customerAddresses.find((address) => address.is_default)
+        : customerAddresses.find((address) => (
+            String(address.label || "").trim() === payload.label
+            && String(address.address_line || "").trim() === payload.address_line
+            && String(address.city || "").trim() === payload.city
+          ));
+
+      if (preferredAddress && shippingAddressSelect) {
+        shippingAddressSelect.value = String(preferredAddress.id);
+      }
+
+      renderShippingAddresses();
+      updateCheckoutAvailability();
+      showInlineMessage(saleFormMessage, "Direccion guardada correctamente.", "success");
+      closeAddressModal();
+    } catch (error) {
+      setAddressSubmitting(false);
+      showInlineMessage(addressModalMessage, error instanceof Error ? error.message : "No se pudo guardar la direccion.", "error");
     }
   }
 
@@ -847,14 +1432,15 @@
           <div class="relative overflow-hidden rounded-[1rem] bg-white/10 shadow-[0_18px_30px_rgba(15,23,42,0.18)] transition-all duration-700 ease-linear group-hover:shadow-[0_24px_36px_rgba(15,23,42,0.24)]">
             <img src="${product.image}" alt="${product.name}" class="h-36 w-full object-cover object-center transition-transform duration-700 ease-linear group-hover:scale-[1.03] sm:h-40 lg:h-42">
             <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.02),rgba(15,23,42,0.18),rgba(15,23,42,0.88))]"></div>
+            <div class="pointer-events-none absolute inset-y-0 left-[-35%] w-[42%] -skew-x-[18deg] bg-[linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.12),rgba(255,255,255,0))] opacity-0 transition-all duration-700 ease-out group-hover:left-[115%] group-hover:opacity-100"></div>
             <div class="absolute left-3 top-3 z-10 inline-flex rounded-full border border-white/18 bg-slate-950/28 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-white/88 backdrop-blur-sm">${categoryLabel(product.category)}</div>
             <div class="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-2 p-3">
-              <div class="space-y-2">
-                <div class="space-y-1">
-                  <h3 class="line-clamp-2 text-[0.92rem] font-extrabold leading-5 tracking-[-0.01em] text-white drop-shadow-[0_6px_16px_rgba(15,23,42,0.45)]">${product.name}</h3>
-                  <p class="text-[0.98rem] font-black tracking-tight text-[#ffd977] drop-shadow-[0_6px_18px_rgba(255,202,97,0.26)]">${formatCurrency(product.price)}</p>
+              <div class="space-y-2 rounded-[0.9rem] bg-[linear-gradient(180deg,rgba(15,23,42,0.06),rgba(15,23,42,0.34))] p-2.5">
+                <div class="space-y-1 transition-all duration-300 ease-out group-hover:-translate-y-[1px]">
+                  <h3 class="line-clamp-2 text-[0.92rem] font-extrabold leading-5 tracking-[-0.01em] text-white drop-shadow-[0_6px_16px_rgba(15,23,42,0.45)] transition-all duration-300 ease-out group-hover:text-white/95">${product.name}</h3>
+                  <p class="text-[1rem] font-black tracking-tight text-[#ffd977] drop-shadow-[0_6px_18px_rgba(255,202,97,0.26)] transition-all duration-300 ease-out group-hover:translate-x-[1px] group-hover:text-[#ffe7a3]">${formatCurrency(product.price)}</p>
                 </div>
-                <button type="button" class="featured-add inline-flex w-fit items-center justify-center gap-1.5 rounded-full bg-white/92 px-3 py-1.5 text-[11px] font-bold text-slate-950 shadow-[0_12px_24px_rgba(15,23,42,0.18)] transition-all duration-200 ease-out hover:-translate-y-[1px] hover:bg-white hover:shadow-[0_16px_28px_rgba(15,23,42,0.22)]" data-category="${product.category}" data-id="${product.id}">
+                <button type="button" class="featured-add inline-flex w-fit items-center justify-center gap-1.5 rounded-full bg-sol px-3 py-1.5 text-[11px] font-bold text-slate-950 shadow-[0_12px_24px_rgba(255,202,97,0.26)] transition-all duration-200 ease-out hover:-translate-y-[1px] hover:brightness-105 hover:shadow-[0_16px_28px_rgba(255,202,97,0.32)] group-hover:bg-sol" data-category="${product.category}" data-id="${product.id}">
                   <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 fill-current" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>
                   ${t("detail.addToCart")}
                 </button>
@@ -954,28 +1540,33 @@
 
     const renderCard = (product) => {
       const isOut = product.stock <= 0;
+      const isFavorite = favoriteProductIds.has(String(product.id));
+      const favoriteCopy = getFavoriteCopy();
       return `
-        <article class="product-card group flex h-full min-h-[12.2rem] cursor-pointer flex-col overflow-hidden rounded-[1.1rem] border border-white/75 bg-[linear-gradient(180deg,_rgba(255,255,255,0.96),_rgba(248,244,236,0.92))] shadow-[0_10px_22px_rgba(62,107,72,0.08)] backdrop-blur transition duration-200 hover:-translate-y-[2px] hover:border-hoja/25 hover:shadow-[0_16px_28px_rgba(62,107,72,0.12)]" data-category="${product.category}" data-id="${product.id}">
-          <div class="relative bg-[linear-gradient(180deg,_rgba(245,240,230,0.96),_rgba(234,244,236,0.88))] px-2 py-2">
-            <div class="flex aspect-[4/2.65] items-center justify-center overflow-hidden rounded-[0.85rem] bg-white/70 ring-1 ring-black/5">
-              <img src="${product.image}" alt="${product.name}" class="h-full w-full object-cover object-center transition duration-300 group-hover:scale-[1.04]">
+        <article class="product-card group flex h-full min-h-[12rem] cursor-pointer flex-col overflow-hidden rounded-[1.2rem] border border-white/75 bg-[linear-gradient(180deg,_rgba(255,255,255,0.98),_rgba(247,243,235,0.94))] shadow-[0_12px_24px_rgba(62,107,72,0.08)] backdrop-blur transition-all duration-300 hover:-translate-y-[3px] hover:border-hoja/22 hover:shadow-[0_18px_32px_rgba(62,107,72,0.14)]" data-category="${product.category}" data-id="${product.id}">
+          <div class="relative bg-[linear-gradient(180deg,_rgba(245,240,230,0.96),_rgba(234,244,236,0.88))] p-2.5">
+            <button type="button" class="favorite-toggle absolute left-4 top-4 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border text-sm shadow-[0_10px_22px_rgba(15,23,42,0.12)] transition-all duration-200 ${isFavorite ? "border-amber-300 bg-amber-100 text-amber-600 hover:bg-amber-200" : "border-white/80 bg-white/92 text-slate-500 hover:border-amber-200 hover:text-amber-500"}" data-category="${product.category}" data-id="${product.id}" aria-label="${isFavorite ? favoriteCopy.remove : favoriteCopy.add}" title="${isFavorite ? favoriteCopy.remove : favoriteCopy.add}">
+              <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor" aria-hidden="true"><path d="M12 2.75 14.84 8.5l6.34.92-4.59 4.48 1.08 6.32L12 17.23 6.33 20.22l1.08-6.32-4.59-4.48 6.34-.92L12 2.75Z"/></svg>
+            </button>
+            <div class="relative flex aspect-[4/2.55] items-center justify-center overflow-hidden rounded-[0.95rem] bg-white/75 ring-1 ring-black/5">
+              <img src="${product.image}" alt="${product.name}" class="h-full w-full object-cover object-center transition duration-500 ease-out group-hover:scale-[1.05]">
+              <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.02),rgba(15,23,42,0.0),rgba(15,23,42,0.08))] opacity-80"></div>
             </div>
-            <span class="absolute left-3 top-3 rounded-full bg-slate-950/72 px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.14em] text-white">${categoryLabel(product.category)}</span>
-            <span class="absolute right-3 top-3 rounded-full px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.14em] ${isOut ? "bg-rose-100 text-rose-700" : "bg-emerald-100 text-emerald-700"}">${isOut ? t("dynamic.outOfStock") : t("dynamic.unitsShort").replace("{count}", String(product.stock))}</span>
+            <span class="absolute right-4 top-4 rounded-full px-2.5 py-1 text-[8px] font-bold uppercase tracking-[0.16em] shadow-[0_8px_18px_rgba(15,23,42,0.08)] ${isOut ? "bg-rose-100 text-rose-700" : "bg-emerald-100 text-emerald-700"}">${isOut ? t("dynamic.outOfStock") : t("dynamic.unitsShort").replace("{count}", String(product.stock))}</span>
           </div>
-          <div class="flex flex-1 flex-col p-3">
-            <div class="min-h-[3.3rem]">
-              <p class="text-[8px] font-bold uppercase tracking-[0.14em] text-slate-400">${product.id}</p>
-              <h3 class="mt-1 line-clamp-2 text-[12px] font-black leading-[1rem] text-slate-900">${product.name}</h3>
-              <p class="mt-1 line-clamp-1 text-[10px] text-slate-500">${product.subcategory}</p>
+          <div class="flex flex-1 flex-col p-3.5">
+            <div class="min-h-[3.5rem]">
+              <p class="text-[8px] font-bold uppercase tracking-[0.16em] text-slate-400">${product.id}</p>
+              <h3 class="mt-1.5 line-clamp-2 text-[0.83rem] font-black leading-[1.1rem] tracking-[-0.01em] text-slate-900">${product.name}</h3>
+              <p class="mt-1 line-clamp-1 text-[10px] font-medium text-slate-500">${product.subcategory}</p>
             </div>
-            <div class="mt-auto flex items-end justify-between gap-2 pt-2">
+            <div class="mt-auto flex items-end justify-between gap-2 pt-3">
               <div>
-                <p class="text-[8px] font-bold uppercase tracking-[0.14em] text-slate-400">${t("detail.price")}</p>
-                <p class="mt-1 text-[0.92rem] font-black leading-none text-hoja">${formatCurrency(product.price)}</p>
+                <p class="text-[8px] font-bold uppercase tracking-[0.16em] text-slate-400">${t("detail.price")}</p>
+                <p class="mt-1 text-[1rem] font-black leading-none tracking-tight text-hoja">${formatCurrency(product.price)}</p>
               </div>
-              <button class="add-to-cart inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[9px] font-semibold leading-none ${isOut ? "cursor-not-allowed bg-slate-200 text-slate-400" : "bg-hoja text-white transition hover:bg-hoja/95"}" data-category="${product.category}" data-id="${product.id}" ${isOut ? "disabled" : ""}>
-                <svg viewBox="0 0 24 24" class="h-2.5 w-2.5 fill-current" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>
+              <button class="add-to-cart inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[9px] font-bold leading-none shadow-[0_8px_18px_rgba(62,107,72,0.12)] ${isOut ? "cursor-not-allowed bg-slate-200 text-slate-400 shadow-none" : "bg-hoja text-white transition-all duration-200 hover:-translate-y-[1px] hover:bg-hoja/95 hover:shadow-[0_12px_22px_rgba(62,107,72,0.18)]"}" data-category="${product.category}" data-id="${product.id}" ${isOut ? "disabled" : ""}>
+                <svg viewBox="0 0 24 24" class="h-3 w-3 fill-current" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>
                 ${t("dynamic.add")}
               </button>
             </div>
@@ -1019,28 +1610,27 @@
         `;
 
       return `
-        <section class="rounded-[1.7rem] border border-white/70 bg-[linear-gradient(180deg,_rgba(255,255,255,0.78),_rgba(247,243,235,0.76))] p-4 shadow-[0_14px_30px_rgba(62,107,72,0.08)] sm:p-5" data-category-section="${category}">
+        <section class="rounded-[1.75rem] border border-white/70 bg-[linear-gradient(180deg,_rgba(255,255,255,0.82),_rgba(247,243,235,0.8))] p-4 shadow-[0_16px_32px_rgba(62,107,72,0.08)] sm:p-5" data-category-section="${category}">
           <div class="flex flex-col gap-3 border-b border-slate-200/70 pb-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p class="inline-flex w-fit rounded-full bg-hoja/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-hoja">${categoryLabel(category)}</p>
-              <h2 class="mt-1 text-2xl font-black text-slate-900">${categoryLabel(category)}</h2>
+              <h2 class="text-[1.8rem] font-black tracking-tight text-slate-900">${categoryLabel(category)}</h2>
               <p class="mt-1 text-sm text-slate-600">
-                ${totalCategoryProducts} productos en esta categoría.
+                ${t("dynamic.productsInCategory").replace("{count}", String(totalCategoryProducts))}
               </p>
             </div>
-            <div class="rounded-full bg-crema px-4 py-2 text-xs font-semibold text-slate-700">
+            <div class="rounded-full bg-crema px-4 py-2 text-xs font-semibold text-slate-700 shadow-[0_8px_18px_rgba(15,23,42,0.05)]">
               ${t("dynamic.showingRange")
                 .replace("{start}", String(totalCategoryProducts === 0 ? 0 : startIndex + 1))
                 .replace("{end}", String(Math.min(startIndex + productsPerPage, totalCategoryProducts)))
                 .replace("{total}", String(totalCategoryProducts))}
             </div>
           </div>
-          <div class="mt-4 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+          <div class="mt-4 grid gap-3.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
             ${visibleProducts.map(renderCard).join("")}
           </div>
-          <div class="mt-4 flex flex-col items-center gap-3 rounded-[1.1rem] border border-slate-200/70 bg-white/85 px-4 py-4">
+          <div class="mt-4 flex flex-col items-center gap-3 rounded-[1.15rem] border border-slate-200/70 bg-white/88 px-4 py-4 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
             <p class="text-center text-sm text-slate-600">
-              Página ${page} de ${totalPages}
+              ${t("dynamic.pageOf").replace("{page}", String(page)).replace("{total}", String(totalPages))}
             </p>
             <div class="flex flex-wrap items-center justify-center gap-2">
               <button
@@ -1079,6 +1669,14 @@
       });
     });
 
+    productGrid.querySelectorAll(".favorite-toggle").forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        await toggleFavorite(button.dataset.category, button.dataset.id);
+      });
+    });
+
     productGrid.querySelectorAll(".product-card").forEach((card) => {
       card.addEventListener("click", () => {
         const product = findProduct(card.dataset.category, card.dataset.id);
@@ -1101,15 +1699,15 @@
 
     if (productPaginationSummary) {
       const categorySummary = activeCategory === "all"
-        ? `${visibleCategories.length} categorías visibles`
+        ? t("dynamic.visibleCategories").replace("{count}", String(visibleCategories.length))
         : `${categoryLabel(activeCategory)} activa`;
-      productPaginationSummary.textContent = `${categorySummary} - ${totalProducts} productos encontrados en el catálogo.`;
+      productPaginationSummary.textContent = `${categorySummary} - ${t("dynamic.productsFound").replace("{count}", String(totalProducts))}`;
     }
 
     if (productPagination) {
       productPagination.innerHTML = `
         <div class="rounded-full bg-crema px-4 py-2 text-xs font-semibold text-slate-700">
-          Cada categoría mantiene su propia paginación con bloques de 12 productos.
+          ${t("dynamic.paginationHint")}
         </div>
       `;
     }
@@ -1134,11 +1732,43 @@
       cart.push({
         category,
         id,
-        quantity: 1
+        quantity: 1,
+        selected: true
       });
     }
 
     renderCart();
+    queueCartSync();
+  }
+
+  function consumePendingAddFromQuery() {
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get("add");
+    const preferredCategory = params.get("category");
+
+    if (!productId) return;
+
+    const flatProducts = getFlatProducts();
+    const product = flatProducts.find((item) => {
+      if (preferredCategory && item.category !== preferredCategory) {
+        return false;
+      }
+      return item.id === productId;
+    }) || flatProducts.find((item) => item.id === productId);
+
+    if (!product) return;
+
+    activeCategory = product.category || activeCategory;
+    resetCategoryPages(activeCategory);
+    syncCategoryUI();
+    addToCart(product.category, product.id);
+    renderProducts();
+
+    params.delete("add");
+    params.delete("category");
+    const nextQuery = params.toString();
+    const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}${window.location.hash || ""}`;
+    window.history.replaceState({}, "", nextUrl);
   }
 
   function updateCartItem(category, id, nextQuantity) {
@@ -1148,6 +1778,7 @@
     if (nextQuantity <= 0) {
       cart = cart.filter((item) => !(item.category === category && item.id === id));
       renderCart();
+      queueCartSync();
       return;
     }
 
@@ -1160,9 +1791,18 @@
       ? { ...item, quantity: nextQuantity }
       : item);
     renderCart();
+    queueCartSync();
   }
 
-  function getCartDetails() {
+  function toggleCartItemSelection(category, id, selected) {
+    cart = cart.map((item) => item.category === category && item.id === id
+      ? { ...item, selected }
+      : item);
+    renderCart();
+    queueCartSync();
+  }
+
+  function getCartDetails(selectedOnly = false) {
     return cart.map((item) => {
       const product = findProduct(item.category, item.id);
       if (!product) return null;
@@ -1172,12 +1812,14 @@
         product,
         subtotal
       };
-    }).filter(Boolean);
+    }).filter(Boolean).filter((item) => selectedOnly ? item.selected !== false : true);
   }
 
   function renderCart() {
     const items = getCartDetails();
     const totalUnits = items.reduce((sum, item) => sum + item.quantity, 0);
+    const selectedItems = items.filter((item) => item.selected !== false);
+    const selectedUnits = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
     if (cartCountBadge) {
       cartCountBadge.textContent = String(totalUnits);
       cartCountBadge.classList.toggle("hidden", totalUnits === 0);
@@ -1191,39 +1833,44 @@
       `;
       cartStatus.textContent = t("cart.emptyStatus");
     } else {
-      cartItems.innerHTML = items.map(({ product, quantity, subtotal }) => `
-        <article class="rounded-[1.35rem] border border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.08),_rgba(255,255,255,0.04))] p-3.5">
+      cartItems.innerHTML = items.map(({ product, quantity, subtotal, selected }) => `
+        <article class="rounded-[1.15rem] border border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.08),_rgba(255,255,255,0.04))] p-3">
           <div class="flex gap-3">
-            <img src="${product.image}" alt="${product.name}" class="h-20 w-20 rounded-[1rem] border border-white/10 object-cover">
+            <img src="${product.image}" alt="${product.name}" class="h-[4.4rem] w-[4.4rem] rounded-[0.9rem] border border-white/10 object-cover">
             <div class="min-w-0 flex-1">
               <div class="flex items-start justify-between gap-3">
                 <div>
                   <p class="text-sm font-bold text-white">${product.name}</p>
-                  <p class="mt-1 text-xs text-white/55">${product.id} - ${categoryLabel(product.category)}</p>
+                  <p class="mt-0.5 text-[11px] text-white/55">${product.id} - ${categoryLabel(product.category)}</p>
                 </div>
                 <div class="text-right">
                   <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-white/40">${t("summary.subtotal")}</p>
-                  <p class="mt-1 text-sm font-black text-sol">${formatCurrency(subtotal)}</p>
+                  <p class="mt-0.5 text-[13px] font-black ${selected ? "text-sol" : "text-white/55"}">${formatCurrency(subtotal)}</p>
                 </div>
               </div>
-              <div class="mt-3 flex items-center justify-between gap-3">
-                <div class="inline-flex items-center rounded-full border border-white/10 bg-slate-950/35">
-                  <button class="cart-qty px-3 py-1.5 text-sm font-bold text-white/75 transition hover:bg-white/10" data-action="decrease" data-category="${product.category}" data-id="${product.id}">-</button>
-                  <span class="min-w-[2rem] text-center text-sm font-semibold text-white">${quantity}</span>
-                  <button class="cart-qty px-3 py-1.5 text-sm font-bold text-white/75 transition hover:bg-white/10" data-action="increase" data-category="${product.category}" data-id="${product.id}">+</button>
+              <div class="mt-2.5 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                  <label class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-slate-950/35">
+                    <input class="cart-select h-4 w-4 accent-[#D9A441]" type="checkbox" data-category="${product.category}" data-id="${product.id}" ${selected ? "checked" : ""}>
+                  </label>
+                  <div class="inline-flex items-center rounded-full border border-white/10 bg-slate-950/35">
+                  <button class="cart-qty px-3 py-1 text-sm font-bold text-white/75 transition hover:bg-white/10" data-action="decrease" data-category="${product.category}" data-id="${product.id}">-</button>
+                  <span class="min-w-[1.85rem] text-center text-sm font-semibold text-white">${quantity}</span>
+                  <button class="cart-qty px-3 py-1 text-sm font-bold text-white/75 transition hover:bg-white/10" data-action="increase" data-category="${product.category}" data-id="${product.id}">+</button>
+                  </div>
                 </div>
-                <div class="rounded-[0.95rem] border border-white/10 bg-white/6 px-3 py-2 text-right">
+                <div class="rounded-[0.9rem] border border-white/10 bg-white/6 px-3 py-1.5 text-right">
                   <p class="text-[11px] uppercase tracking-[0.12em] text-white/40">${t("dynamic.unitPrice")}</p>
-                  <p class="text-sm font-semibold text-white">${formatCurrency(product.price)}</p>
+                  <p class="text-[13px] font-semibold text-white">${formatCurrency(product.price)}</p>
                 </div>
               </div>
             </div>
           </div>
         </article>
       `).join("");
-      cartStatus.textContent = t("dynamic.cartStatus")
+      cartStatus.textContent = `${t("dynamic.cartStatus")
         .replace("{products}", String(items.length))
-        .replace("{units}", String(totalUnits));
+        .replace("{units}", String(totalUnits))} • ${selectedItems.length} seleccionados / ${selectedUnits} unidades`;
     }
 
     cartItems.querySelectorAll(".cart-qty").forEach((button) => {
@@ -1235,11 +1882,17 @@
       });
     });
 
+    cartItems.querySelectorAll(".cart-select").forEach((input) => {
+      input.addEventListener("change", () => {
+        toggleCartItemSelection(input.dataset.category, input.dataset.id, input.checked);
+      });
+    });
+
     updateTotals();
   }
 
   function updateTotals() {
-    const subtotal = getCartDetails().reduce((sum, item) => sum + item.subtotal, 0);
+    const subtotal = getCartDetails(true).reduce((sum, item) => sum + item.subtotal, 0);
     const discount = Math.min(Math.max(Number(discountInput.value) || 0, 0), subtotal);
     const total = Math.max(subtotal - discount, 0);
 
@@ -1254,7 +1907,7 @@
 
   async function recordSale() {
     hideInlineMessage(saleFormMessage);
-    const items = getCartDetails();
+    const items = getCartDetails(true);
     if (items.length === 0) {
       showInlineMessage(saleFormMessage, t("alerts.addProductFirst"), "error");
       return;
@@ -1289,6 +1942,7 @@
       customer_id: Number(selectedCustomer.id),
       payment_code: paymentMethod.value,
       note: saleNote.value.trim(),
+      shipping_address: getSelectedShippingAddress(),
       discount,
       items: items.map((item) => {
         const row = inventoryState[item.category].find((product) => product[0] === item.id);
@@ -1356,18 +2010,24 @@
     if (detailProduct) {
       openProductDetail(findProduct(detailProduct.category, detailProduct.id) || detailProduct);
     }
+    updateSessionButton();
   }
 
   window.refreshPosLanguage = applyLanguage;
 
   async function refreshInventoryFromStorage() {
     try {
-      await syncPosData();
+      await syncInventoryStateFromApi();
     } catch {
-      renderFeaturedSlider();
-      renderProducts();
-      renderCart();
+      inventoryState = {
+        insumos: [],
+        abonos: [],
+        herramientas: []
+      };
     }
+    renderFeaturedSlider();
+    renderProducts();
+    renderCart();
   }
 
   categoryChips.forEach((chip) => {
@@ -1404,6 +2064,16 @@
   discountInput.addEventListener("input", updateTotals);
   customerAccountSelect?.addEventListener("change", () => {
     renderCustomerAccounts(customerAccountSelect.value);
+    loadAddressesForSession().catch(() => {});
+  });
+  shippingAddressSelect?.addEventListener("change", () => {
+    if (shippingAddressSelect.value === "__new__") {
+      shippingAddressSelect.value = "";
+      openAddressModal();
+      return;
+    }
+    renderShippingAddresses();
+    updateCheckoutAvailability();
   });
   openCustomerAccountModalButton?.addEventListener("click", applyCurrentCustomerSession);
   closeCustomerAccountModalButton?.addEventListener("click", closeCustomerAccountModal);
@@ -1411,6 +2081,14 @@
   customerAccountModal?.addEventListener("click", (event) => {
     if (event.target === customerAccountModal) {
       closeCustomerAccountModal();
+    }
+  });
+  openAddressModalButton?.addEventListener("click", openAddressModal);
+  closeAddressModalButton?.addEventListener("click", closeAddressModal);
+  cancelAddressModalButton?.addEventListener("click", closeAddressModal);
+  addressModal?.addEventListener("click", (event) => {
+    if (event.target === addressModal) {
+      closeAddressModal();
     }
   });
   customerAccountForm?.addEventListener("submit", async (event) => {
@@ -1422,6 +2100,10 @@
       showInlineMessage(customerAccountMessage, error instanceof Error ? error.message : "No se pudo crear la cuenta cliente.", "error");
     }
   });
+  addressFormModal?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    await createAddressFromModal();
+  });
   openCartModalButton?.addEventListener("click", openCartModal);
   closeCartModalButton?.addEventListener("click", closeCartModal);
   cartModal?.addEventListener("click", (event) => {
@@ -1429,9 +2111,19 @@
       closeCartModal();
     }
   });
-  clearCartButton.addEventListener("click", () => {
+  clearCartButton.addEventListener("click", async () => {
     cart = [];
     renderCart();
+    if (isCustomerSession()) {
+      try {
+        await fetchJson("/api/cart/clear", {
+          method: "POST",
+          headers: { Accept: "application/json" }
+        });
+      } catch (error) {
+        showInlineMessage(saleFormMessage, error instanceof Error ? error.message : "No se pudo limpiar el carrito.", "warning");
+      }
+    }
   });
   closeProductDetailButton?.addEventListener("click", closeProductDetail);
   productDetailModal?.addEventListener("click", (event) => {
@@ -1452,15 +2144,34 @@
       showInlineMessage(saleFormMessage, error instanceof Error ? error.message : "No se pudo registrar la venta.", "error");
     }
   });
-  logoutButton?.addEventListener("click", async () => {
+  logoutButton?.addEventListener("click", (event) => {
+    event.stopPropagation();
     if (!isAuthenticated()) {
-      window.location.href = "login.html?redirect=pos.html";
+      openAuthModal();
       return;
     }
 
-    await logoutSession();
-    updateSessionButton();
-    window.location.href = "index.html";
+    toggleAuthMenu();
+  });
+  closeAuthModalButton?.addEventListener("click", closeAuthModal);
+  authModal?.addEventListener("click", (event) => {
+    if (event.target === authModal) {
+      closeAuthModal();
+    }
+  });
+  authLoginForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    await loginFromModal();
+  });
+  toggleAuthPasswordButton?.addEventListener("click", () => {
+    if (!authLoginPassword) return;
+    const isPassword = authLoginPassword.type === "password";
+    authLoginPassword.type = isPassword ? "text" : "password";
+    toggleAuthPasswordButton.textContent = isPassword ? "Ocultar" : "Ver";
+  });
+  openAuthRegisterButton?.addEventListener("click", () => {
+    closeAuthModal();
+    openCustomerAccountModal();
   });
 
   window.addEventListener("storage", (event) => {
@@ -1470,6 +2181,18 @@
     if (event.key === customerAccountsKey) {
       customerAccounts = loadCustomerAccounts();
       renderCustomerAccounts();
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!authMenu || authMenu.classList.contains("hidden")) return;
+    if (authMenu.contains(event.target) || logoutButton?.contains(event.target)) return;
+    closeAuthMenu();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeAuthMenu();
     }
   });
 
@@ -1487,6 +2210,26 @@
     startFeaturedAutoplay();
   })();
 })();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

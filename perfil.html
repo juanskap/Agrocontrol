@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgroControl | Mi perfil</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%233E6B48'/><path d='M20 39c0-10 7-18 18-20-2 3-3 6-3 10 0 6 3 11 9 15-3 1-5 1-8 1-10 0-16-6-16-6Z' fill='%23D9A441'/><path d='M23 42c4-7 11-12 21-14' stroke='%23F5F0E6' stroke-width='4' stroke-linecap='round'/></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/storage-helper.js"></script>
+  <script src="assets/public-auth.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            tierra: "#6B4F3A",
+            hoja: "#3E6B48",
+            musgo: "#6D8B4E",
+            crema: "#F5F0E6",
+            sol: "#D9A441"
+          },
+          boxShadow: {
+            suave: "0 20px 45px rgba(62, 107, 72, 0.16)"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.92),_rgba(255,255,255,0)_34%),linear-gradient(135deg,_#f8f3e8_0%,_#eef4ec_48%,_#f5efe2_100%)] text-slate-800">
+  <header class="sticky top-0 z-30 border-b border-white/40 bg-crema/95 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-6 py-4">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-11 w-auto">
+      </a>
+      <nav class="flex flex-wrap items-center justify-center gap-2 text-sm font-semibold">
+        <a href="index.html" class="group inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 transition hover:bg-hoja/8 hover:text-hoja">
+          <span>Inicio</span>
+        </a>
+        <a href="nosotros.html" class="group inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 transition hover:bg-hoja/8 hover:text-hoja">
+          <span>Nosotros</span>
+        </a>
+        <a href="pos.html" class="group inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 transition hover:bg-hoja/8 hover:text-hoja">
+          <span>POS</span>
+        </a>
+        <a href="contacto.html" class="group inline-flex items-center gap-2 rounded-full px-3 py-2 text-slate-700 transition hover:bg-hoja/8 hover:text-hoja">
+          <span>Contacto</span>
+        </a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="login.html?redirect=perfil.html" class="group inline-flex items-center gap-2 rounded-full bg-hoja/85 px-5 py-2 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(62,107,72,0.14)] transition hover:bg-hoja/95" data-i18n="nav.login">
+          <svg class="h-4 w-4 flex-shrink-0 stroke-current stroke-[2] text-white transition-colors group-hover:text-crema" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="8.25" r="3"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5.75 19c1.45-2.95 3.95-4.5 6.25-4.5s4.8 1.55 6.25 4.5"/>
+          </svg>
+          <span data-i18n-text>Iniciar sesión</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto flex w-full max-w-7xl flex-1 flex-col px-6 py-12">
+    <section class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+      <article class="overflow-hidden rounded-[2rem] border border-white/50 bg-white/88 p-7 shadow-suave backdrop-blur-sm">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Mi perfil</p>
+            <h1 id="profile-hero-name" class="mt-3 text-[2rem] font-black text-slate-900 md:text-[2.35rem]">Cargando perfil...</h1>
+            <p class="mt-3 max-w-2xl text-sm leading-7 text-slate-600">Aqui podras revisar tu informacion de cuenta y, en el siguiente paso, consultar tu historial de compras y movimientos importantes.</p>
+          </div>
+          <div class="rounded-[1.5rem] border border-hoja/10 bg-[linear-gradient(135deg,_rgba(62,107,72,0.10),_rgba(217,164,65,0.08))] px-5 py-4">
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-hoja/70">Estado</p>
+            <p class="mt-2 text-sm font-semibold text-slate-900">Cuenta cliente activa</p>
+            <p id="profile-code" class="mt-1 text-sm text-slate-600">Codigo: --</p>
+          </div>
+        </div>
+
+        <div class="mt-8 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-[1.4rem] border border-slate-200 bg-crema/70 p-4">
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja/70">Nombre completo</p>
+            <p id="profile-name" class="mt-2 text-lg font-semibold text-slate-900">Cargando...</p>
+          </div>
+          <div class="rounded-[1.4rem] border border-slate-200 bg-crema/70 p-4">
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja/70">Correo</p>
+            <p id="profile-email" class="mt-2 text-base text-slate-800">Cargando...</p>
+          </div>
+          <div class="rounded-[1.4rem] border border-slate-200 bg-crema/70 p-4">
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja/70">Telefono</p>
+            <p id="profile-phone" class="mt-2 text-base text-slate-800">Cargando...</p>
+          </div>
+          <div class="rounded-[1.4rem] border border-slate-200 bg-crema/70 p-4">
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja/70">Tipo de cuenta</p>
+            <p id="profile-role" class="mt-2 text-base text-slate-800">Cliente</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="rounded-[2rem] bg-slate-950 p-7 text-white shadow-[0_24px_55px_rgba(15,23,42,0.22)]">
+        <p class="text-sm font-bold uppercase tracking-[0.28em] text-sol">Resumen de compras</p>
+        <h2 class="mt-3 text-[1.85rem] font-black">Tu actividad reciente</h2>
+        <div class="mt-6 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-4">
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/60">Compras realizadas</p>
+            <p id="sales-count" class="mt-2 text-3xl font-black text-white">--</p>
+          </div>
+          <div class="rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-4">
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/60">Total acumulado</p>
+            <p id="sales-total" class="mt-2 text-3xl font-black text-white">$0.00</p>
+          </div>
+        </div>
+        <div class="mt-4 rounded-[1.35rem] border border-white/10 bg-white/[0.04] p-4">
+          <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/60">Ultima compra</p>
+          <p id="sales-latest" class="mt-2 text-sm leading-7 text-white/82">Cargando informacion de tus compras...</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="mt-6 rounded-[2rem] border border-white/50 bg-white/88 p-7 shadow-suave backdrop-blur-sm">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Historial de compras</p>
+          <h2 class="mt-3 text-[1.9rem] font-black text-slate-900">Tus pedidos mas recientes</h2>
+        </div>
+        <p class="max-w-xl text-sm leading-7 text-slate-600">Aqui podras revisar fecha, total, metodo de pago y los productos incluidos en cada compra.</p>
+      </div>
+
+      <div id="sales-feedback" class="mt-6 rounded-[1.4rem] border border-dashed border-hoja/20 bg-crema/60 p-5 text-sm text-slate-600">
+        Cargando historial de compras...
+      </div>
+      <div id="profile-sales-list" class="mt-6 grid gap-4"></div>
+    </section>
+
+    <section class="mt-6 rounded-[2rem] border border-white/50 bg-white/88 p-7 shadow-suave backdrop-blur-sm">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Mis favoritos</p>
+          <h2 class="mt-3 text-[1.9rem] font-black text-slate-900">Productos guardados con estrella</h2>
+        </div>
+        <p class="max-w-xl text-sm leading-7 text-slate-600">Cada favorito te ayuda a volver rapido al POS para comprar de nuevo los productos que mas te interesan.</p>
+      </div>
+
+      <div id="favorites-feedback" class="mt-6 rounded-[1.4rem] border border-dashed border-hoja/20 bg-crema/60 p-5 text-sm text-slate-600">
+        Cargando favoritos...
+      </div>
+      <div id="profile-favorites-list" class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6"></div>
+      <div id="favorites-pagination" class="mt-6 flex flex-wrap items-center justify-center gap-2"></div>
+    </section>
+
+    <section class="mt-6 rounded-[2rem] border border-white/50 bg-white/88 p-7 shadow-suave backdrop-blur-sm">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="text-sm font-bold uppercase tracking-[0.28em] text-hoja">Mis direcciones</p>
+          <h2 class="mt-3 text-[1.9rem] font-black text-slate-900">Hasta 3 direcciones de envio</h2>
+        </div>
+        <p class="max-w-xl text-sm leading-7 text-slate-600">Puedes guardar casa, trabajo o una direccion frecuente. Si eliminas una, podras registrar otra nueva.</p>
+      </div>
+
+      <div id="addresses-feedback" class="mt-6 rounded-[1.4rem] border border-dashed border-hoja/20 bg-crema/60 p-5 text-sm text-slate-600">
+        Cargando direcciones...
+      </div>
+      <div id="profile-addresses-list" class="mt-6 grid gap-4 lg:grid-cols-3"></div>
+
+      <form id="address-form" class="mt-6 rounded-[1.5rem] border border-slate-200 bg-crema/55 p-5">
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <label class="block">
+            <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-hoja/70">Etiqueta</span>
+            <input id="address-label" type="text" class="w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-hoja focus:ring-[3px] focus:ring-hoja/15" placeholder="Casa">
+          </label>
+          <label class="block">
+            <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-hoja/70">Destinatario</span>
+            <input id="address-recipient" type="text" class="w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-hoja focus:ring-[3px] focus:ring-hoja/15" placeholder="Maria Lopez">
+          </label>
+          <label class="block">
+            <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-hoja/70">Telefono</span>
+            <input id="address-phone" type="text" class="w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-hoja focus:ring-[3px] focus:ring-hoja/15" placeholder="0999999999">
+          </label>
+          <label class="block md:col-span-2 xl:col-span-2">
+            <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-hoja/70">Direccion</span>
+            <input id="address-line" type="text" class="w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-hoja focus:ring-[3px] focus:ring-hoja/15" placeholder="Av. Principal y Calle 10">
+          </label>
+          <label class="block">
+            <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-hoja/70">Ciudad</span>
+            <input id="address-city" type="text" class="w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-hoja focus:ring-[3px] focus:ring-hoja/15" placeholder="Guayaquil">
+          </label>
+          <label class="block">
+            <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-hoja/70">Provincia</span>
+            <input id="address-province" type="text" class="w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-hoja focus:ring-[3px] focus:ring-hoja/15" placeholder="Guayas">
+          </label>
+          <label class="block md:col-span-2 xl:col-span-2">
+            <span class="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-hoja/70">Referencia</span>
+            <input id="address-reference" type="text" class="w-full rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-hoja focus:ring-[3px] focus:ring-hoja/15" placeholder="Frente al parque">
+          </label>
+          <label class="inline-flex items-center gap-3 rounded-[1rem] border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700">
+            <input id="address-default" type="checkbox" class="h-4 w-4 accent-[#3E6B48]">
+            Marcar como principal
+          </label>
+        </div>
+        <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p class="text-sm text-slate-600">Cuando llegues al limite de 3 direcciones, tendras que eliminar una para registrar otra.</p>
+          <button id="submit-address" type="submit" class="inline-flex items-center justify-center rounded-full bg-hoja px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-hoja/95">Guardar direccion</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="mt-auto bg-slate-950 text-white">
+    <div class="mx-auto flex max-w-7xl flex-col items-center gap-4 px-6 py-5 text-center">
+      <p class="max-w-2xl text-sm leading-6 text-white/70">AgroControl. Perfil de cliente en construccion progresiva.</p>
+      <img src="assets/logo-agrocontrol.svg" alt="Logo AgroControl" class="h-7 w-auto opacity-90">
+    </div>
+  </footer>
+
+  <script>
+    const publicAuth = initPublicAuth({
+      loginRedirect: "perfil.html",
+      profileRoute: "perfil.html",
+    });
+
+    const profileElements = {
+      code: document.getElementById("profile-code"),
+      name: document.getElementById("profile-name"),
+      heroName: document.getElementById("profile-hero-name"),
+      email: document.getElementById("profile-email"),
+      phone: document.getElementById("profile-phone"),
+      role: document.getElementById("profile-role"),
+      salesCount: document.getElementById("sales-count"),
+      salesTotal: document.getElementById("sales-total"),
+      salesLatest: document.getElementById("sales-latest"),
+      salesFeedback: document.getElementById("sales-feedback"),
+      salesList: document.getElementById("profile-sales-list"),
+      favoritesFeedback: document.getElementById("favorites-feedback"),
+      favoritesList: document.getElementById("profile-favorites-list"),
+      favoritesPagination: document.getElementById("favorites-pagination"),
+      addressesFeedback: document.getElementById("addresses-feedback"),
+      addressesList: document.getElementById("profile-addresses-list"),
+      addressForm: document.getElementById("address-form"),
+      addressLabel: document.getElementById("address-label"),
+      addressRecipient: document.getElementById("address-recipient"),
+      addressPhone: document.getElementById("address-phone"),
+      addressLine: document.getElementById("address-line"),
+      addressCity: document.getElementById("address-city"),
+      addressProvince: document.getElementById("address-province"),
+      addressReference: document.getElementById("address-reference"),
+      addressDefault: document.getElementById("address-default"),
+      submitAddress: document.getElementById("submit-address"),
+    };
+
+    const favoritesPerPage = 12;
+    let favoritesPage = 1;
+    const favoriteCategoryImages = {
+      insumos: [
+        "https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=700&q=80",
+        "https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?auto=format&fit=crop&w=700&q=80",
+        "https://images.unsplash.com/photo-1512428813834-c702c7702b78?auto=format&fit=crop&w=700&q=80"
+      ],
+      abonos: [
+        "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=700&q=80",
+        "https://images.unsplash.com/photo-1492496913980-501348b61469?auto=format&fit=crop&w=700&q=80",
+        "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=700&q=80"
+      ],
+      herramientas: [
+        "https://images.unsplash.com/photo-1504439468489-c8920d796a29?auto=format&fit=crop&w=700&q=80",
+        "https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=700&q=80",
+        "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=700&q=80"
+      ]
+    };
+
+    function formatCurrency(value) {
+      const amount = Number(value || 0);
+      return new Intl.NumberFormat("es-EC", {
+        style: "currency",
+        currency: "USD",
+      }).format(Number.isFinite(amount) ? amount : 0);
+    }
+
+    function formatDate(value) {
+      if (!value) return "Fecha no disponible";
+      const date = new Date(`${value}T00:00:00`);
+      if (Number.isNaN(date.getTime())) return value;
+      return new Intl.DateTimeFormat("es-EC", {
+        dateStyle: "long",
+      }).format(date);
+    }
+
+    function formatCategory(value) {
+      if (!value) return "General";
+      return value.charAt(0).toUpperCase() + value.slice(1);
+    }
+
+    function parseSaleMeta(note) {
+      const raw = String(note || "").trim();
+      if (!raw) {
+        return { customerNote: "", shippingAddress: "" };
+      }
+
+      const parts = raw.split("|").map((part) => part.trim()).filter(Boolean);
+      const shippingPart = parts.find((part) => /^direccion de envio:/i.test(part)) || "";
+      const customerNote = parts.filter((part) => part !== shippingPart).join(" | ");
+
+      return {
+        customerNote,
+        shippingAddress: shippingPart.replace(/^direccion de envio:\s*/i, "").trim()
+      };
+    }
+
+    function getFavoriteImage(category, id) {
+      const key = String(category || "").toLowerCase();
+      const images = favoriteCategoryImages[key] || favoriteCategoryImages.insumos;
+      const seed = String(id || key);
+      const total = seed.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0);
+      return images[total % images.length];
+    }
+
+    function renderAddresses(addresses) {
+      profileElements.addressesFeedback.className = "mt-6 rounded-[1.4rem] border border-hoja/10 bg-hoja/[0.06] p-5 text-sm text-slate-700";
+      profileElements.addressesFeedback.textContent = addresses.length
+        ? `Tienes ${addresses.length} direccion${addresses.length === 1 ? "" : "es"} guardada${addresses.length === 1 ? "" : "s"}.`
+        : "Aun no has guardado direcciones. Puedes registrar hasta 3.";
+
+      profileElements.addressesList.innerHTML = addresses.length
+        ? addresses.map((address) => `
+          <article class="rounded-[1.35rem] border border-slate-200 bg-[linear-gradient(180deg,_rgba(255,255,255,0.98),_rgba(247,243,235,0.94))] p-4 shadow-[0_14px_24px_rgba(15,23,42,0.05)]">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="text-xs font-bold uppercase tracking-[0.18em] text-hoja/70">${address.label || "Direccion"}</p>
+                <h3 class="mt-2 text-lg font-black text-slate-900">${address.recipient_name || "Destinatario"}</h3>
+              </div>
+              ${address.is_default ? '<span class="rounded-full bg-emerald-100 px-3 py-1 text-[11px] font-bold text-emerald-700">Principal</span>' : ""}
+            </div>
+            <p class="mt-3 text-sm leading-6 text-slate-700">${address.address_line || ""}</p>
+            <p class="mt-1 text-sm text-slate-500">${[address.city, address.province].filter(Boolean).join(", ")}</p>
+            ${address.reference ? `<p class="mt-2 text-sm text-slate-500">Referencia: ${address.reference}</p>` : ""}
+            ${address.phone ? `<p class="mt-1 text-sm text-slate-500">Tel: ${address.phone}</p>` : ""}
+            <div class="mt-4 flex items-center gap-2">
+              ${address.is_default ? "" : `<button type="button" data-address-default="${address.id}" class="inline-flex items-center justify-center rounded-full border border-hoja/20 px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-hoja transition hover:bg-hoja/5">Principal</button>`}
+              <button type="button" data-address-delete="${address.id}" class="inline-flex items-center justify-center rounded-full border border-rose-200 px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-rose-700 transition hover:bg-rose-50">Eliminar</button>
+            </div>
+          </article>
+        `).join("")
+        : "";
+
+      profileElements.submitAddress.disabled = addresses.length >= 3;
+      profileElements.submitAddress.classList.toggle("opacity-60", addresses.length >= 3);
+      profileElements.submitAddress.textContent = addresses.length >= 3 ? "Limite alcanzado" : "Guardar direccion";
+
+      profileElements.addressesList.querySelectorAll("[data-address-default]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          await fetch("api/addresses/update", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify({ id: Number(button.dataset.addressDefault), set_default: true })
+          });
+          await loadAddresses();
+        });
+      });
+
+      profileElements.addressesList.querySelectorAll("[data-address-delete]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          await fetch("api/addresses/delete", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify({ id: Number(button.dataset.addressDelete) })
+          });
+          await loadAddresses();
+        });
+      });
+    }
+
+    async function loadAddresses() {
+      const response = await fetch("api/addresses", {
+        headers: { Accept: "application/json" }
+      });
+      const payload = await response.json();
+      const addresses = Array.isArray(payload?.data) ? payload.data : [];
+      renderAddresses(addresses);
+      return addresses;
+    }
+
+    function renderFavorites(favorites) {
+      if (!favorites.length) {
+        profileElements.favoritesFeedback.textContent = "Todavia no has marcado productos favoritos. Puedes hacerlo desde el POS con el boton de estrella.";
+        profileElements.favoritesList.innerHTML = "";
+        profileElements.favoritesPagination.innerHTML = "";
+        return;
+      }
+
+      const totalPages = Math.max(1, Math.ceil(favorites.length / favoritesPerPage));
+      favoritesPage = Math.min(Math.max(favoritesPage, 1), totalPages);
+      const startIndex = (favoritesPage - 1) * favoritesPerPage;
+      const visibleFavorites = favorites.slice(startIndex, startIndex + favoritesPerPage);
+
+      profileElements.favoritesFeedback.className = "mt-6 rounded-[1.4rem] border border-hoja/10 bg-hoja/[0.06] p-5 text-sm text-slate-700";
+      profileElements.favoritesFeedback.textContent = `Tienes ${favorites.length} producto${favorites.length === 1 ? "" : "s"} guardado${favorites.length === 1 ? "" : "s"} en favoritos. Mostrando ${startIndex + 1}-${Math.min(startIndex + favoritesPerPage, favorites.length)}.`;
+
+      profileElements.favoritesList.innerHTML = visibleFavorites.map((favorite) => `
+        <article class="overflow-hidden rounded-[1.25rem] border border-slate-200 bg-[linear-gradient(180deg,_rgba(255,255,255,0.98),_rgba(247,243,235,0.94))] shadow-[0_14px_24px_rgba(15,23,42,0.05)]">
+          <div class="relative bg-[linear-gradient(180deg,_rgba(245,240,230,0.96),_rgba(234,244,236,0.88))] p-2">
+            <img src="${getFavoriteImage(favorite.category, favorite.sku || favorite.id)}" alt="${favorite.name || "Producto"}" class="h-24 w-full rounded-[0.9rem] object-cover object-center">
+            <div class="absolute inset-x-2 bottom-2 rounded-[0.9rem] bg-[linear-gradient(180deg,_rgba(15,23,42,0.08),_rgba(15,23,42,0.78))] px-3 py-2.5 text-white backdrop-blur-[2px]">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <p class="text-[9px] font-bold uppercase tracking-[0.16em] text-amber-300">Favorito</p>
+                  <h3 class="mt-1 line-clamp-2 text-[0.88rem] font-black leading-4 text-white">${favorite.name || "Producto"}</h3>
+                </div>
+                <div class="rounded-full bg-white/16 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white">${formatCategory(favorite.category || "")}</div>
+              </div>
+              <p class="mt-2 text-sm font-black text-[#ffe39a]">${formatCurrency(favorite.price || 0)}</p>
+            </div>
+          </div>
+          <div class="p-3">
+            <button
+              type="button"
+              data-favorite-add
+              data-favorite-id="${favorite.sku || favorite.id || ""}"
+              data-favorite-category="${favorite.category || ""}"
+              class="inline-flex w-full items-center justify-center rounded-full bg-hoja px-4 py-1.5 text-[13px] font-semibold text-white transition hover:bg-hoja/95"
+            >
+              Agregar al carrito
+            </button>
+          </div>
+        </article>
+      `).join("");
+
+      profileElements.favoritesPagination.innerHTML = totalPages > 1
+        ? Array.from({ length: totalPages }, (_, index) => {
+            const page = index + 1;
+            const active = page === favoritesPage;
+            return `
+              <button
+                type="button"
+                data-favorites-page="${page}"
+                class="inline-flex min-w-[2.4rem] items-center justify-center rounded-full px-3 py-2 text-sm font-semibold transition ${
+                  active
+                    ? "bg-hoja text-white shadow-[0_10px_20px_rgba(62,107,72,0.18)]"
+                    : "border border-slate-200 bg-white text-slate-700 hover:border-hoja/25 hover:text-hoja"
+                }"
+              >${page}</button>
+            `;
+          }).join("")
+        : "";
+
+      profileElements.favoritesPagination.querySelectorAll("[data-favorites-page]").forEach((button) => {
+        button.addEventListener("click", () => {
+          favoritesPage = Number(button.dataset.favoritesPage || "1");
+          renderFavorites(favorites);
+        });
+      });
+
+      profileElements.favoritesList.querySelectorAll("[data-favorite-add]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const productId = String(button.dataset.favoriteId || "").trim();
+          const category = String(button.dataset.favoriteCategory || "").trim();
+          if (!productId) return;
+
+          const params = new URLSearchParams();
+          params.set("add", productId);
+          if (category) {
+            params.set("category", category);
+          }
+
+          window.location.href = `pos.html?${params.toString()}`;
+        });
+      });
+    }
+
+    function renderSales(sales) {
+      profileElements.salesCount.textContent = String(sales.length);
+      const totalSpent = sales.reduce((sum, sale) => sum + Number(sale.total || 0), 0);
+      profileElements.salesTotal.textContent = formatCurrency(totalSpent);
+
+      if (!sales.length) {
+        profileElements.salesLatest.textContent = "Aun no registras compras en tu cuenta.";
+        profileElements.salesFeedback.textContent = "Todavia no hay compras registradas. Cuando hagas tu primer pedido, aparecera aqui.";
+        profileElements.salesList.innerHTML = "";
+        return;
+      }
+
+      const latestSale = sales[0];
+      profileElements.salesLatest.textContent = `${latestSale.number || "Venta"} - ${formatDate(latestSale.date)} - ${formatCurrency(latestSale.total)}`;
+      profileElements.salesFeedback.className = "mt-6 rounded-[1.4rem] border border-hoja/10 bg-hoja/[0.06] p-5 text-sm text-slate-700";
+      profileElements.salesFeedback.textContent = "Tu historial ya esta disponible. Puedes revisar cada compra con sus productos y totales.";
+
+      profileElements.salesList.innerHTML = sales.map((sale) => {
+        const items = Array.isArray(sale.items) ? sale.items : [];
+        const saleMeta = parseSaleMeta(sale.note);
+        const itemsHtml = items.length
+          ? items.map((item) => `
+            <li class="flex items-start justify-between gap-4 rounded-2xl bg-crema/60 px-4 py-3">
+              <div>
+                <p class="font-semibold text-slate-900">${item.name || "Producto"}</p>
+                <p class="mt-1 text-xs uppercase tracking-[0.16em] text-hoja/70">${item.category || "General"}</p>
+              </div>
+              <div class="text-right text-sm text-slate-700">
+                <p>Cant. ${item.quantity || 0}</p>
+                <p class="mt-1 font-semibold text-slate-900">${formatCurrency(item.subtotal || 0)}</p>
+              </div>
+            </li>
+          `).join("")
+          : `<li class="rounded-2xl bg-crema/60 px-4 py-3 text-sm text-slate-600">No hay productos detallados para esta compra.</li>`;
+
+        return `
+          <article class="overflow-hidden rounded-[1.6rem] border border-slate-200 bg-white shadow-[0_18px_35px_rgba(15,23,42,0.06)]">
+            <div class="border-b border-slate-200/80 bg-[linear-gradient(135deg,_rgba(62,107,72,0.08),_rgba(217,164,65,0.08))] px-5 py-4">
+              <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                <div>
+                  <p class="text-xs font-bold uppercase tracking-[0.2em] text-hoja/70">${sale.number || "Venta"}</p>
+                  <h3 class="mt-2 text-xl font-black text-slate-900">${formatDate(sale.date)}</h3>
+                  <p class="mt-1 text-sm text-slate-600">${sale.payment || "Metodo de pago no disponible"}</p>
+                </div>
+                <div class="grid gap-2 sm:grid-cols-2 lg:min-w-[18rem]">
+                  <div class="rounded-2xl border border-white/70 bg-white/80 px-4 py-3">
+                    <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">Total</p>
+                    <p class="mt-1 text-lg font-black text-slate-900">${formatCurrency(sale.total)}</p>
+                  </div>
+                  <div class="rounded-2xl border border-white/70 bg-white/80 px-4 py-3">
+                    <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">Productos</p>
+                    <p class="mt-1 text-lg font-black text-slate-900">${items.length}</p>
+                  </div>
+                </div>
+              </div>
+              ${saleMeta.shippingAddress ? `
+                <div class="mt-3 rounded-[1rem] border border-hoja/10 bg-white/70 px-4 py-3">
+                  <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-hoja/70">Direccion usada</p>
+                  <p class="mt-1 text-sm text-slate-700">${saleMeta.shippingAddress}</p>
+                </div>
+              ` : ""}
+              ${saleMeta.customerNote ? `<p class="mt-3 text-sm text-slate-600">Nota: ${saleMeta.customerNote}</p>` : ""}
+            </div>
+            <div class="px-5 py-4">
+              <ul class="grid gap-3">
+                ${itemsHtml}
+              </ul>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    (async () => {
+      const session = safeStorage.getItem("agrocontrol-auth-v1");
+      let parsed = null;
+      try {
+        parsed = JSON.parse(session || "null");
+      } catch {
+        parsed = null;
+      }
+
+      if (!parsed) {
+        window.location.href = "login.html?redirect=perfil.html";
+        return;
+      }
+
+      if (parsed.role === "admin") {
+        window.location.href = "inventario.html";
+        return;
+      }
+
+      profileElements.name.textContent = parsed.user || "Cliente";
+      profileElements.heroName.textContent = parsed.user || "Tu cuenta cliente";
+      profileElements.email.textContent = parsed.email || "Sin correo";
+      profileElements.role.textContent = parsed.role === "admin" ? "Administrador" : "Cliente";
+      profileElements.phone.textContent = "No registrado";
+
+      try {
+        const response = await fetch("api/customers", {
+          headers: { Accept: "application/json" }
+        });
+        const payload = await response.json();
+        const customer = Array.isArray(payload?.data) ? payload.data[0] : null;
+
+        if (customer) {
+          profileElements.name.textContent = customer.full_name || parsed.user || "Cliente";
+          profileElements.heroName.textContent = customer.full_name || parsed.user || "Tu cuenta cliente";
+          profileElements.email.textContent = customer.email || parsed.email || "Sin correo";
+          profileElements.phone.textContent = customer.phone || "No registrado";
+          profileElements.code.textContent = `Codigo: ${customer.code || "--"}`;
+        }
+      } catch {
+        profileElements.code.textContent = "Codigo: --";
+      }
+
+      try {
+        const response = await fetch("api/sales", {
+          headers: { Accept: "application/json" }
+        });
+        const payload = await response.json();
+        const sales = Array.isArray(payload?.data) ? payload.data : [];
+        renderSales(sales);
+      } catch {
+        profileElements.salesCount.textContent = "--";
+        profileElements.salesTotal.textContent = "$0.00";
+        profileElements.salesLatest.textContent = "No fue posible cargar tu ultima compra.";
+        profileElements.salesFeedback.className = "mt-6 rounded-[1.4rem] border border-red-200 bg-red-50 p-5 text-sm text-red-700";
+        profileElements.salesFeedback.textContent = "Hubo un problema al cargar tu historial. Intenta refrescar la pagina.";
+        profileElements.salesList.innerHTML = "";
+      }
+
+      try {
+        const response = await fetch("api/favorites", {
+          headers: { Accept: "application/json" }
+        });
+        const payload = await response.json();
+        const favorites = Array.isArray(payload?.data) ? payload.data : [];
+        renderFavorites(favorites);
+      } catch {
+        profileElements.favoritesFeedback.className = "mt-6 rounded-[1.4rem] border border-red-200 bg-red-50 p-5 text-sm text-red-700";
+        profileElements.favoritesFeedback.textContent = "No fue posible cargar tus favoritos. Intenta refrescar la pagina.";
+        profileElements.favoritesList.innerHTML = "";
+      }
+
+      try {
+        await loadAddresses();
+      } catch {
+        profileElements.addressesFeedback.className = "mt-6 rounded-[1.4rem] border border-red-200 bg-red-50 p-5 text-sm text-red-700";
+        profileElements.addressesFeedback.textContent = "No fue posible cargar tus direcciones. Intenta refrescar la pagina.";
+        profileElements.addressesList.innerHTML = "";
+      }
+    })();
+
+    profileElements.addressForm?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const payload = {
+        label: profileElements.addressLabel.value.trim(),
+        recipient_name: profileElements.addressRecipient.value.trim(),
+        phone: profileElements.addressPhone.value.trim(),
+        address_line: profileElements.addressLine.value.trim(),
+        city: profileElements.addressCity.value.trim(),
+        province: profileElements.addressProvince.value.trim(),
+        reference: profileElements.addressReference.value.trim(),
+        is_default: profileElements.addressDefault.checked,
+      };
+
+      try {
+        const response = await fetch("api/addresses", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const result = await response.json();
+        if (!response.ok || result?.status === "error") {
+          throw new Error(result?.message || "No se pudo guardar la direccion.");
+        }
+
+        profileElements.addressForm.reset();
+        renderAddresses(Array.isArray(result?.data) ? result.data : []);
+      } catch (error) {
+        profileElements.addressesFeedback.className = "mt-6 rounded-[1.4rem] border border-red-200 bg-red-50 p-5 text-sm text-red-700";
+        profileElements.addressesFeedback.textContent = error instanceof Error ? error.message : "No se pudo guardar la direccion.";
+      }
+    });
+  </script>
+  <script src="assets/scroll-reset.js"></script>
+</body>
+</html>
+
+
+
+
+
